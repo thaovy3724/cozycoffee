@@ -206,7 +206,12 @@ public class AdminPanelGUI extends JFrame {
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(new Color(245, 245, 245));
-		panel_2.setBounds(199, 55, 887, 508);
+		
+		// calculate to set the height for panel_2
+		int fullHeight = getContentPane().getHeight();
+		panel_2.setBounds(199, 55, 887, fullHeight - panel_1.getHeight());
+		//---------------------------------------
+		
 		getContentPane().add(panel_2);
 		
 //		JLabel lblNewLabel_1 = new JLabel("Đăng xuất");
