@@ -20,7 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JToggleButton;
 import java.awt.Color;
-public class AdminPanelGUI extends JFrame {
+public class AdminFrameGUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -32,7 +32,7 @@ public class AdminPanelGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AdminPanelGUI frame = new AdminPanelGUI();
+					AdminFrameGUI frame = new AdminFrameGUI();
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -45,7 +45,7 @@ public class AdminPanelGUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AdminPanelGUI() {
+	public AdminFrameGUI() {
 		setBackground(new Color(255, 255, 255));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1100, 600);
@@ -60,7 +60,7 @@ public class AdminPanelGUI extends JFrame {
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		// Load the original image
-				ImageIcon originalIcon = new ImageIcon(AdminPanelGUI.class.getResource("/ASSET/Images/logoRmBg.png"));
+				ImageIcon originalIcon = new ImageIcon(AdminFrameGUI.class.getResource("/ASSET/Images/logoRmBg.png"));
 
 				// Resize the image (e.g., to 50x50 pixels)
 				Image scaledImage = originalIcon.getImage().getScaledInstance(180, 120, Image.SCALE_SMOOTH);
@@ -183,7 +183,7 @@ public class AdminPanelGUI extends JFrame {
 		
 		
 		// Load the original image
-		originalIcon = new ImageIcon(AdminPanelGUI.class.getResource("/ASSET/Images/logout.png"));
+		originalIcon = new ImageIcon(AdminFrameGUI.class.getResource("/ASSET/Images/logout.png"));
 
 		// Resize the image (e.g., to 50x50 pixels)
 		scaledImage = originalIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
@@ -209,7 +209,7 @@ public class AdminPanelGUI extends JFrame {
 		
 		// calculate to set the height for panel_2
 		int fullHeight = getContentPane().getHeight();
-		panel_2.setBounds(199, 55, 887, fullHeight - panel_1.getHeight());
+		panel_2.setBounds(199, 55, 887, 508);
 		//---------------------------------------
 		
 		getContentPane().add(panel_2);
