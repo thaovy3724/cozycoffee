@@ -4,10 +4,10 @@ public class TrangThai_PnDTO {
 	private int idTT;
     private String tenTT;
 
-    public TrangThaiPNDTO() {
+    public TrangThai_PnDTO() {
     }
 
-    public TrangThaiPNDTO(int idTT, String tenTT) {
+    public TrangThai_PnDTO(int idTT, String tenTT) {
         this.idTT = idTT;
         this.tenTT = tenTT;
     }
