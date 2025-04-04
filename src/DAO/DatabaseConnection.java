@@ -15,6 +15,7 @@ public class DatabaseConnection {
     private String dbname = DB_NAME;
 
     private Connection link;
+    private PreparedStatement pstmt;
     private String error;
 
     public DatabaseConnection() {
@@ -34,65 +35,51 @@ public class DatabaseConnection {
     public Connection getLink() {
         return this.link;
     }
-    
 
-    public boolean execute(String sql, List<Object> params) {
-        try {
-            if (this.link != null) {
-                PreparedStatement pstmt = this.link.prepareStatement(sql);
-                for (int i = 0; i < params.size(); i++) {
-                    //Tham số sql bắt đầu từ 1, nhưng tham số trong list params bắt đầu từ 0
-                    pstmt.setObject(i + 1, params.get(i));
-                }
-                boolean result = pstmt.executeUpdate() > 0;
-                pstmt.close();
-                return result;
-            }
-            return false;
-        } catch (SQLException e) {
-            return false;
+    // Chuẩn bị PreparedStatement với một câu SQL
+    public void prepareStatement(String sql) throws SQLException {
+        if (this.link == null || this.link.isClosed()) {
+            throw new SQLException("Database connection is not available");
         }
+        closePreparedStatement(); // Đóng pstmt cũ nếu tồn tại
+        this.pstmt = this.link.prepareStatement(sql);
+    }
+
+    // Đóng PreparedStatement hiện tại
+    public void closePreparedStatement() throws SQLException {
+        if (this.pstmt != null && !this.pstmt.isClosed()) {
+            this.pstmt.close();
+            this.pstmt = null;
+        }
+    }
+
+    public boolean execute(List<Object> params) throws SQLException {
+        if (this.pstmt == null) {
+            throw new SQLException("PreparedStatement is not initialized. Call prepareStatement first.");
+        }
+        if (params != null) {
+            for (int i = 0; i < params.size(); i++) {
+                this.pstmt.setObject(i + 1, params.get(i));
+            }
+        }
+        boolean result = this.pstmt.executeUpdate() > 0;
+        this.pstmt.close();
+        return result;
     }
 
     // Trả về tất cả các dòng dưới dạng ResultSet
-    public ResultSet getAll(String sql, List<Object> params) {
-        try {
-            if (this.link != null) {
-                PreparedStatement pstmt = this.link.prepareStatement(sql);
-                if (params != null) {
-                    for (int i = 0; i < params.size(); i++) {
-                        pstmt.setObject(i + 1, params.get(i));
-                    }
-                }
-                return pstmt.executeQuery();
-                // Lưu ý: Người dùng cần đóng ResultSet và pstmt sau khi sử dụng
-            }
-            return null;
-        } catch (SQLException e) {
-            return null;
+    public ResultSet getAll(List<Object> params) throws SQLException {
+        if (this.pstmt == null) {
+            throw new SQLException("PreparedStatement is not initialized. Call prepareStatement first.");
         }
+        if (params != null) {
+            for (int i = 0; i < params.size(); i++) {
+                this.pstmt.setObject(i + 1, params.get(i));
+            }
+        }
+        ResultSet rs = this.pstmt.executeQuery();
+        return rs; // Người dùng phải đóng ResultSet
     }
-
-    // Trả về một dòng dưới dạng ResultSet
-//    public ResultSet getOne(String sql, List<Object> params) {
-//        try {
-//            if (this.link != null) {
-//                PreparedStatement pstmt = this.link.prepareStatement(sql);
-//                // Gán các tham số từ params vào PreparedStatement
-//                if (params != null) {
-//                    for (int i = 0; i < params.size(); i++) {
-//                        pstmt.setObject(i + 1, params.get(i));
-//                    }
-//                }
-//                ResultSet rs = pstmt.executeQuery();
-//                rs.next();
-//                return new QueryResult(pstmt, rs);
-//            }
-//            return null;
-//        } catch (SQLException e) {
-//            return null;
-//        }
-//    }
 
     public int getNewAutoIncrementNumber(String tableName) {
         String sql = "SELECT AUTO_INCREMENT as newID " +
@@ -108,7 +95,7 @@ public class DatabaseConnection {
                     ResultSet rs = pstmt.executeQuery();
                     if (rs.next()) {
                         int newID = rs.getInt("newID");
-                        close(pstmt, rs);
+                        rs.close();
                         return newID;
                     }
                     return -1;
@@ -121,34 +108,14 @@ public class DatabaseConnection {
     }
 
     // Method để đóng kết nối
-    public void close(PreparedStatement pstmt, ResultSet rs) throws SQLException {
-        // Đóng ResultSet nếu có
-        if (rs != null && !rs.isClosed()) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                System.err.println("Error closing ResultSet: " + e.getMessage());
-            }
-        }
-
-        // Đóng PreparedStatement nếu có
-        if (pstmt != null && !pstmt.isClosed()) {
-            try {
-                pstmt.close();
-            } catch (SQLException e) {
-                System.err.println("Error closing PreparedStatement: " + e.getMessage());
-            }
-        }
-
-        // Đóng Connection (link) nếu có
-        if (this.link != null && !this.link.isClosed()) {
-            try {
+    public void close() {
+        try {
+            closePreparedStatement();// Đóng PreparedStatement
+            if (this.link != null && !this.link.isClosed()) {
                 this.link.close();
-            } catch (SQLException e) {
-                System.err.println("Error closing Connection: " + e.getMessage());
-            } finally {
-                this.link = null; // Đặt lại link về null sau khi đóng
             }
+        } catch (SQLException e) {
+            this.error = "Error closing connection: " + e.getMessage();
         }
     }
 }

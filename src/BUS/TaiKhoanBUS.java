@@ -18,38 +18,41 @@ public class TaiKhoanBUS {
 
     public boolean add(TaiKhoanDTO taiKhoan) {
         // Kiểm tra logic nghiệp vụ trước khi thêm
-        if (taiKhoan.getTenTK() == null || taiKhoan.getTenTK().isEmpty()) {
-            return false; // Tên tài khoản không được rỗng
-        }
         if (taiKhoanDAO.isExist("idTK", taiKhoan.getIdTK())) {
             return false; // Tài khoản đã tồn tại
         }
-        return taiKhoanDAO.add(taiKhoan);
+        return taiKhoanDAO.add(
+                List.of(
+                        taiKhoan.getIdTK(),
+                        taiKhoan.getTenTK(),
+                        taiKhoan.getHoten(),
+                        taiKhoan.getEmail(),
+                        taiKhoan.getDienthoai(),
+                        taiKhoan.getTrangthai(),
+                        taiKhoan.getIdNQ()
+                )
+        );
     }
 
     public boolean update(TaiKhoanDTO taiKhoan) {
         // Kiểm tra logic nghiệp vụ trước khi cập nhật
-        if (!taiKhoanDAO.isExist(taiKhoan.getIdTK())) {
+        if (!taiKhoanDAO.isExist("idTK", taiKhoan.getIdTK())) {
             return false; // Tài khoản không tồn tại
         }
         return taiKhoanDAO.update(taiKhoan);
     }
 
-    public boolean lock(int idTK) {
-        if (!taiKhoanDAO.isExist(idTK)) {
+    public boolean lock(TaiKhoanDTO taiKhoan) {
+        if (!taiKhoanDAO.isExist("idTK", taiKhoan.getIdTK())) {
             return false; // Tài khoản không tồn tại
         }
-        return taiKhoanDAO.lock(idTK);
+        return taiKhoanDAO.lock(taiKhoan.getIdTK());
     }
 
-    public boolean unlock(int idTK) {
-        if (!taiKhoanDAO.isExist(idTK)) {
+    public boolean unlock(TaiKhoanDTO taiKhoan) {
+        if (!taiKhoanDAO.isExist("idTK", taiKhoan.getIdTK())) {
             return false; // Tài khoản không tồn tại
         }
-        return taiKhoanDAO.unlock(idTK);
-    }
-
-    public void closeConnection() {
-        taiKhoanDAO.closeConnection();
+        return taiKhoanDAO.unlock(taiKhoan.getIdTK());
     }
 }

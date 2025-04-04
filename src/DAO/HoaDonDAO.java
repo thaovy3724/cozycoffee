@@ -13,15 +13,22 @@ import java.util.List;
 //Các tham số kiểu (T, K, ...) trong generic chỉ chấp nhận các lớp hoặc interface
 public class HoaDonDAO extends BaseDAO<HoaDonDTO> {
 
-    @Override
-    protected String getTableName() {
-        return "hoadon";
+    public HoaDonDAO() {
+        super(
+                "hoadon",
+                List.of("idHD", "ngaytao", "idTK")
+        );
     }
 
-    @Override
-    protected List<String> getTableColumns() {
-        return List.of("idHD", "ngaytao", "idTK");
-    }
+//    @Override
+//    protected String getTableName() {
+//        return "hoadon";
+//    }
+//
+//    @Override
+//    protected List<String> getTableColumns() {
+//        return List.of("idHD", "ngaytao", "idTK");
+//    }
 
 
     @Override
@@ -33,35 +40,35 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO> {
         );
     }
 
-//    public List<HoaDonDTO> searchDate(Date start, Date end) {
-//        List<HoaDonDTO> list = new ArrayList<>();
-//        List<Object> params = new ArrayList<>();
-//        String sql = "SELECT * FROM hoadon WHERE 1=1 ";
-//        if (start != null) {
-//            sql += "AND (ngaytao >= ?) ";
-//            params.add(start);
-//        }
-//        if (end != null) {
-//            sql += "AND (ngaytao <= ?) ";
-//            params.add(end);
-//        }
-//        ResultSet rs;
-//        if (params.isEmpty()) {
-//            rs = db.getAll(sql, null);
-//        } else {
-//            rs = db.getAll(sql, params);
-//        }
-//        try {
-//            while (rs != null && rs.next()) {
-//                HoaDonDTO hd = mapResultSetToDTO(rs);
-//                list.add(hd);
-//            }
-//            if (rs != null) rs.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return list;
-//    }
+    public List<HoaDonDTO> searchDate(Date start, Date end) {
+        List<HoaDonDTO> list = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+        String sql = "SELECT * FROM hoadon WHERE 1=1 ";
+        if (start != null) {
+            sql += "AND (ngaytao >= ?) ";
+            params.add(start);
+        }
+        if (end != null) {
+            sql += "AND (ngaytao <= ?) ";
+            params.add(end);
+        }
+        ResultSet rs;
+        if (params.isEmpty()) {
+            rs = db.getAll(sql, null);
+        } else {
+            rs = db.getAll(sql, params);
+        }
+        try {
+            while (rs != null && rs.next()) {
+                HoaDonDTO hd = mapResultSetToDTO(rs);
+                list.add(hd);
+            }
+            if (rs != null) rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
     public List<HoaDonDTO> searchIdNV(int idTK) {
         List<HoaDonDTO> list = new ArrayList<>();

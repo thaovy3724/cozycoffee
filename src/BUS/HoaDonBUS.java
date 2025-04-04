@@ -6,12 +6,7 @@ import java.sql.Date;
 import java.util.List;
 
 public class HoaDonBUS {
-    private final HoaDonDAO hoaDonDAO;
-
-    // Constructor: Khởi tạo DAO (dùng Singleton từ HoaDonDAO)
-    public HoaDonBUS() {
-        hoaDonDAO = new HoaDonDAO();
-    }
+    private final HoaDonDAO hoaDonDAO = new HoaDonDAO();
 
     // Lấy tất cả hóa đơn
     public List<HoaDonDTO> getAllHoaDon() {

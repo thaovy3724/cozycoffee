@@ -8,106 +8,139 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class BaseDAO<T> implements IBaseDAO<T> {
-    protected final DatabaseConnection db = new DatabaseConnection();
+    protected String tableName;
+    protected List<String> tableColumns;
+    public BaseDAO(String tableName, List<String> tableColumns) {
+        this.tableName = tableName;
+        this.tableColumns = tableColumns;
+    }
 
     @Override
     public List<T> getAll() {
+        DatabaseConnection db = new DatabaseConnection();
         List<T> list = new ArrayList<>();
-        String sql = "SELECT * FROM " + getTableName();
-        ResultSet rs = db.getAll(sql, null);
+        String sql = "SELECT * FROM " + tableName;
+        ResultSet rs = null;
         try {
+            db.prepareStatement(sql);
+            rs = db.getAll(null);
             if (rs != null) {
                 while (rs.next()) {
                     T entity = mapResultSetToDTO(rs);
                     list.add(entity);
                 }
-                return list;
             }
-           return new ArrayList<>();
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                db.close();
+            }
         }
-        finally {
-            rs.close();
-        }
-       return new ArrayList<>();
+        return list.isEmpty() ? null : list;
     }
 
     @Override
-    public Optional<T> findById(String column, int id) {
-        String sql = "SELECT * FROM " + getTableName() + " WHERE " + column + " = ?";
+    public T findById(String column, int id) {
+        DatabaseConnection db = new DatabaseConnection();
+        String sql = "SELECT * FROM " + tableName + " WHERE " + column + " = ?";
         List<Object> params = new ArrayList<>();
         params.add(id);
-        ResultSet rs = db.getAll(sql, params);
+        T entity = null;
+        ResultSet rs = null;
         try {
+            db.prepareStatement(sql);
+            rs = db.getAll(params);
             if (rs != null && rs.next()) {
-                T entity = mapResultSetToDTO(rs);
-                return Optional.ofNullable(entity);
+                entity = mapResultSetToDTO(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
-            try{
-                rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+            return null;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                db.close();
             }
         }
-        return Optional.empty();
+        return entity;
     }
 
     @Override
     public boolean isExist(String column, int id) {
-        String sql = "SELECT COUNT(*) FROM " + getTableName() + " WHERE " + column + " = ?";
+        DatabaseConnection db = new DatabaseConnection();
+        String sql = "SELECT COUNT(*) FROM " + tableName + " WHERE " + column + " = ?";
         List<Object> params = new ArrayList<>();
         params.add(id);
-        DatabaseConnection.QueryResult qr = db.getOne(sql, params);
+        ResultSet rs = null;
         try {
-            if (qr.resultSet != null) {
-                boolean exists = qr.resultSet.getInt(1) > 0;
+            db.prepareStatement(sql);
+            rs = db.getAll(params);
+            if (rs != null && rs.next()) {
+                boolean exists = rs.getInt(1) > 0;
                 return exists;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
-            qr.close();
+            return false;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                db.close();
+            }
         }
         return false;
     }
 
     @Override
     public boolean add(List<Object> params) {
-
+        DatabaseConnection db = new DatabaseConnection();
         //Đảm bảo phải có tham số truyền vào
         //và số lượng tham số bằng với số cột để tránh gọi truy vấn sql không cần thiết
-        if (params == null || params.size() != getTableColumns().size()) {
+        if (params == null || params.size() != tableColumns.size()) {
             return false;
         }
         StringBuilder sql = new StringBuilder("INSERT INTO ");
 
         //Tên table
-        sql.append(getTableName());
+        sql.append(tableName);
         sql.append(" (");
         //Danh sách cột của table
-        sql.append(String.join(",", getTableColumns()));
+        sql.append(String.join(",", tableColumns));
         sql.append(") VALUES (");
         //Với mỗi tham số, thêm một character "?"
         sql.append(String.join(",", Collections.nCopies(params.size(), "?")));
         sql.append(")");
 
-        return db.execute(sql.toString(), params);
-    }
+        try {
+            db.prepareStatement(sql.toString());
+            return db.execute(params);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
 
-    @Override
-    public void closeConnection() {
-        db.close();
+        return false
     }
 
     // *** Các phương thức trừu tượng mà lớp con phải triển khai
-    protected abstract String getTableName();
-    protected abstract List<String> getTableColumns();
+//    protected abstract String getTableName();
+//    protected abstract List<String> getTableColumns();
     protected abstract T mapResultSetToDTO(ResultSet rs) throws SQLException;
     // ***
 }
