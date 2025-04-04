@@ -1,29 +1,119 @@
 package GUI;
-
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Color;
+import java.awt.Image;
+
 import javax.swing.SwingConstants;
+import javax.swing.JButton;
+import javax.swing.ImageIcon;
+import java.awt.Font;
+import javax.swing.JComboBox;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class DanhMucPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+	private JTextField txtNhpIddmTn;
+	private JTextField txtNhpTnDanh;
+	private JTable table;
 
 	/**
 	 * Create the panel.
 	 */
 	public DanhMucPanel() {
+		
+		setBackground(new Color(255, 255, 255));
+		setBounds(0, 0, 887, 508);
 		setLayout(null);
+		ImageIcon searchIcon = getScaledImage(20, 20, "/ASSET/Images/searchIcon.png");
 		
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.RED);
-		panel.setBounds(0, 0, 887, 508);
-		add(panel);
-		
-		JLabel lblNewLabel = new JLabel("New label");
+		JLabel lblNewLabel = new JLabel("Tên danh mục");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(lblNewLabel);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel.setBounds(112, 41, 126, 42);
+		add(lblNewLabel);
+		
+		txtNhpTnDanh = new JTextField();
+		txtNhpTnDanh.setHorizontalAlignment(SwingConstants.CENTER);
+		txtNhpTnDanh.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtNhpTnDanh.setText("Nhập tên danh mục");
+		txtNhpTnDanh.setBounds(248, 47, 335, 32);
+		add(txtNhpTnDanh);
+		txtNhpTnDanh.setColumns(10);
+		
+		JLabel lblDanhMcCha = new JLabel("Danh mục cha");
+		lblDanhMcCha.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDanhMcCha.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblDanhMcCha.setBounds(112, 84, 126, 42);
+		add(lblDanhMcCha);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setToolTipText("");
+		comboBox.setBounds(248, 90, 335, 32);
+		add(comboBox);
+		
+		JButton btnNewButton_1 = new JButton("Thêm");
+		btnNewButton_1.setBackground(Color.GREEN);
+		btnNewButton_1.setBounds(602, 29, 114, 32);
+		add(btnNewButton_1);
+		
+		JButton btnNewButton_1_1 = new JButton("Sửa");
+		btnNewButton_1_1.setBackground(Color.ORANGE);
+		btnNewButton_1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnNewButton_1_1.setBounds(602, 72, 114, 32);
+		add(btnNewButton_1_1);
+		
+		JButton btnNewButton_1_1_1 = new JButton("Xóa");
+		btnNewButton_1_1_1.setBackground(Color.RED);
+		btnNewButton_1_1_1.setBounds(602, 115, 114, 32);
+		add(btnNewButton_1_1_1);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(112, 211, 604, 286);
+		add(scrollPane);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"ID", "Tên danh mục", "Trạng thái", "ID cha"
+			}
+		));
+		txtNhpIddmTn = new JTextField();
+		txtNhpIddmTn.setBounds(112, 158, 525, 42);
+		add(txtNhpIddmTn);
+		txtNhpIddmTn.setHorizontalAlignment(SwingConstants.CENTER);
+		txtNhpIddmTn.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtNhpIddmTn.setText("Nhập idDM, tên danh mục");
+		txtNhpIddmTn.setColumns(10);
+		
+		JButton btnNewButton = new JButton("");
+		btnNewButton.setBounds(637, 158, 79, 42);
+		add(btnNewButton);
+		btnNewButton.setIcon(searchIcon);
+		
+		
+	}
+	
+	public ImageIcon getScaledImage(int width, int height, String path) {
+		// Load the original image
+		ImageIcon originalIcon = new ImageIcon(DanhMucPanel.class.getResource(path));
 
+		// Resize the image (e.g., to 50x50 pixels)
+		Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+
+		// Create a new ImageIcon with the scaled image
+		return new ImageIcon(scaledImage);
 	}
 }
