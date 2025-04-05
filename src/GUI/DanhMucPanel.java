@@ -1,4 +1,7 @@
 package GUI;
+import BUS.DanhMucBUS;
+import DTO.DanhMucDTO;
+
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -14,14 +17,18 @@ import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
+import DTO.ComboItem;
 
 public class DanhMucPanel extends JPanel {
-
+	DanhMucBUS danhMucBUS = new DanhMucBUS();
+			
 	private static final long serialVersionUID = 1L;
 	private JTextField txtNhpIddmTn;
-	private JTextField txtNhpTnDanh;
+	private JTextField tenDMTxt;
 	private JTable table;
+	private JComboBox dmucChaOption;
 
 	/**
 	 * Create the panel.
@@ -39,13 +46,12 @@ public class DanhMucPanel extends JPanel {
 		lblNewLabel.setBounds(112, 41, 126, 42);
 		add(lblNewLabel);
 		
-		txtNhpTnDanh = new JTextField();
-		txtNhpTnDanh.setHorizontalAlignment(SwingConstants.CENTER);
-		txtNhpTnDanh.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtNhpTnDanh.setText("Nhập tên danh mục");
-		txtNhpTnDanh.setBounds(248, 47, 335, 32);
-		add(txtNhpTnDanh);
-		txtNhpTnDanh.setColumns(10);
+		tenDMTxt = new JTextField();
+		tenDMTxt.setHorizontalAlignment(SwingConstants.LEFT);
+		tenDMTxt.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		tenDMTxt.setBounds(248, 47, 335, 32);
+		add(tenDMTxt);
+		tenDMTxt.setColumns(10);
 		
 		JLabel lblDanhMcCha = new JLabel("Danh mục cha");
 		lblDanhMcCha.setHorizontalAlignment(SwingConstants.CENTER);
@@ -53,10 +59,10 @@ public class DanhMucPanel extends JPanel {
 		lblDanhMcCha.setBounds(112, 84, 126, 42);
 		add(lblDanhMcCha);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setToolTipText("");
-		comboBox.setBounds(248, 90, 335, 32);
-		add(comboBox);
+		dmucChaOption = new JComboBox();
+		dmucChaOption.setToolTipText("");
+		dmucChaOption.setBounds(248, 90, 335, 32);
+		add(dmucChaOption);
 		
 		JButton btnNewButton_1 = new JButton("Thêm");
 		btnNewButton_1.setBackground(Color.GREEN);
@@ -103,10 +109,14 @@ public class DanhMucPanel extends JPanel {
 		add(btnNewButton);
 		btnNewButton.setIcon(searchIcon);
 		
+		// load list
+		loadDanhMucList();
 		
+		// setup field
+		setUpFields();
 	}
 	
-	public ImageIcon getScaledImage(int width, int height, String path) {
+	private ImageIcon getScaledImage(int width, int height, String path) {
 		// Load the original image
 		ImageIcon originalIcon = new ImageIcon(DanhMucPanel.class.getResource(path));
 
@@ -115,5 +125,33 @@ public class DanhMucPanel extends JPanel {
 
 		// Create a new ImageIcon with the scaled image
 		return new ImageIcon(scaledImage);
+	}
+	
+	// load danh muc list
+	private void loadDanhMucList() {
+	    DefaultTableModel dtm = new DefaultTableModel(
+	        new String[] {"ID", "Tên danh mục", "Trạng thái", "ID cha"}, 0
+	    );
+	
+	    List<DanhMucDTO> danhMucArr = danhMucBUS.getAllDanhMuc();
+	    for (DanhMucDTO danhMuc : danhMucArr) {
+	        Object[] row = {
+	            danhMuc.getIdDM(),
+	            danhMuc.getTenDM(),
+	            danhMuc.getTrangthai(),
+	            danhMuc.getIdDMCha()
+	        };
+	        dtm.addRow(row);
+	    }
+	
+	    table.setModel(dtm);
+	}
+
+	public void setUpFields() {
+		// load danh sach danh muc cha
+		List<DanhMucDTO> arr = danhMucBUS.getAllDanhMuc();
+		dmucChaOption.addItem(new ComboItem(-1, "Không có"));
+		for(DanhMucDTO item : arr) 
+			dmucChaOption.addItem(new ComboItem(item.getIdDM(), item.getTenDM()));
 	}
 }

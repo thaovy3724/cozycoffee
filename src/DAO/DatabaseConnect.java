@@ -10,7 +10,8 @@ public class DatabaseConnect {
     private String pass = Config.DB_PASS;
     private String dbname = Config.DB_NAME;
     private Connection link;
-
+    private PreparedStatement pstmt;
+    
     public DatabaseConnect() {
     	try {
     		this.connectDB();
@@ -37,9 +38,9 @@ public class DatabaseConnect {
         this.link = DriverManager.getConnection(url, this.user, this.pass);
     }
 
-    public Connection getLink() {
-        return this.link;
-    }
+//    public Connection getLink() {
+//        return this.link;
+//    }
 
     public boolean execute(String sql, List<Object> params) {
         if (this.link == null) return false;
@@ -50,7 +51,7 @@ public class DatabaseConnect {
                 for (int i = 0; i < params.size(); i++) 
                     pstmt.setObject(i + 1, params.get(i));
         	boolean result = pstmt.executeUpdate() > 0;
-            close(pstmt, null);
+            close(null);
             return result;
         }catch (SQLException e) {
         	e.printStackTrace(); // Hoặc dùng Logger thay vì in ra console
@@ -101,13 +102,13 @@ public class DatabaseConnect {
 //        } 
 //    }
 
-    public void close(PreparedStatement pstmt, ResultSet rs) throws SQLException {
+    public void close(ResultSet rs) throws SQLException {
         // Đóng ResultSet nếu có
         if (rs != null && !rs.isClosed()) {
             try {
                 rs.close();
             } catch (SQLException e) {
-                System.err.println("Error closing ResultSet: " + e.getMessage());
+            	e.printStackTrace();
             }
         }
 
@@ -116,18 +117,18 @@ public class DatabaseConnect {
             try {
                 pstmt.close();
             } catch (SQLException e) {
-                System.err.println("Error closing PreparedStatement: " + e.getMessage());
+            	e.printStackTrace();
             }
         }
 
         // Đóng Connection (link) nếu có
-        if (this.link != null && !this.link.isClosed()) {
+        if (link != null && !link.isClosed()) {
             try {
-                this.link.close();
+                link.close();
             } catch (SQLException e) {
-                System.err.println("Error closing Connection: " + e.getMessage());
+            	e.printStackTrace();
             } finally {
-                this.link = null; // Đặt lại link về null sau khi đóng
+                link = null; // Đặt lại link về null sau khi đóng
             }
         }
     }
