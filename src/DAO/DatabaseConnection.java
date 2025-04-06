@@ -77,6 +77,8 @@ public class DatabaseConnection {
                 this.pstmt.setObject(i + 1, params.get(i));
             }
         }
+        //Vì executeQuery() không bao giờ trả về null => getAll() không bao giờ trả về null
+        //=> không cần xử lý trường hợp rs = null khi dùng getAll()
         ResultSet rs = this.pstmt.executeQuery();
         return rs; // Người dùng phải đóng ResultSet
     }
