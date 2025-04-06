@@ -14,5 +14,5 @@ public interface IBaseDAO<T> {
     List<T> getAll();           // Lấy tất cả bản ghi
     T findById(String column, int id);           // Tìm theo ID
     boolean isExist(String column, int id);      // Kiểm tra tồn tại
-    boolean add(List<Object> tuple); //Thêm mới
+    boolean add(T entity); //Thêm mới
 }
