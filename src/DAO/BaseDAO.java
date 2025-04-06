@@ -1,5 +1,7 @@
 package DAO;
 
+import DTO.TaiKhoanDTO;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,11 +22,10 @@ public abstract class BaseDAO<T> implements IBaseDAO<T> {
         DatabaseConnection db = new DatabaseConnection();
         List<T> list = new ArrayList<>();
         String sql = "SELECT * FROM " + tableName;
-        ResultSet rs = null;
+
         try {
             db.prepareStatement(sql);
-            rs = db.getAll(null);
-            if (rs != null) {
+            try (ResultSet rs = db.getAll(null)) {
                 while (rs.next()) {
                     T entity = mapResultSetToDTO(rs);
                     list.add(entity);
@@ -32,18 +33,11 @@ public abstract class BaseDAO<T> implements IBaseDAO<T> {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-                db.close();
-            }
+            db.close();
         }
-        return list.isEmpty() ? null : list;
+
+        return list;
     }
 
     @Override
@@ -53,25 +47,19 @@ public abstract class BaseDAO<T> implements IBaseDAO<T> {
         List<Object> params = new ArrayList<>();
         params.add(id);
         T entity = null;
-        ResultSet rs = null;
+
         try {
             db.prepareStatement(sql);
-            rs = db.getAll(params);
-            if (rs != null && rs.next()) {
-                entity = mapResultSetToDTO(rs);
+            try (ResultSet rs = db.getAll(params)) {
+                if (rs.next()) {
+                    entity = mapResultSetToDTO(rs);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
         } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-                db.close();
-            }
+            db.close();
         }
         return entity;
     }
@@ -82,33 +70,27 @@ public abstract class BaseDAO<T> implements IBaseDAO<T> {
         String sql = "SELECT COUNT(*) FROM " + tableName + " WHERE " + column + " = ?";
         List<Object> params = new ArrayList<>();
         params.add(id);
-        ResultSet rs = null;
+        boolean exists = false;
+
         try {
             db.prepareStatement(sql);
-            rs = db.getAll(params);
-            if (rs != null && rs.next()) {
-                boolean exists = rs.getInt(1) > 0;
-                return exists;
+            try (ResultSet rs = db.getAll(params)) {
+                if (rs.next()) {
+                     exists= rs.getInt(1) > 0;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-                db.close();
-            }
+            db.close();
         }
-        return false;
+        return exists;
     }
 
     @Override
-    public boolean add(List<Object> params) {
+    public boolean add(T entity) {
         DatabaseConnection db = new DatabaseConnection();
+        List<Object> params = mapDTOToParams(entity);
         //Đảm bảo phải có tham số truyền vào
         //và số lượng tham số bằng với số cột để tránh gọi truy vấn sql không cần thiết
         if (params == null || params.size() != tableColumns.size()) {
@@ -135,12 +117,13 @@ public abstract class BaseDAO<T> implements IBaseDAO<T> {
             db.close();
         }
 
-        return false
+        return false;
     }
 
     // *** Các phương thức trừu tượng mà lớp con phải triển khai
 //    protected abstract String getTableName();
 //    protected abstract List<String> getTableColumns();
     protected abstract T mapResultSetToDTO(ResultSet rs) throws SQLException;
+    public abstract List<Object> mapDTOToParams(T entity);
     // ***
 }
