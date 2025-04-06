@@ -1,6 +1,5 @@
 package DAO;
 
-import DTO.CTHoaDonDTO;
 import DTO.HoaDonDTO;
 
 import java.sql.ResultSet;
@@ -40,71 +39,112 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO> {
         );
     }
 
-    public List<HoaDonDTO> searchDate(Date start, Date end) {
+    @Override
+    public List<Object> mapDTOToParams(HoaDonDTO hoaDonDTO) {
+        return List.of(
+                hoaDonDTO.getIdHD(),
+                hoaDonDTO.getNgaytao(),
+                hoaDonDTO.getIdTK()
+        );
+    }
+
+    public List<HoaDonDTO> searchByDate(Date start, Date end) {
+        DatabaseConnection db = new DatabaseConnection();
         List<HoaDonDTO> list = new ArrayList<>();
         List<Object> params = new ArrayList<>();
-        String sql = "SELECT * FROM hoadon WHERE 1=1 ";
+        StringBuilder sql = new StringBuilder("SELECT * FROM hoadon WHERE 1=1 ");
         if (start != null) {
-            sql += "AND (ngaytao >= ?) ";
+            sql.append("AND (ngaytao >= ?) ");
             params.add(start);
         }
         if (end != null) {
-            sql += "AND (ngaytao <= ?) ";
+            sql.append("AND (ngaytao <= ?) ");
             params.add(end);
         }
-        ResultSet rs;
-        if (params.isEmpty()) {
-            rs = db.getAll(sql, null);
-        } else {
-            rs = db.getAll(sql, params);
-        }
+
         try {
-            while (rs != null && rs.next()) {
-                HoaDonDTO hd = mapResultSetToDTO(rs);
-                list.add(hd);
+            db.prepareStatement(sql.toString());
+            try (ResultSet rs = db.getAll(params);) {
+                while (rs.next()) {
+                    HoaDonDTO hd = mapResultSetToDTO(rs);
+                    list.add(hd);
+                }
             }
-            if (rs != null) rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            db.close();
         }
         return list;
     }
 
-    public List<HoaDonDTO> searchIdNV(int idTK) {
+    public List<HoaDonDTO> searchByIdNV(int idTK) {
+        DatabaseConnection db = new DatabaseConnection();
         List<HoaDonDTO> list = new ArrayList<>();
-        String sql = "SELECT * FROM hoadon WHERE idTK = ?" + idTK;
+        String sql = "SELECT * FROM hoadon WHERE idTK = ?";
         List<Object> params = new ArrayList<>();
         params.add(idTK);
-        ResultSet rs = db.getAll(sql, params);
+
         try {
-            while (rs != null && rs.next()) {
-                HoaDonDTO hd = mapResultSetToDTO(rs);
-                list.add(hd);
+            db.prepareStatement(sql);
+            try ( ResultSet rs = db.getAll(params)) {
+                while (rs.next()) {
+                    HoaDonDTO hd = mapResultSetToDTO(rs);
+                    list.add(hd);
+                }
             }
-            if (rs != null) rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            db.close();
         }
+
         return list;
     }
 
-    public List<HoaDonDTO> searchTongtien(int giaBD, int giaKT) {
+    public List<HoaDonDTO> searchByTongTien(int giaBD, int giaKT) {
+        DatabaseConnection db = new DatabaseConnection();
         List<HoaDonDTO> list = new ArrayList<>();
-        String sql = "SELECT h.* FROM hoadon h " +
-                "INNER JOIN CT_hoadon ct ON h.idHD = ct.idHD " +
-                "GROUP BY h.idHD, h.ngaytao, h.idTK " +
-                "HAVING SUM(ct.soluong * ct.gialucdat) >= " + giaBD + " " +
-                "AND SUM(ct.soluong * ct.gialucdat) <= " + giaKT;
-        ResultSet rs = db.getAll(sql);
-        try {
-            while (rs != null && rs.next()) {
-                HoaDonDTO hd = mapResultSetToDTO(rs);
-                list.add(hd);
+        StringBuilder sql = new StringBuilder(
+                "SELECT h.* FROM hoadon h " +
+                        "INNER JOIN CT_hoadon ct ON h.idHD = ct.idHD " +
+                        "GROUP BY h.idHD, h.ngaytao, h.idTK"
+        );
+        List<Object> params = new ArrayList<>();
+
+        boolean hasGiaBD = giaBD != 0;
+        boolean hasGiaKT = giaKT != 0;
+
+        if (hasGiaBD || hasGiaKT) {
+            sql.append(" HAVING ");
+            if (hasGiaBD) {
+                sql.append("SUM(ct.soluong * ct.gialucdat) >= ?");
+                params.add(giaBD);
             }
-            if (rs != null) rs.close();
+            if (hasGiaKT) {
+                if (hasGiaBD) {
+                    sql.append(" AND ");
+                }
+                sql.append("SUM(ct.soluong * ct.gialucdat) <= ?");
+                params.add(giaKT);
+            }
+        }
+
+        try {
+            db.prepareStatement(sql.toString());
+            try (ResultSet rs = db.getAll(params)) {
+                while (rs != null && rs.next()) {
+                    HoaDonDTO hd = mapResultSetToDTO(rs);
+                    list.add(hd);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            db.close();
         }
+
         return list;
     }
+
 }

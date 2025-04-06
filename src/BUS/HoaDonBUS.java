@@ -15,22 +15,22 @@ public class HoaDonBUS {
 
     // Tìm hóa đơn theo ID
     public HoaDonDTO findHoaDonById(int idHD) {
-        HoaDonDTO hd = hoaDonDAO.findById("idHD", idHD);
-        if (hd == null) {
+        HoaDonDTO hoaDon = hoaDonDAO.findById("idHD", idHD);
+        if (hoaDon == null) {
             throw new IllegalArgumentException("Không tìm thấy hóa đơn với ID: " + idHD);
         }
-        return hd;
+        return hoaDon;
     }
 
     // Kiểm tra hóa đơn có tồn tại không
     public boolean isHoaDonExist(int idHD) {
-        return hoaDonDAO.isExist(idHD);
+        return hoaDonDAO.isExist("idHD", idHD);
     }
 
     // Thêm hóa đơn mới
     public void addHoaDon(HoaDonDTO hoaDon) throws IllegalArgumentException {
         // Kiểm tra xem hóa đơn đã tồn tại chưa
-        if (hoaDonDAO.isExist(hoaDon.getIdHD())) {
+        if (hoaDonDAO.isExist("idHD", hoaDon.getIdHD())) {
             throw new IllegalArgumentException("Hóa đơn với ID " + hoaDon.getIdHD() + " đã tồn tại");
         }
 
@@ -43,21 +43,17 @@ public class HoaDonBUS {
 
     // Tìm kiếm hóa đơn theo khoảng tổng tiền
     public List<HoaDonDTO> searchHoaDonByTongtien(int giaBD, int giaKT) {
-        return hoaDonDAO.searchTongtien(giaBD, giaKT);
+        return hoaDonDAO.searchByTongTien(giaBD, giaKT);
     }
 
     // Tìm kiếm hóa đơn theo khoảng ngày tạo
     public List<HoaDonDTO> searchHoaDonByDate(Date start, Date end) {
-        return hoaDonDAO.searchDate(start, end);
+        return hoaDonDAO.searchByDate(start, end);
     }
 
     // Tìm kiếm hóa đơn theo ID nhân viên
     public List<HoaDonDTO> searchHoaDonByIdNV(int idTK) {
-        return hoaDonDAO.searchIdNV(idTK);
+        return hoaDonDAO.searchByIdNV(idTK);
     }
 
-    // Đóng kết nối (nếu cần)
-    public void closeConnection() {
-        hoaDonDAO.closeConnection();
-    }
 }
