@@ -45,6 +45,20 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
         );
     }
 
+    @Override
+    public List<Object> mapDTOToParams(TaiKhoanDTO taiKhoanDTO) {
+        return List.of(
+                taiKhoanDTO.getIdTK(),
+                taiKhoanDTO.getTenTK(),
+                taiKhoanDTO.getMatkhau(),
+                taiKhoanDTO.getHoten(),
+                taiKhoanDTO.getEmail(),
+                taiKhoanDTO.getDienthoai(),
+                taiKhoanDTO.getTrangthai(),
+                taiKhoanDTO.getIdNQ()
+        );
+    }
+
     // Tìm kiếm tài khoản theo từ khóa
     public List<TaiKhoanDTO> search(String kyw) {
         DatabaseConnection db = new DatabaseConnection();
@@ -60,12 +74,9 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
             }
         }
 
-        ResultSet rs = null;
-
         try {
             db.prepareStatement(sql.toString());
-            rs = db.getAll(params);
-            if (rs != null) {
+            try (ResultSet rs = db.getAll(params)) {
                 while (rs.next()) {
                     TaiKhoanDTO tk = mapResultSetToDTO(rs);
                     list.add(tk);
@@ -75,15 +86,10 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
             e.printStackTrace();
             return null;
         } finally {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
             db.close();
         }
 
-        return list.isEmpty() ? null : list;
+        return list;
     }
 
     // Cập nhật tài khoản
@@ -122,12 +128,12 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
     }
 
     // Khóa tài khoản (trangthai = false)
-    public boolean lock(int idTK) {
+    public boolean lock(TaiKhoanDTO taikhoanDTO) {
         DatabaseConnection db = new DatabaseConnection();
         String sql = "UPDATE taikhoan SET trangthai = ? WHERE idTK = ?";
         List<Object> params = new ArrayList<>();
         params.add(false);
-        params.add(idTK);
+        params.add(taikhoanDTO.getIdTK());
 
         try {
             db.prepareStatement(sql);
@@ -142,12 +148,12 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
     }
 
     // Mở khóa tài khoản (trangthai = true)
-    public boolean unlock(int idTK) {
+    public boolean unlock(TaiKhoanDTO taiKhoanDTO) {
         DatabaseConnection db = new DatabaseConnection();
         String sql = "UPDATE taikhoan SET trangthai = ? WHERE idTK = ?";
         List<Object> params = new ArrayList<>();
         params.add(true);
-        params.add(idTK);
+        params.add(taiKhoanDTO.getIdTK());
 
         try {
             db.prepareStatement(sql);

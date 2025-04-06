@@ -1,5 +1,7 @@
 package DTO;
 
+import java.util.Objects;
+
 public class TaiKhoanDTO {
     private int idTK;
     private String tenTK;
@@ -96,24 +98,19 @@ public class TaiKhoanDTO {
         this.idNQ = idNQ;
     }
 
-    /*
-     *Trong java, truy vấn trả về đối tượng của mysqli sẽ trả về một ResultSet
-     *Nếu trong database có dữ liệu:
-     *idTK=1, tenTK="user1", matkhau="pass123", hoten="Nguyen Van A",
-     *email="a@gmail.com", dienthoai="0123456789",
-     *trangthai=1, idNQ="NQ001"
-     *Thì kết quả truy vấn sẽ trả về ResultSet
-     * TaiKhoanDTO{
-     *           idTK=1,
-     *           tenTK='user1',
-     *           matKhau='pass123',
-     *           hoTen='Nguyen Van A',
-     *           email='a@gmail.com',
-     *           dienThoai='0123456789',
-     *           trangThai=true,
-     *           idNQ='NQ001'
-     * }
-     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TaiKhoanDTO)) return false;
+        TaiKhoanDTO that = (TaiKhoanDTO) o;
+        return idTK == that.idTK && trangthai == that.trangthai && Objects.equals(tenTK, that.tenTK) && Objects.equals(matkhau, that.matkhau) && Objects.equals(hoten, that.hoten) && Objects.equals(email, that.email) && Objects.equals(dienthoai, that.dienthoai) && Objects.equals(idNQ, that.idNQ);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idTK, tenTK, matkhau, hoten, email, dienthoai, trangthai, idNQ);
+    }
+
     @Override
     public String toString() {
         return "TaiKhoanDTO{" +
