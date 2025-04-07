@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
     public TaiKhoanDAO() {
@@ -41,7 +42,7 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
                 rs.getString("email"),
                 rs.getString("dienthoai"),
                 rs.getBoolean("trangthai"),
-                rs.getString("idNQ")
+                rs.getInt("idNQ")
         );
     }
 
@@ -95,25 +96,46 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
     // Cập nhật tài khoản
     public boolean update(TaiKhoanDTO taiKhoan) {
         DatabaseConnection db = new DatabaseConnection();
+        /*
+        * .stream(): phân rã List thành một luồng dữ liệu để thao tác chức năng như lọc, gộp, biến đổi, ...
+        * .filter(): lọc qua luồng dữ liệu dựa trên điều kiện được đưa vào
+        * .collect(): thu thập dữ liệu từ luồng dữ sau khi đã được phân rã thành một List mới
+        * */
+        List<String> columns = getTableColumns().stream()
+                .filter(column -> !column.equals("idTK")) //Chỉ lấy những cột khác "idTK"
+                .filter(column -> {
+                    // Nếu là "matkhau" thì chỉ giữ lại khi giá trị không rỗng
+                    if (column.equals("matkhau")) {
+                        return taiKhoan.getMatkhau() != null && !taiKhoan.getMatkhau().isEmpty();
+                    }
+                    return true; // Các cột khác giữ lại bình thường
+                })
+                .collect(Collectors.toList());
+
         StringBuilder sql = new StringBuilder("UPDATE " + tableName + " " +
                 "SET ");
-        for (int i = 0; i < getTableColumns().size(); i++) {
-            sql.append(getTableColumns().get(i)).append(" = ?");
-            if (i < getTableColumns().size() - 1) {
+        for (int i = 0; i < columns.size(); i++) {
+            sql.append(columns.get(i) + " = COALESCE(?, "+columns.get(i)+")");
+            if (i < columns.size() - 1) {
                 sql.append(", ");
             }
         }
         sql.append(" WHERE idTK = ?");
-        List<Object> params = List.of(
-                taiKhoan.getTenTK(),
-                taiKhoan.getMatkhau(),
-                taiKhoan.getHoten(),
-                taiKhoan.getEmail(),
-                taiKhoan.getDienthoai(),
-                taiKhoan.getTrangthai(),
-                taiKhoan.getIdNQ(),
-                taiKhoan.getIdTK() // Giá trị cho WHERE
-        );
+        List<Object> params = new ArrayList<>();
+        for (String col : columns) {
+            switch (col) {
+                case "tenTK": params.add(taiKhoan.getTenTK()); break;
+                case "matkhau":
+                    params.add(taiKhoan.getMatkhau());
+                    break;
+                case "hoten": params.add(taiKhoan.getHoten()); break;
+                case "email": params.add(taiKhoan.getEmail()); break;
+                case "dienthoai": params.add(taiKhoan.getDienthoai()); break;
+                case "trangthai": params.add(taiKhoan.getTrangthai()); break;
+                case "idNQ": params.add(taiKhoan.getIdNQ()); break;
+            }
+        }
+        params.add(taiKhoan.getIdTK()); //Tham số truyền vào WHERE
 
         try {
             db.prepareStatement(sql.toString());

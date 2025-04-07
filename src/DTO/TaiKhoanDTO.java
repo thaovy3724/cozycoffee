@@ -10,7 +10,7 @@ public class TaiKhoanDTO {
     private String email;
     private String dienthoai;
     private boolean trangthai;
-    private String idNQ;
+    private int idNQ;
 
     public TaiKhoanDTO() {
         this.idTK = 0;
@@ -20,10 +20,10 @@ public class TaiKhoanDTO {
         this.email = "";
         this.dienthoai = "";
         this.trangthai = false;
-        this.idNQ = "";
+        this.idNQ = 0;
     }
 
-    public TaiKhoanDTO(int idTK, String tenTK, String matkhau, String hoten, String email, String dienthoai, boolean trangthai, String idNQ) {
+    public TaiKhoanDTO(int idTK, String tenTK, String matkhau, String hoten, String email, String dienthoai, boolean trangthai, int idNQ) {
         this.idTK = idTK;
         this.tenTK = tenTK;
         this.matkhau = matkhau;
@@ -90,11 +90,11 @@ public class TaiKhoanDTO {
         this.trangthai = trangthai;
     }
 
-    public String getIdNQ() {
+    public int getIdNQ() {
         return idNQ;
     }
 
-    public void setIdNQ(String idNQ) {
+    public void setIdNQ(int idNQ) {
         this.idNQ = idNQ;
     }
 

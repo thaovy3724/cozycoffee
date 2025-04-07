@@ -4,8 +4,12 @@ import DAO.NhomQuyenDAO;
 import DAO.TaiKhoanDAO;
 import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
+//import at.favre.lib.crypto.bcrypt.BCrypt;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TaiKhoanBUS {
     private final TaiKhoanDAO taiKhoanDAO;
@@ -24,20 +28,61 @@ public class TaiKhoanBUS {
         return nhomQuyenDAO.getAll();
     }
 
-    public boolean add(TaiKhoanDTO taiKhoan) {
+//    // Hash mật khẩu bằng BCrypt
+//    private String hashPassword(String plainPassword) {
+//        return BCrypt.withDefaults().hashToString(12, plainPassword.toCharArray());
+//    }
+//
+//    // Kiểm tra mật khẩu
+//    private boolean checkPassword(String plainPassword, String hashedPassword) {
+//        return BCrypt.verifyer().verify(plainPassword.toCharArray(), hashedPassword).verified;
+//    }
+
+    public List<String> add(TaiKhoanDTO taiKhoan) {
         // Kiểm tra logic nghiệp vụ trước khi thêm
-        if (taiKhoanDAO.isExist("idTK", taiKhoan.getIdTK())) {
-            return false; // Tài khoản đã tồn tại
+        List<String> message = new ArrayList<>();
+//        Map<String, Object> equals = new HashMap<>();
+//        equals.put("tenTK", taiKhoan.getIdTK());
+//        equals.put("email", taiKhoan.getEmail());
+//        equals.put("dienthoai", taiKhoan.getDienthoai());
+        if (taiKhoanDAO.isExist("tenTK", taiKhoan.getTenTK())) {
+            message.add("Tên tài khoản đã tồn tại");
         }
-        return taiKhoanDAO.add(taiKhoan);
+        if (taiKhoanDAO.isExist("email", taiKhoan.getEmail())) {
+            message.add("Email đã tồn tại");
+        }
+        if (taiKhoanDAO.isExist("dienthoai", taiKhoan.getDienthoai())) {
+            message.add("Điện thoại đã tồn tại");
+        }
+
+        if (message.isEmpty()) {
+//            String hashedPassword = hashPassword(taiKhoan.getMatkhau());
+//            taiKhoan.setMatkhau(hashedPassword);
+            taiKhoanDAO.add(taiKhoan);
+        }
+
+        return message;
     }
 
-    public boolean update(TaiKhoanDTO taiKhoan) {
-        // Kiểm tra logic nghiệp vụ trước khi cập nhật
-        if (!taiKhoanDAO.isExist("idTK", taiKhoan.getIdTK())) {
-            return false; // Tài khoản không tồn tại
+    public List<String> update(TaiKhoanDTO taiKhoan) {
+        List<String> message = new ArrayList<>();
+        if (taiKhoanDAO.isExist("tenTK", taiKhoan.getTenTK(), "idTK", taiKhoan.getIdTK())) {
+            message.add("Tên tài khoản đã tồn tại");
         }
-        return taiKhoanDAO.update(taiKhoan);
+        if (taiKhoanDAO.isExist("email", taiKhoan.getEmail(), "idTK", taiKhoan.getIdTK())) {
+            message.add("Email đã tồn tại");
+        }
+        if (taiKhoanDAO.isExist("dienthoai", taiKhoan.getDienthoai(), "idTK", taiKhoan.getIdTK())) {
+            message.add("Điện thoại đã tồn tại");
+        }
+        if(message.isEmpty()) {
+//            if (taiKhoan.getMatkhau() != null && !taiKhoan.getMatkhau().isEmpty()) {
+//                taiKhoan.setMatkhau(hashPassword(taiKhoan.getMatkhau()));
+//            }
+            taiKhoanDAO.update(taiKhoan);
+        }
+
+        return message;
     }
 
     public boolean lock(TaiKhoanDTO taiKhoan) {
@@ -52,5 +97,9 @@ public class TaiKhoanBUS {
             return false; // Tài khoản không tồn tại
         }
         return taiKhoanDAO.unlock(taiKhoan);
+    }
+
+    public List<TaiKhoanDTO> search(String kyw) {
+        return taiKhoanDAO.search(kyw);
     }
 }
