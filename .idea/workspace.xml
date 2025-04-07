@@ -5,28 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0b6e49eb-ad6e-47e1-be09-0e789ce97c9e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/bcrypt_0_10_2_optimized.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/mysql_connector_j_9_2_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cozycoffee.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/lib/bcrypt-0.10.2-optimized.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/BUS/DanhMucBUS.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BUS/DanhMucBUS.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/CONFIG/Config.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/CONFIG/Config.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/DanhMucDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/DanhMucDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/HoaDonDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/HoaDonDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/NhomQuyenDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/NhomQuyenDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/TaiKhoanDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/TaiKhoanDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/DanhMucPanel$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DanhMucPanel$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/DanhMucPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DanhMucPanel.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BUS/TaiKhoanBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/TaiKhoanBUS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/BaseDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/BaseDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/IBaseDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/IBaseDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/NhomQuyenDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/NhomQuyenDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DAO/TaiKhoanDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/TaiKhoanDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DTO/TaiKhoanDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DTO/TaiKhoanDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/AdminFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/AdminFrame.java" afterDir="false" />
