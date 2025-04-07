@@ -4,10 +4,7 @@ import DTO.TaiKhoanDTO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class BaseDAO<T> implements IBaseDAO<T> {
     protected String tableName;
@@ -65,11 +62,11 @@ public abstract class BaseDAO<T> implements IBaseDAO<T> {
     }
 
     @Override
-    public boolean isExist(String column, int id) {
+    public boolean isExist(String column, Object value) {
         DatabaseConnection db = new DatabaseConnection();
         String sql = "SELECT COUNT(*) FROM " + tableName + " WHERE " + column + " = ?";
         List<Object> params = new ArrayList<>();
-        params.add(id);
+        params.add(value);
         boolean exists = false;
 
         try {
@@ -86,6 +83,62 @@ public abstract class BaseDAO<T> implements IBaseDAO<T> {
         }
         return exists;
     }
+
+    @Override
+    public boolean isExist(String column, Object value, String excludedColumn, Object excludedValue) {
+        DatabaseConnection db = new DatabaseConnection();
+        String sql = "SELECT COUNT(*) FROM " + tableName + " WHERE " + column + " = ? AND " + excludedColumn + " != ?" ;
+        List<Object> params = new ArrayList<>();
+        params.add(value);
+        params.add(excludedValue);
+        boolean exists = false;
+
+        try {
+            db.prepareStatement(sql);
+            try (ResultSet rs = db.getAll(params)) {
+                if (rs.next()) {
+                    exists= rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+        return exists;
+    }
+
+//    @Override
+//    public boolean isExist(Map<String, Object> equals, Map<String, Object> notEquals) {
+//        DatabaseConnection db = new DatabaseConnection();
+//        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM " + tableName + " WHERE ");
+//        List<Object> params = new ArrayList<>();
+//
+//        List<String> conditions = new ArrayList<>();
+//        for(Map.Entry<String, Object> eCondition: equals.entrySet()) {
+//            conditions.add(eCondition.getKey() + " = ?");
+//            params.add(eCondition.getValue());
+//        }
+//        for(Map.Entry<String, Object> neCondition: notEquals.entrySet()) {
+//            conditions.add(neCondition.getKey() + " != ?");
+//            params.add(neCondition.getValue());
+//        }
+//
+//        try {
+//            db.prepareStatement(sql);
+//            ResultSet rs = db.getAll(params);
+//            if (rs.next()) {
+//                return rs.getInt(1) > 0;
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            db.close();
+//        }
+//        return false;
+//
+//        sql.append(String.join(" AND ", conditions));
+//    }
 
     @Override
     public boolean add(T entity) {

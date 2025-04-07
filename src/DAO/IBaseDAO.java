@@ -1,8 +1,7 @@
 package DAO;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 /**
  * T: Kiểu của DTO
@@ -13,6 +12,8 @@ import java.util.Optional;
 public interface IBaseDAO<T> {
     List<T> getAll();           // Lấy tất cả bản ghi
     T findById(String column, int id);           // Tìm theo ID
-    boolean isExist(String column, int id);      // Kiểm tra tồn tại
+    boolean isExist(String column, Object value);
+    boolean isExist(String column, Object value, String excludedColumn, Object excludedValue);
+//    boolean isExist(Map<String, Object> equals, Map<String, Object> notEquals);// Kiểm tra tồn tại
     boolean add(T entity); //Thêm mới
 }
