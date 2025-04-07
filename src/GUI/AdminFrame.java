@@ -27,6 +27,7 @@ public class AdminFrame extends JFrame {
     private JPanel menuPanel;
     private JPanel navbarPanel;
     private JPanel dynamicPanel;
+    private JToggleButton lastSelectedButton;
 
     /**
      * Launch the application.
@@ -220,8 +221,12 @@ public class AdminFrame extends JFrame {
         btn.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                System.out.println("Button clicked: " + actionCommand + ", State: " + e.getStateChange());
                 if (e.getStateChange() == ItemEvent.SELECTED) {
+                    //Cập nhật lại nút ngay lập tức, tránh tình trạng nhấn 2 lần mới được
+                    if (lastSelectedButton != null && lastSelectedButton != btn) {
+                        lastSelectedButton.setSelected(false); // Bỏ chọn nút trước đó
+                    }
+                    lastSelectedButton = btn; // Cập nhật nút được chọn
                     replaceDynamicPanel(btn.getActionCommand());
                 }
             }
@@ -230,7 +235,7 @@ public class AdminFrame extends JFrame {
 
     private void replaceDynamicPanel(String panelType) {
         dynamicPanel.removeAll();
-        JPanel selectedPanel;
+        JPanel selectedPanel = new JPanel();
 
         switch (panelType) {
             case "thongke":
@@ -248,7 +253,7 @@ public class AdminFrame extends JFrame {
             case "congthuc":
                 selectedPanel = new JPanel(); // Thay bằng panel Công thức
                 break;
-            case "danhmuc":
+            case "dmuc":
                 selectedPanel = new DanhMucPanel();
                 break;
             case "ncc":

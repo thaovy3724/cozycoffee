@@ -5,11 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0b6e49eb-ad6e-47e1-be09-0e789ce97c9e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/BUS/TaiKhoanBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/TaiKhoanBUS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/TaiKhoanDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/TaiKhoanDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DTO/TaiKhoanDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DTO/TaiKhoanDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/DAO/NhomQuyenDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/NhomQuyenDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/AdminFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/AdminFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/TaiKhoanPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/TaiKhoanPanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
