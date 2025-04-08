@@ -198,21 +198,16 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
         params.add(tenTK);
         params.add(matKhau);
 
-        ResultSet rs = null;
         try {
             db.prepareStatement(sql.toString());
-            rs = db.getAll(params);
-            if (rs != null && rs.next()) {
-                return mapResultSetToDTO(rs);
+            try (ResultSet rs = db.getAll(params)) {
+                if (rs.next()) {
+                    return mapResultSetToDTO(rs);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
             db.close();
         }
 
