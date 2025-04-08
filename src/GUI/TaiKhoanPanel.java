@@ -6,6 +6,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import DTO.ComboItem;
@@ -162,13 +164,22 @@ public class TaiKhoanPanel extends JPanel {
 		});
 		btnUpdate.setBounds(718, 72, 114, 32);
 		add(btnUpdate);
+
+		//Input tìm kiếm
 		textSearch = new JTextField();
 		textSearch.setBounds(52, 245, 704, 30);
 		add(textSearch);
 		textSearch.setHorizontalAlignment(SwingConstants.CENTER);
 		textSearch.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textSearch.setText("Nhập idDM, tên danh mục");
+		textSearch.setText("Nhập tên tài khoản, email, điện thoại");
 		textSearch.setColumns(10);
+		//Thêm sự kiện tự xóa nội dung khi focus vào input
+		textSearch.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				textSearch.setText(""); // Xóa nội dung khi focus
+			}
+		});
 
 		//Nút tìm kiếm
 		btnSearch = new JButton("");
