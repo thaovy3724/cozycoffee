@@ -16,6 +16,7 @@ import DTO.TaiKhoanDTO;
 
 public class TaiKhoanPanel extends JPanel {
 	TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();
+	private AdminFrame adminFrame; // Thêm tham chiếu đến AdminFrame
 
 	private static final long serialVersionUID = 1L;
 	private String[] jTableColumns = {"ID", "Tên TK", "Họ tên", "Email", "Điện thoại", "Trạng thái", "Nhóm quyền"};
@@ -37,7 +38,9 @@ public class TaiKhoanPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public TaiKhoanPanel() {
+	// Truyền tham chiếu AdminFrame vào TaiKhoanPanel
+	public TaiKhoanPanel(AdminFrame adminFrame) {
+		this.adminFrame = adminFrame;
 
 		setBackground(new Color(255, 255, 255));
 		setBounds(0, 0, 887, 508);
@@ -183,7 +186,7 @@ public class TaiKhoanPanel extends JPanel {
 
 		//Nút tìm kiếm
 		btnSearch = new JButton("");
-		btnSearch.setBounds(753, 244, 79, 32);
+		btnSearch.setBounds(753, 245, 79, 30);
 		add(btnSearch);
 		btnSearch.setIcon(searchIcon);
 		
@@ -198,6 +201,8 @@ public class TaiKhoanPanel extends JPanel {
 				jTableColumns
 		);
 		table = new JTable(tableModel);
+		table.setEnabled(true); // Cho phép tương tác (chọn dòng), nhưng không cho chỉnh sửa
+		table.setDefaultEditor(Object.class, null); // Xóa editor mặc định để ngăn chỉnh sửa
 		scrollPane.setViewportView(table);
 		
 		// load list
@@ -321,6 +326,14 @@ public class TaiKhoanPanel extends JPanel {
 		TaiKhoanDTO taiKhoan = createTaiKhoanDTO();
 		List<String> updateTaiKhoanMessage = taiKhoanBUS.update(taiKhoan);
 		if (updateTaiKhoanMessage.isEmpty()) {
+			// Kiểm tra xem tài khoản vừa cập nhật có phải là tài khoản đang đăng nhập không
+			TaiKhoanDTO currentUser = adminFrame.getCurrentUser();
+			if (currentUser != null && currentUser.getIdTK() == taiKhoan.getIdTK()) {
+				// Cập nhật currentUser với thông tin mới
+				adminFrame.setCurrentUser(taiKhoan);
+				// Làm mới giao diện navbar để hiển thị thông tin mới
+				adminFrame.refreshNavbar();
+			}
 			showSuccessMessageAndRefreshUI("Cập nhật tài khoản thành công!");
 		} else {
 			StringBuilder isExistedMessage = new StringBuilder();
@@ -482,18 +495,6 @@ public class TaiKhoanPanel extends JPanel {
 		return taiKhoan;
 	}
 
-	//Hiển thị thông báo lỗi
-	private void showErrorMessage(String message) {
-		JOptionPane.showMessageDialog(null, message);
-	}
-
-	//Hiển thị thông báo thành công và làm mới UI
-	private void showSuccessMessageAndRefreshUI(String successMessage) {
-		JOptionPane.showMessageDialog(null, successMessage);
-		loadTaiKhoanList(taiKhoanBUS.getAllTaiKhoan());
-		clearFields();
-	}
-
 	//Xóa các trường thông tin sau khi add/ update
 	private void clearFields() {
 		textIdTK.setText("0"); // Đặt lại idTK về 0 khi thêm mới
@@ -542,5 +543,17 @@ public class TaiKhoanPanel extends JPanel {
 				break;
 			}
 		}
+	}
+
+	//Hiển thị thông báo lỗi
+	private void showErrorMessage(String message) {
+		JOptionPane.showMessageDialog(null, message);
+	}
+
+	//Hiển thị thông báo thành công và làm mới UI
+	private void showSuccessMessageAndRefreshUI(String successMessage) {
+		JOptionPane.showMessageDialog(null, successMessage);
+		loadTaiKhoanList(taiKhoanBUS.getAllTaiKhoan());
+		clearFields();
 	}
 }
