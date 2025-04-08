@@ -73,6 +73,8 @@ public class DatabaseConnect {
             throw e;
         }
     }
+    
+    
 
 //    public ResultSet getAll(String sql, Object... params) throws SQLException {
 //        if (this.link == null) throw new SQLException("Database connection is null");
@@ -133,4 +135,7 @@ public class DatabaseConnect {
         }
     }
 
+    public String getDBName() {
+    	return dbname;
+    }
 }

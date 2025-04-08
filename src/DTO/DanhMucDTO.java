@@ -7,11 +7,15 @@ public class DanhMucDTO {
     private int idDMCha;
 
     public DanhMucDTO() {
+    	idDM = 0;
+    	tenDM = "";
+    	trangthai = 1;
+    	idDMCha = 0;
     }
 
     public DanhMucDTO(int idDM, String tenDM, int trangthai, int idDMCha) {
         this.idDM = idDM;
-        this.tenDM = tenDM;
+        setTenDM(tenDM);
         this.trangthai = trangthai;
         this.idDMCha = idDMCha;
     }
@@ -29,7 +33,7 @@ public class DanhMucDTO {
     }
 
     public void setTenDM(String tenDM) {
-        this.tenDM = tenDM;
+        this.tenDM = tenDM.trim();
     }
 
     public int getTrangthai() {

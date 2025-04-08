@@ -3,15 +3,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 import java.awt.Font;
@@ -24,10 +18,7 @@ import java.awt.Color;
 public class AdminFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JPanel menuPanel;
-	private JPanel navbarPanel;
 	private JPanel dynamicPanel;
-	
 
 	/**
 	 * Launch the application.
@@ -36,7 +27,7 @@ public class AdminFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AdminFrame frame = new AdminFrame();
+					new AdminFrame();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -60,19 +51,16 @@ public class AdminFrame extends JFrame {
 		setLocationRelativeTo(null);
 		
 		// Menu init
-		menuPanel = menuInit();
-		getContentPane().add(menuPanel);
+		getContentPane().add(menuInit());
 		
 		// Navbar init
-		navbarPanel = navbarInit();
-		getContentPane().add(navbarPanel);		
+		getContentPane().add(navbarInit());		
 		
 		//content
 		dynamicPanel = new JPanel();
 		dynamicPanel.setBackground(new Color(245, 245, 245));
 		
 		// calculate to set the height for panel_2
-		int fullHeight = getContentPane().getHeight();
 		dynamicPanel.setBounds(199, 55, 887, 508);
 		//---------------------------------------
 		
@@ -165,7 +153,7 @@ public class AdminFrame extends JFrame {
 		tenTkLB.setOpaque(true); 
 		tenTkLB.setFont(new Font("Tahoma", Font.BOLD, 12));
 		tenTkLB.setHorizontalAlignment(SwingConstants.TRAILING);
-		tenTkLB.setBounds(0, 0, 563, 54);
+		tenTkLB.setBounds(0, 0, 758, 54);
 		navbarPanel.add(tenTkLB);
 		
 		JButton logoutBtn = new JButton("Đăng xuất");
@@ -181,16 +169,6 @@ public class AdminFrame extends JFrame {
 		});
 		logoutBtn.setBounds(757, 1, 130, 54);
 		navbarPanel.add(logoutBtn);
-		
-		
-		JButton infoBtn = new JButton("Thông tin cá nhân");
-		infoBtn.setIcon(getScaledImage(20, 20, "/ASSET/Images/person.png"));
-		infoBtn.setContentAreaFilled(false); // Disable content area filling
-		infoBtn.setOpaque(true);           // Disable background painting
-		infoBtn.setBorderPainted(false);
-		infoBtn.setFont(new Font("Tahoma", Font.BOLD, 12));
-		infoBtn.setBounds(573, 0, 183, 54);
-		navbarPanel.add(infoBtn);
 		
 		return navbarPanel;
 	}
