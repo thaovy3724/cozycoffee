@@ -1,4 +1,6 @@
 package GUI;
+import DTO.TaiKhoanDTO;
+
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.BorderLayout;
@@ -7,19 +9,12 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import java.awt.Image;
 import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JToggleButton;
 import java.awt.Color;
 public class AdminFrame extends JFrame {
 
@@ -28,26 +23,51 @@ public class AdminFrame extends JFrame {
     private JPanel navbarPanel;
     private JPanel dynamicPanel;
     private JToggleButton lastSelectedButton;
+    /*
+    * 9/4/2025 - Trọng Híuuu:
+    * + Thêm thuộc tính người dùng hiện tại, getter và setter để hiển thị thông tin trên AdminFrame
+    *       - getter và setter được dùng để hỗ trợ cập nhật lại UI khi người dùng cập nhật thông tin
+    *           của tài khoản đang được đăng nhập trong quản lý tài khoản
+    * + Cập nhật phương thức refresh navBar để hỗ trợ refresh UI (dùng cho cập nhật tài khoản)
+    * + Bỏ hàm main() trong class này => Từ giờ giao diện admin sẽ render từ frame đăng nhập và đăng nhập thành công
+    */
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    AdminFrame frame = new AdminFrame();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    //Thuộc tính currentUser - người dùng đang đăng nhập hiện tại trên adminFrame
+    private TaiKhoanDTO currentUser;
+
+    // Getter cho currentUser
+    public TaiKhoanDTO getCurrentUser() {
+        return currentUser;
+    }
+
+    // Setter cho currentUser
+    public void setCurrentUser(TaiKhoanDTO currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    // Refreshi navbar
+    public void refreshNavbar() {
+        getContentPane().remove(navbarPanel); // Bỏ navbar cũ
+        navbarPanel = navbarInit(); // Tạo lại navbar với thông tin mới
+        getContentPane().add(navbarPanel);
+        /*
+        * revalidate() yêu cầu trình quản lý bố cục (layout manager) của container
+        * (ở đây là getContentPane()) cập nhật lại kích thước và vị trí của
+        * các thành phần giao diện bên trong nó (chứ chưa được hiển thị) => dùng thêm repaint().
+        * */
+        revalidate();
+        /*
+        * repaint() yêu cầu hệ thống vẽ lại giao diện của thành phần được gọi
+        * (ở đây là cả AdminFrame, hay nói rộng hơn là các đối tượng có kiểu là AdminFrame)
+        * */
+        repaint();
     }
 
     /**
      * Create the frame.
      */
-    public AdminFrame() {
+    public AdminFrame(TaiKhoanDTO currentUser) {
+        this.currentUser = currentUser;
         init();
     }
 
@@ -160,7 +180,8 @@ public class AdminFrame extends JFrame {
         navbarPanel.setBounds(199, 0, 887, 56);
         navbarPanel.setLayout(null);
 
-        JLabel tenTkLB = new JLabel("Thảo Vy");
+        //Thay đổi thành hiển thị tên của tài khoản hiện tại thay vì hiển thị cứng
+        JLabel tenTkLB = new JLabel(currentUser.getHoten());
         tenTkLB.setBackground(new Color(245, 245, 245));
         tenTkLB.setOpaque(true);
         tenTkLB.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -175,8 +196,23 @@ public class AdminFrame extends JFrame {
         logoutBtn.setOpaque(true);           // Disable background painting
         logoutBtn.setBorderPainted(false);
 
+        //Thêm sự kiện cho nút đăng xuất
         logoutBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                // Hiển thị hộp thoại xác nhận
+                int confirm = showOptionDialog(
+                        "Xác nhận đăng xuất",
+                        "Bạn có chắc chắn muốn đăng xuất không?"
+                );
+
+                // Kiểm tra lựa chọn của người dùng
+                if (confirm == JOptionPane.YES_OPTION) {
+                    // Nếu chọn "Yes", thực hiện đăng xuất
+                    dispose(); // Đóng AdminFrame
+                    new DangNhapFrame().setVisible(true); // Mở lại DangNhapFrame
+                    JOptionPane.showMessageDialog(null, "Đăng xuất thành công");
+                }
+                // Nếu chọn "No" hoặc đóng hộp thoại, không làm gì cả
             }
         });
         logoutBtn.setBounds(757, 1, 130, 54);
@@ -263,7 +299,8 @@ public class AdminFrame extends JFrame {
                 selectedPanel = new JPanel(); // Thay bằng panel Phiếu nhập
                 break;
             case "taikhoan":
-                selectedPanel = new TaiKhoanPanel(); // Hiển thị TaiKhoanPanel
+                // Truyền AdminFrame vào TaiKhoanPanel
+                selectedPanel = new TaiKhoanPanel(this); // Hiển thị TaiKhoanPanel
                 System.out.println("TaiKhoanPanel created");
                 break;
             default:
@@ -277,5 +314,14 @@ public class AdminFrame extends JFrame {
         dynamicPanel.repaint();
     }
 
+    private int showOptionDialog(String title, String message) {
+        int confirm = JOptionPane.showConfirmDialog(
+                AdminFrame.this, // Parent component (AdminFrame)
+                message,
+                title,
+                JOptionPane.YES_NO_OPTION // Tùy chọn Yes/No
+        );
+        return confirm;
+    }
     // End: toggle button
 }

@@ -102,4 +102,8 @@ public class TaiKhoanBUS {
     public List<TaiKhoanDTO> search(String kyw) {
         return taiKhoanDAO.search(kyw);
     }
+
+    public TaiKhoanDTO checkLogin(String tenTK, String matkhau) {
+        return taiKhoanDAO.checkLogin(tenTK, matkhau);
+    }
 }

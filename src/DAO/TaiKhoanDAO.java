@@ -201,7 +201,7 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
         ResultSet rs = null;
         try {
             db.prepareStatement(sql.toString());
-            db.getAll(params);
+            rs = db.getAll(params);
             if (rs != null && rs.next()) {
                 return mapResultSetToDTO(rs);
             }
