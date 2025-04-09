@@ -19,7 +19,7 @@ public class TaiKhoanPanel extends JPanel {
 	private AdminFrame adminFrame; // Thêm tham chiếu đến AdminFrame
 
 	private static final long serialVersionUID = 1L;
-	private String[] jTableColumns = {"ID", "Tên TK", "Họ tên", "Email", "Điện thoại", "Trạng thái", "Nhóm quyền"};
+	private String[] taiKhoanJTableColumns = {"ID", "Tên TK", "Họ tên", "Email", "Điện thoại", "Trạng thái", "Nhóm quyền"};
 	//Các element sẽ được lấy dữ liệu hoặc gắn sự kiện
 	private JTextField textSearch;
 	private JTextField textTenTK;
@@ -198,7 +198,7 @@ public class TaiKhoanPanel extends JPanel {
 		DefaultTableModel tableModel = new DefaultTableModel(
 				new Object[][] {
 				},
-				jTableColumns
+				taiKhoanJTableColumns
 		);
 		table = new JTable(tableModel);
 		table.setEnabled(true); // Cho phép tương tác (chọn dòng), nhưng không cho chỉnh sửa
@@ -246,7 +246,7 @@ public class TaiKhoanPanel extends JPanel {
 	// load danh muc list
 	private void loadTaiKhoanList(List<TaiKhoanDTO> taiKhoanList) {
 		DefaultTableModel dtm = new DefaultTableModel(
-				jTableColumns, 0
+				taiKhoanJTableColumns, 0
 		);
 
 		for (TaiKhoanDTO item : taiKhoanList) {
