@@ -60,6 +60,29 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
         );
     }
 
+    public List<TaiKhoanDTO> getAllByIDNQ(int idNQ) {
+        DatabaseConnection db = new DatabaseConnection();
+        StringBuilder sql = new StringBuilder("SELECT * FROM " + tableName + " WHERE idNQ = ?");
+        List<Object> params = new ArrayList<>();
+        params.add(idNQ);
+        List<TaiKhoanDTO> list = new ArrayList<>();
+        try {
+            db.prepareStatement(sql.toString());
+            try (ResultSet rs = db.getAll(params)) {
+                while (rs.next()) {
+                    TaiKhoanDTO item = mapResultSetToDTO(rs);
+                    list.add(item);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+
+        return list;
+    }
+
     // Tìm kiếm tài khoản theo từ khóa
     public List<TaiKhoanDTO> search(String kyw) {
         DatabaseConnection db = new DatabaseConnection();
@@ -70,7 +93,7 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
         if (!kyw.isEmpty()) {
             sql.append("AND (tenTK LIKE ? OR hoten LIKE ? OR email LIKE ? OR dienthoai LIKE ?) ");
             String pattern = "%" + kyw + "%";
-            for (int i = 0; i< 4; i++) {
+            for (int i = 0; i < 4; i++) {
                 params.add(pattern);
             }
         }

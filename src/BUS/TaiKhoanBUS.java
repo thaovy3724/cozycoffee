@@ -7,9 +7,7 @@ import DTO.TaiKhoanDTO;
 //import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class TaiKhoanBUS {
     private final TaiKhoanDAO taiKhoanDAO;
@@ -26,6 +24,10 @@ public class TaiKhoanBUS {
 
     public List<NhomQuyenDTO> getAllNhomQuyen() {
         return nhomQuyenDAO.getAll();
+    }
+
+    public List<TaiKhoanDTO> getAllTaiKhoanByIDNQ(int idNQ) {
+        return taiKhoanDAO.getAllByIDNQ(idNQ);
     }
 
 //    // Hash mật khẩu bằng BCrypt
