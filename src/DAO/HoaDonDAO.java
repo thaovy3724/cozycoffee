@@ -19,23 +19,21 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO> {
         );
     }
 
-//    @Override
-//    protected String getTableName() {
-//        return "hoadon";
-//    }
-//
-//    @Override
-//    protected List<String> getTableColumns() {
-//        return List.of("idHD", "ngaytao", "idTK");
-//    }
+    protected String getTableName() {
+        return "hoadon";
+    }
+
+    protected List<String> getTableColumns() {
+        return List.of("idHD", "ngaytao", "idTK");
+    }
 
 
     @Override
     protected HoaDonDTO mapResultSetToDTO(ResultSet rs) throws SQLException {
         return new HoaDonDTO(
-                rs.getInt("idHD"),
-                rs.getDate("ngaytao").toLocalDate(),
-                rs.getInt("idTK")
+                rs.getInt(getTableColumns().get(0)),
+                rs.getDate(getTableColumns().get(1)).toLocalDate(),
+                rs.getInt(getTableColumns().get(2))
         );
     }
 

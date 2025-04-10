@@ -3,6 +3,7 @@ package DTO;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class HoaDonDTO {
     private int idHD;
@@ -72,5 +73,18 @@ public class HoaDonDTO {
                 ", idTK=" + idTK +
                 ", chiTietHoaDon=" + chiTietHoaDon +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HoaDonDTO that = (HoaDonDTO) o;
+        return idHD == that.idHD; // So sánh dựa trên idHD
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idHD, ngaytao, idTK, chiTietHoaDon);
     }
 }

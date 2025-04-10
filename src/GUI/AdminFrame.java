@@ -278,7 +278,7 @@ public class AdminFrame extends JFrame {
                 selectedPanel = new JPanel(); // Thay bằng panel Thống kê
                 break;
             case "hoadon":
-                selectedPanel = new JPanel(); // Thay bằng panel Hóa đơn
+                selectedPanel = new HoaDonPanel(); // Thay bằng panel Hóa đơn
                 break;
             case "sanpham":
                 selectedPanel = new JPanel(); // Thay bằng panel Sản phẩm
@@ -301,7 +301,6 @@ public class AdminFrame extends JFrame {
             case "taikhoan":
                 // Truyền AdminFrame vào TaiKhoanPanel
                 selectedPanel = new TaiKhoanPanel(this); // Hiển thị TaiKhoanPanel
-                System.out.println("TaiKhoanPanel created");
                 break;
             default:
                 selectedPanel = new JPanel(); // Mặc định
