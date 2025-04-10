@@ -34,6 +34,7 @@ public class DangNhapFrame extends JFrame {
 		setSize(800, 500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
+		setLocationRelativeTo(null);
 
 		// Icon (JLabel)
 		JLabel lblIcon = new JLabel("");
