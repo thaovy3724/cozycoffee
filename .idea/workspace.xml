@@ -4,65 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0b6e49eb-ad6e-47e1-be09-0e789ce97c9e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/BUS/SanPhamBUS.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DAO/SanPhamDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DTO/SanPhamDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/BUS/DanhMucBUS.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BUS/DanhMucBUS.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/BUS/HoaDonBUS.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BUS/HoaDonBUS.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/BUS/TaiKhoanBUS.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BUS/TaiKhoanBUS.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/CONFIG/Config.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/CONFIG/Config.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/BaseDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/BaseDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/CTHoaDonDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/CTHoaDonDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/DanhMucDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/DanhMucDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/DatabaseConnect.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/DatabaseConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/DatabaseConnection.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/HoaDonDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/HoaDonDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/IBaseDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/IBaseDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/NhomQuyenDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/NhomQuyenDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/TaiKhoanDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/TaiKhoanDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/CTHoaDonDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/CTHoaDonDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/CT_CongThucDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/CT_HoaDonDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/ComboItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/ComboItem.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/CongThucDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/DanhMucDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/DanhMucDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/HoaDonDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/HoaDonDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/Lo_NguyenLieuDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/NguyenLieuDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/NhaCungCapDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/NhomQuyenDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/NhomQuyenDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/PhieuNhapDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/SanPhamDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/SanPhamDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/TaiKhoanDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/TaiKhoanDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/TrangThai_PnDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/DangNhapFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DangNhapFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/DanhMucPanel$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DanhMucPanel$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/DanhMucPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DanhMucPanel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/HoaDonPanel$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/HoaDonPanel$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/HoaDonPanel$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/HoaDonPanel$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/HoaDonPanel$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/HoaDonPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/HoaDonPanel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/SanPhamPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/TaiKhoanPanel$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/TaiKhoanPanel$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/TaiKhoanPanel$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/TaiKhoanPanel$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/TaiKhoanPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/TaiKhoanPanel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/module-info.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BUS/HoaDonBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/HoaDonBUS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/HoaDonDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/HoaDonDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DTO/HoaDonDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DTO/HoaDonDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/AdminFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/AdminFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/DangNhapFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/DangNhapFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/HoaDon.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/TaiKhoanPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/TaiKhoanPanel.java" afterDir="false" />
-    </list>
+    <list default="true" id="0b6e49eb-ad6e-47e1-be09-0e789ce97c9e" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
