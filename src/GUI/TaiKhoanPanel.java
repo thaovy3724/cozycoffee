@@ -19,13 +19,14 @@ public class TaiKhoanPanel extends JPanel {
 	private AdminFrame adminFrame; // Thêm tham chiếu đến AdminFrame
 
 	private static final long serialVersionUID = 1L;
+	String iniTextSearchPlaceHolder = "Nhập tên tài khoản, email, điện thoại";
 	private String[] taiKhoanJTableColumns = {"ID", "Tên TK", "Họ tên", "Email", "Điện thoại", "Trạng thái", "Nhóm quyền"};
 	//Các element sẽ được lấy dữ liệu hoặc gắn sự kiện
 	private JTextField textSearch;
 	private JTextField textTenTK;
 	private JComboBox optionNhomQuyen;
 	private JComboBox optionTrangThai;
-	private JTable table;
+	private JTable taiKhoanTable;
 	private JPasswordField passwordField;
 	private JTextField textHoTen;
 	private JTextField textEmail;
@@ -174,13 +175,20 @@ public class TaiKhoanPanel extends JPanel {
 		add(textSearch);
 		textSearch.setHorizontalAlignment(SwingConstants.CENTER);
 		textSearch.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textSearch.setText("Nhập tên tài khoản, email, điện thoại");
+		textSearch.setText(iniTextSearchPlaceHolder);
 		textSearch.setColumns(10);
 		//Thêm sự kiện tự xóa nội dung khi focus vào input
 		textSearch.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
 				textSearch.setText(""); // Xóa nội dung khi focus
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (textSearch.getText().trim().isEmpty()) { //Nếu field rỗng
+					textSearch.setText(iniTextSearchPlaceHolder); // Đặt placeholder về lại như ban đầu
+				}
 			}
 		});
 
@@ -200,10 +208,10 @@ public class TaiKhoanPanel extends JPanel {
 				},
 				taiKhoanJTableColumns
 		);
-		table = new JTable(tableModel);
-		table.setEnabled(true); // Cho phép tương tác (chọn dòng), nhưng không cho chỉnh sửa
-		table.setDefaultEditor(Object.class, null); // Xóa editor mặc định để ngăn chỉnh sửa
-		scrollPane.setViewportView(table);
+		taiKhoanTable = new JTable(tableModel);
+		taiKhoanTable.setEnabled(true); // Cho phép tương tác (chọn dòng), nhưng không cho chỉnh sửa
+		taiKhoanTable.setDefaultEditor(Object.class, null); // Xóa editor mặc định để ngăn chỉnh sửa
+		scrollPane.setViewportView(taiKhoanTable);
 		
 		// load list
 		loadTaiKhoanList(taiKhoanBUS.getAllTaiKhoan());
@@ -212,23 +220,21 @@ public class TaiKhoanPanel extends JPanel {
 		setUpNQFields();
 		setUpTTFields();
 
-		// Gán sự kiện cho các nút
+		// Gán sự kiện
 		setupEventListeners();
 	}
 
-	//Căn chỉnh hình ảnh (hàm này nên được nằm trong class chung)
-	private ImageIcon getScaledImage(int width, int height, String path) {
-		// Load the original image
-		ImageIcon originalIcon = new ImageIcon(DanhMucPanel.class.getResource(path));
+	/*
+	* Dưới đây bao gồm:
+	* 		+ Các hàm setUp cho GUI (truyền dữ liệu vào các element sau khi GUI được load xong)
+	* 		+ Các hàm xử lý sự kiện (eventHandler)
+	* 		+ Hàm validateInput
+	* 		+ Các hàm tiện ích
+	* */
 
-		// Resize the image (e.g., to 50x50 pixels)
-		Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+	//													===Các hàm setUp cho GUI===
 
-		// Create a new ImageIcon with the scaled image
-		return new ImageIcon(scaledImage);
-	}
-
-	//Set up ComboBox nhóm quyền
+	//Set up các option trong ComboBox nhóm quyền
 	public void setUpNQFields() {
 		// load danh sach danh muc cha
 		List<NhomQuyenDTO> nhomQuyenList = taiKhoanBUS.getAllNhomQuyen();
@@ -237,92 +243,74 @@ public class TaiKhoanPanel extends JPanel {
 			optionNhomQuyen.addItem(new ComboItem(item.getIdNQ(), item.getTenNQ()));
 	}
 
-	//Set up Combobox Trạng thái
+	//Set up các option trong Combobox Trạng thái
 	public void setUpTTFields(){
 		optionTrangThai.addItem(new ComboItem(0, "Bị khóa"));
 		optionTrangThai.addItem(new ComboItem(1, "Hoạt động"));
 	}
 
-	// load danh muc list
-	private void loadTaiKhoanList(List<TaiKhoanDTO> taiKhoanList) {
-		DefaultTableModel dtm = new DefaultTableModel(
-				taiKhoanJTableColumns, 0
-		);
-
-		for (TaiKhoanDTO item : taiKhoanList) {
-			String tenNQ;
-			switch (item.getIdNQ()){
-				case 1:
-					tenNQ = "Admin";
-					break;
-				case 2:
-					tenNQ = "Nhân viên";
-					break;
-				default:
-					tenNQ = "Không rõ";
-					break;
-			}
-
-			Object[] row = {
-					item.getIdTK(),
-					item.getTenTK(),
-					item.getHoten(),
-					item.getEmail(),
-					item.getDienthoai(),
-					item.getTrangthai() ? "Hoạt động" : "Bị ẩn",
-					tenNQ
-			};
-			dtm.addRow(row);
-		}
-
-		table.setModel(dtm);
-	}
-
-	//Thực hiện gắn sự kiện
+	//Set up các eventListener
 	private void setupEventListeners() {
 		//Nút thêm
-		btnAdd.addActionListener(e -> addTaiKhoan());
+		btnAdd.addActionListener(
+				e -> {
+					if (validateInput("add")) {
+						addTaiKhoan();
+					}
+				}
+		);
 
 		//Nút cập nhật
-		btnUpdate.addActionListener(e -> updateTaiKhoan());
+		btnUpdate.addActionListener(
+				e -> {
+					if (validateInput("update")) {
+						updateTaiKhoan();
+					}
+				}
+		);
 
 		//Nút tìm kiếm
 		btnSearch.addActionListener(e -> searchTaiKhoan());
 
-		//Xử lý khi người dùng nhấn vào một dòng trong bảng
-		table.getSelectionModel().addListSelectionListener(e -> {
-			if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
-				int selectedRow = table.getSelectedRow();
+		//Set up sự kiện: khi nhấn dòng trong bảng
+		taiKhoanTable.getSelectionModel().addListSelectionListener(e -> {
+			/*
+			* getValueIsAdjusting(): Là một phương thức của ListSelectionEvent, trả về một giá trị boolean:
+			*		+ true: Nếu sự kiện là một phần của chuỗi thay đổi liên tục,
+			* 			tức là quá trình chọn vẫn đang "điều chỉnh" (adjusting).
+			*		+ false: Nếu quá trình chọn đã hoàn tất, trạng thái đã ổn định.
+			* Trong Swing, khi người dùng tương tác với bảng (như nhấp chuột, kéo chuột, hoặc dùng phím),
+			* hệ thống có thể phát sinh nhiều sự kiện liên tiếp.
+			* getValueIsAdjusting() giúp phân biệt giữa các sự kiện trung gian và sự kiện cuối cùng
+			* Kiểm tra !e.getValueIsAdjusting() đảm bảo chỉ xử lý sự kiện khi người dùng đã hoàn tất thao tác chọn,
+			* tức là khi trạng thái chọn đã ổn định.
+			* */
+			if (!e.getValueIsAdjusting() && taiKhoanTable.getSelectedRow() != -1) {
+				int selectedRow = taiKhoanTable.getSelectedRow();
 				fillFieldsFromSelectedRow(selectedRow);
 			}
 		});
 	}
+	//											===END: các hàm setUp cho GUI===
 
+	//												===Các hàm xử lý sự kiện===
 	//Xử lý sự kiện nút thêm
 	private void addTaiKhoan() {
-		if (!validateInput("add")) {
-			return;
-		}
-
 		TaiKhoanDTO taiKhoan = createTaiKhoanDTO();
 		List<String> addTaiKhoanMessage = taiKhoanBUS.add(taiKhoan);
 		if (addTaiKhoanMessage.isEmpty()) {
-			showSuccessMessageAndRefreshUI("Thêm tài khoản thành công!");
+			showSuccessMessageAndRefreshUI("Thành công", "Thêm tài khoản thành công!");
 		} else {
 			StringBuilder isExistedMessage = new StringBuilder();
 			for(String message: addTaiKhoanMessage) {
 				isExistedMessage.append(message + "\n");
 			}
-			showErrorMessage(isExistedMessage.toString());
+			showErrorMessage("Lỗi!!!", isExistedMessage.toString());
 		}
 	}
 
 	//Xử lý sự kiện nút cập nhật
 	private void updateTaiKhoan() {
-		if (!validateInput("update")) {
-			return;
-		}
-
 		TaiKhoanDTO taiKhoan = createTaiKhoanDTO();
 		List<String> updateTaiKhoanMessage = taiKhoanBUS.update(taiKhoan);
 		if (updateTaiKhoanMessage.isEmpty()) {
@@ -334,26 +322,54 @@ public class TaiKhoanPanel extends JPanel {
 				// Làm mới giao diện navbar để hiển thị thông tin mới
 				adminFrame.refreshNavbar();
 			}
-			showSuccessMessageAndRefreshUI("Cập nhật tài khoản thành công!");
+			showSuccessMessageAndRefreshUI("Thành công!", "Cập nhật tài khoản thành công!");
 		} else {
 			StringBuilder isExistedMessage = new StringBuilder();
 			for(String message: updateTaiKhoanMessage) {
 				isExistedMessage.append(message + "\n");
 			}
-			showErrorMessage(isExistedMessage.toString());
+			showErrorMessage("Lỗi!!!", isExistedMessage.toString());
 		}
+	}
+
+	//Điền dữ liệu vào các trường khi chọn một dòng trong bảng
+	private void fillFieldsFromSelectedRow(int selectedRow) {
+		textIdTK.setText(taiKhoanTable.getValueAt(selectedRow, 0).toString()); // gán ID của hàng được chọn vào trường ẩn
+		textTenTK.setText(taiKhoanTable.getValueAt(selectedRow, 1).toString());
+		textHoTen.setText(taiKhoanTable.getValueAt(selectedRow, 2).toString());
+		textEmail.setText(taiKhoanTable.getValueAt(selectedRow, 3).toString());
+		textDienThoai.setText(taiKhoanTable.getValueAt(selectedRow, 4).toString());
+
+		String trangThai = taiKhoanTable.getValueAt(selectedRow, 5).toString();
+		optionTrangThai.setSelectedIndex(trangThai.equals("Hoạt động") ? 1 : 0);
+
+		int idNQ = -1;
+		List<NhomQuyenDTO> nhomQuyenList = taiKhoanBUS.getAllNhomQuyen();
+		for (NhomQuyenDTO nhomquyen: nhomQuyenList) {
+			if (nhomquyen.getTenNQ().equals(taiKhoanTable.getValueAt(selectedRow, 6).toString())) {
+				idNQ = nhomquyen.getIdNQ();
+				break;
+			}
+		}
+		selectComboBoxItem(optionNhomQuyen, idNQ);
+
+		passwordField.setText(""); //Không hiển thị mật khẩu vì lý do bảo mật
 	}
 
 	//Xử lý sự kiện nút tìm kiếm
 	private void searchTaiKhoan() {
 		String searchText = textSearch.getText().trim();
+		if (iniTextSearchPlaceHolder.equals(searchText)) {
+			searchText = "";
+		}
 		List<TaiKhoanDTO> result = taiKhoanBUS.search(searchText);
 		loadTaiKhoanList(result);
 	}
+	//											===END: Các hàm xử lý sự kiện===
 
-	//Hàm validate input khi add
+	//										===Hàm validate input (add, update)===
 	private boolean validateInput(String action) {
-		boolean isValidAddInput = true;
+		//boolean isValidAddInput = true;
 		String tenTK = textTenTK.getText().trim();
 		String matKhau = new String(passwordField.getPassword()).trim();
 		String hoTen = textHoTen.getText().trim();
@@ -363,6 +379,8 @@ public class TaiKhoanPanel extends JPanel {
 		ComboItem selectedTrangThai = (ComboItem) optionTrangThai.getSelectedItem();
 		//Việc xuất nhiều JOptionPane khiến chúng bị ghi đè với nhau
 		// => append hết lỗi, rồi chỉ xuất 1 lần duy nhất
+		//Biến errorMessage giờ cũng đóng vai trò tựa như một cờ hiệu
+		//Nếu errorMessage.length() > 0 => có lỗi => xuất lỗi và return false; ngược lại return true
 		StringBuilder errorMessage = new StringBuilder();
 
 		//Các trường không được để trống (mật khẩu có thể trống khi update)
@@ -389,8 +407,6 @@ public class TaiKhoanPanel extends JPanel {
 			if (dienThoai.isEmpty()) {
 				errorMessage.append("+ Điện thoại \n");
 			}
-
-			isValidAddInput = false;
 		}
 
 		//Kiểm tra định dạng các trường thông tin (regex trong java phải dùng \\ thay vì \ nếu có)
@@ -459,27 +475,39 @@ public class TaiKhoanPanel extends JPanel {
 			if (!dienThoai.isEmpty() && !dienThoai.matches(dienThoaiRegex)) {
 				errorMessage.append("+ Email (Bao gồm 10 chữ số, bắt đầu từ số 0) \n");
 			}
-
-			isValidAddInput = false;
 		}
 
 		// Kiểm tra combo box
 		if (selectedNhomQuyen == null || selectedNhomQuyen.getKey() == -1) {
 			errorMessage.append("Vui lòng chọn một nhóm quyền hợp lệ \n");
-			isValidAddInput = false;
 		}
 		if (selectedTrangThai == null) {
 			errorMessage.append("Vui lòng chọn trạng thái cho tài khoản \n");
-			isValidAddInput = false;
 		}
 
-		if (!isValidAddInput) {
-			showErrorMessage(errorMessage.toString());
+		if (errorMessage.length() > 0) {
+			showErrorMessage("Lỗi nhập liệu", errorMessage.toString());
+			return false;
 		}
-		return isValidAddInput;
+		return true;
+	}
+	//									===END: Hàm validate input (add, update)===
+
+	//													===Các hàm tiện ích===
+
+	//Căn chỉnh hình ảnh (hàm này nên được nằm trong class chung)
+	private ImageIcon getScaledImage(int width, int height, String path) {
+		// Load the original image
+		ImageIcon originalIcon = new ImageIcon(DanhMucPanel.class.getResource(path));
+
+		// Resize the image (e.g., to 50x50 pixels)
+		Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+
+		// Create a new ImageIcon with the scaled image
+		return new ImageIcon(scaledImage);
 	}
 
-	//Hàm tạo một đối tượng TaiKhoanDTO
+	//Hàm tạo một đối tượng TaiKhoanDTO (để add, update)
 	private TaiKhoanDTO createTaiKhoanDTO() {
 		TaiKhoanDTO taiKhoan = new TaiKhoanDTO();
 		taiKhoan.setIdTK(Integer.parseInt(textIdTK.getText().trim()));
@@ -495,9 +523,44 @@ public class TaiKhoanPanel extends JPanel {
 		return taiKhoan;
 	}
 
-	//Xóa các trường thông tin sau khi add/ update
+	// Hàm load danh sách tài khoản
+	private void loadTaiKhoanList(List<TaiKhoanDTO> taiKhoanList) {
+		DefaultTableModel dtm = new DefaultTableModel(
+				taiKhoanJTableColumns, 0
+		);
+
+		for (TaiKhoanDTO item : taiKhoanList) {
+			String tenNQ;
+			switch (item.getIdNQ()){
+				case 1:
+					tenNQ = "Admin";
+					break;
+				case 2:
+					tenNQ = "Nhân viên";
+					break;
+				default:
+					tenNQ = "Không rõ";
+					break;
+			}
+
+			Object[] row = {
+					item.getIdTK(),
+					item.getTenTK(),
+					item.getHoten(),
+					item.getEmail(),
+					item.getDienthoai(),
+					item.getTrangthai() ? "Hoạt động" : "Bị ẩn",
+					tenNQ
+			};
+			dtm.addRow(row);
+		}
+
+		taiKhoanTable.setModel(dtm);
+	}
+
+	//Hàm xóa các trường thông tin sau khi add/ update
 	private void clearFields() {
-		textIdTK.setText("0"); // Đặt lại idTK về 0 khi thêm mới
+		textIdTK.setText("0"); // Đặt lại idTK trong trường ẩn về 0 để giúp cho hàm thêm mới
 		textTenTK.setText("");
 		passwordField.setText("");
 		textHoTen.setText("");
@@ -505,33 +568,6 @@ public class TaiKhoanPanel extends JPanel {
 		textDienThoai.setText("");
 		optionNhomQuyen.setSelectedIndex(0);
 		optionTrangThai.setSelectedIndex(0);
-	}
-
-	//Điền các trường thông tin cho dòng được chọn
-	private void fillFieldsFromSelectedRow(int selectedRow) {
-		textIdTK.setText(table.getValueAt(selectedRow, 0).toString()); // Lấy idTK từ cột 0
-		textTenTK.setText(table.getValueAt(selectedRow, 1).toString());
-		textHoTen.setText(table.getValueAt(selectedRow, 2).toString());
-		textEmail.setText(table.getValueAt(selectedRow, 3).toString());
-		textDienThoai.setText(table.getValueAt(selectedRow, 4).toString());
-
-		String trangThai = table.getValueAt(selectedRow, 5).toString();
-		optionTrangThai.setSelectedIndex(trangThai.equals("Hoạt động") ? 1 : 0);
-
-		int idNQ = -1;
-		List<NhomQuyenDTO> nhomQuyenList = taiKhoanBUS.getAllNhomQuyen();
-		System.out.println(nhomQuyenList);
-		for (NhomQuyenDTO nhomquyen: nhomQuyenList) {
-			if (nhomquyen.getTenNQ().equals(table.getValueAt(selectedRow, 6).toString())) {
-				idNQ = nhomquyen.getIdNQ();
-				break;
-			}
-		}
-
-		System.out.println(idNQ);
-		selectComboBoxItem(optionNhomQuyen, idNQ);
-
-		passwordField.setText("");
 	}
 
 	//Hàm lấy item tương ứng của đối tượng được chọn cho ComboBox
@@ -545,15 +581,17 @@ public class TaiKhoanPanel extends JPanel {
 		}
 	}
 
-	//Hiển thị thông báo lỗi
-	private void showErrorMessage(String message) {
-		JOptionPane.showMessageDialog(null, message);
+	//Hiển thị thông báo lỗi (hàm này cũng nên nằm trong một class chung)
+	private void showErrorMessage(String title, String message) {
+		JOptionPane.showMessageDialog(null, message, title,JOptionPane.ERROR_MESSAGE);
 	}
 
 	//Hiển thị thông báo thành công và làm mới UI
-	private void showSuccessMessageAndRefreshUI(String successMessage) {
-		JOptionPane.showMessageDialog(null, successMessage);
+	private void showSuccessMessageAndRefreshUI(String title, String successMessage) {
+		JOptionPane.showMessageDialog(null, successMessage, title, JOptionPane.INFORMATION_MESSAGE);
+		//Cập nhật lại UI
 		loadTaiKhoanList(taiKhoanBUS.getAllTaiKhoan());
 		clearFields();
 	}
+	//											===END: các hàm tiện ích===
 }
