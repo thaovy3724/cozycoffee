@@ -174,13 +174,14 @@ public class DanhMucPanel extends JPanel {
         			// getValueAt: return Object
 		    		int selectedRow = table.getSelectedRow();
 		    		if(selectedRow != -1) {
+		    			// edit form
 	        			String tenDM = (String) table.getValueAt(selectedRow, 1);
 	        			int idDMCha = (int) table.getValueAt(selectedRow, 3);
 	        			// kiểm tra trạng thái danh mục, nếu đang khóa thì đặt lại nút 'xóa' là 'mở khóa'
 	        			int trangthai = (int) table.getValueAt(selectedRow, 2);
 	        			if(trangthai == 0) xoa_Btn.setText("Mở khóa");
 	        			tenDM_Txt.setText(tenDM);
-	        			DanhMucDTO dmucCha = danhMucBus.findByID(idDMCha);
+	        			DanhMucDTO dmucCha = danhMucBus.findByIdDM(idDMCha);
 	        			if(dmucCha == null) dmucCha_Op.setSelectedIndex(0);
 	        			else
 	        				dmucCha_Op.setSelectedItem(new ComboItem(dmucCha.getIdDM(), dmucCha.getTenDM()));
@@ -275,7 +276,7 @@ public class DanhMucPanel extends JPanel {
 					DanhMucDTO danhMuc = new DanhMucDTO(idDM, tenDM, trangthai, idDMCha);
 					
 					// cập nhật lại CSDL
-					String error = danhMucBus.update(selectedRow, danhMuc);
+					String error = danhMucBus.update(danhMuc);
 					// kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
 					if(error!="")
 						JOptionPane.showMessageDialog(this, error);
@@ -297,13 +298,9 @@ public class DanhMucPanel extends JPanel {
 		int trangthai = (int) table.getValueAt(selectedRow, 2);
 		
 		// cập nhật lại CSDL
-		System.out.println(idDM);
 		String success = "";
 		if(trangthai == 0) {
-			if(danhMucBus.unlock(idDM)) {
-				success = "Mở khóa thành công";
-				System.out.println("helo");		
-				}
+			if(danhMucBus.unlock(idDM)) success = "Mở khóa thành công";
 		}
 		else success = danhMucBus.delete(idDM);
 		// kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
@@ -311,8 +308,8 @@ public class DanhMucPanel extends JPanel {
 			JOptionPane.showMessageDialog(this, "Xảy ra lỗi");
 		else {
 			JOptionPane.showMessageDialog(this, success);
-			refresh();
 		}
+		refresh();
 	}
 	
 	public void boChon() {
