@@ -11,12 +11,12 @@ public class Lo_NguyenLieuDTO {
     public Lo_NguyenLieuDTO() {
     }
 
-    public Lo_NguyenLieuDTO(int idNL, int idPN, float soluongnhap, float tonkho, int dongia, String hsd) {
+    public Lo_NguyenLieuDTO(int idNL, int idPN, float soluongnhap, float tonkho, float donGia2, String hsd) {
         this.idNL = idNL;
         this.idPN = idPN;
         this.soluongnhap = soluongnhap;
         this.tonkho = tonkho;
-        this.dongia = dongia;
+        this.dongia = (int) donGia2;
         this.hsd = hsd;
     }
 
@@ -56,8 +56,8 @@ public class Lo_NguyenLieuDTO {
         return dongia;
     }
 
-    public void setDongia(int dongia) {
-        this.dongia = dongia;
+    public void setDongia(float dongia) {
+        this.dongia = (int) dongia;
     }
 
     public String getHsd() {
