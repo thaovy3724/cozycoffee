@@ -5,18 +5,25 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JToggleButton;
 import java.awt.Color;
+import java.awt.Dimension;
 public class AdminFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -58,7 +65,7 @@ public class AdminFrame extends JFrame {
         this.currentUser = currentUser;
     }
     
-    // Refreshi navbar
+    // Refresh navbar
     public void refreshNavbar() {
         getContentPane().remove(navbarPanel); // Bỏ navbar cũ
         navbarPanel = navbarInit(); // Tạo lại navbar với thông tin mới
@@ -83,117 +90,127 @@ public class AdminFrame extends JFrame {
 	public void init() {
 		// AdminFrameGUI init
 		setBackground(new Color(255, 255, 255));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1100, 600);
-		getContentPane().setLayout(null);
-		setLocationRelativeTo(null);
-		
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setPreferredSize(new Dimension(1100, 600));
+        setMinimumSize(new Dimension(800, 400));
+        setLocationRelativeTo(null);
+        getContentPane().setLayout(new BorderLayout());
+        
 		// Menu init
-		getContentPane().add(menuInit());
+        getContentPane().add(menuInit(), BorderLayout.WEST);
 		
+		JPanel centerPanel = new JPanel(new BorderLayout());
 		// Navbar init
-		getContentPane().add(navbarInit());		
+		centerPanel.add(navbarInit(), BorderLayout.NORTH);
 		
-		//content
-		dynamicPanel = new JPanel();
-		dynamicPanel.setBackground(new Color(245, 245, 245));
-		
-		// calculate to set the height for panel_2
-		dynamicPanel.setBounds(199, 55, 887, 508);
-		//---------------------------------------
-		
-		getContentPane().add(dynamicPanel);
-		dynamicPanel.setLayout(new BorderLayout(0, 0));
-		
-		setVisible(true); // set visible for adminframe
+		// Dynamic panel
+		dynamicPanel = new JPanel(new BorderLayout());
+        dynamicPanel.setBackground(new Color(245, 245, 245));
+        dynamicPanel.setLayout(new BorderLayout());
+        centerPanel.add(dynamicPanel, BorderLayout.CENTER);
+        getContentPane().add(centerPanel, BorderLayout.CENTER);
+
+        pack();
+        setVisible(true);
 	}
 	
 	public JPanel menuInit() {
 		menuPanel = new JPanel();
 		menuPanel.setBackground(new Color(255, 255, 255));
-		menuPanel.setBounds(0, 0, 200, 563);
-		
-		menuPanel.setLayout(null);
-		
+        menuPanel.setPreferredSize(new Dimension(200, 0));
+        menuPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        		
 		JLabel logoLB = new JLabel("");
 		logoLB.setHorizontalAlignment(SwingConstants.CENTER);
-		
 		ImageHelper logoIcon = new ImageHelper(180, 120, AdminFrame.class.getResource("/ASSET/Images/logoRmBg.png"));
 		// Set the scaled icon to the JLabel
 		logoLB.setIcon(logoIcon.getScaledImage());
-				
-	
-		logoLB.setBounds(0, 1, 200, 130);
-		menuPanel.add(logoLB);
+		menuPanel.add(logoLB, gbc);
 		
+		gbc.gridy++;
 		JToggleButton thongkeBtn = new JToggleButton("Thống kê");
 		thongkeBtn.setActionCommand("thongke");
 		toggleBtnInit(thongkeBtn);
-		thongkeBtn.setBounds(10, 136, 180, 36);
-		menuPanel.add(thongkeBtn);
+		menuPanel.add(thongkeBtn, gbc);
 		
+		gbc.gridy++;
 		JToggleButton hoadonBtn = new JToggleButton("Hóa đơn");
 		hoadonBtn.setActionCommand("hoadon");
 		toggleBtnInit(hoadonBtn);
-		hoadonBtn.setBounds(10, 183, 180, 36);
-		menuPanel.add(hoadonBtn);
+		menuPanel.add(hoadonBtn, gbc);
 		
+		gbc.gridy++;
 		JToggleButton sanphamBtn = new JToggleButton("Sản phẩm");
 		sanphamBtn.setActionCommand("sanpham");
-		toggleBtnInit(sanphamBtn);
 		sanphamBtn.setBounds(10, 230, 180, 36);
-		menuPanel.add(sanphamBtn);
+		menuPanel.add(sanphamBtn, gbc);
 		
+		gbc.gridy++;
 		JToggleButton nguyenlieuBtn = new JToggleButton("Nguyên liệu");
 		nguyenlieuBtn.setActionCommand("nguyenlieu");
 		toggleBtnInit(nguyenlieuBtn);
 		nguyenlieuBtn.setBounds(10, 277, 180, 36);
-		menuPanel.add(nguyenlieuBtn);
+		menuPanel.add(nguyenlieuBtn, gbc);
 		
+		gbc.gridy++;
 		JToggleButton congthucBtn = new JToggleButton("Công thức");
 		congthucBtn.setActionCommand("congthuc");
 		toggleBtnInit(congthucBtn);
-		congthucBtn.setBounds(10, 319, 180, 36);
-		menuPanel.add(congthucBtn);
+		menuPanel.add(congthucBtn, gbc);
 		
+		gbc.gridy++;
 		JToggleButton danhmucBtn = new JToggleButton("Danh mục");
 		danhmucBtn.setActionCommand("danhmuc");
 		toggleBtnInit(danhmucBtn);
 		danhmucBtn.setBounds(10, 366, 180, 36);
-		menuPanel.add(danhmucBtn);
+		menuPanel.add(danhmucBtn, gbc);
 		
+		gbc.gridy++;
 		JToggleButton nhacungcapBtn = new JToggleButton("Nhà cung cấp");
 		nhacungcapBtn.setActionCommand("nhacungcap");
 		toggleBtnInit(nhacungcapBtn);
 		nhacungcapBtn.setBounds(10, 413, 180, 36);
-		menuPanel.add(nhacungcapBtn);
+		menuPanel.add(nhacungcapBtn, gbc);
 		
+		gbc.gridy++;
 		JToggleButton phieunhapBtn = new JToggleButton("Phiếu nhập");
 		phieunhapBtn.setActionCommand("phieunhap");
 		toggleBtnInit(phieunhapBtn);
 		nhacungcapBtn.setBounds(10, 460, 180, 36);
-		menuPanel.add(phieunhapBtn);
+		menuPanel.add(phieunhapBtn, gbc);
 		
+		gbc.gridy++;
 		JToggleButton taikhoanBtn = new JToggleButton("Tài khoản");
 		taikhoanBtn.setActionCommand("taikhoan");
 		toggleBtnInit(taikhoanBtn);
 		taikhoanBtn.setBounds(10, 507, 180, 36);
-		menuPanel.add(taikhoanBtn);
+		menuPanel.add(taikhoanBtn, gbc);
 		
-		return menuPanel;
+		gbc.gridy++;
+        gbc.weighty = 1.0;
+
+        menuPanel.add(new JPanel(), gbc);
+        return menuPanel;
 	}
 	
 	public JPanel navbarInit() {
 		navbarPanel = new JPanel();
-		navbarPanel.setBounds(199, 0, 887, 56);
-		navbarPanel.setLayout(null);
+		navbarPanel.setBackground(new Color(245, 245, 245));
+        navbarPanel.setPreferredSize(new Dimension(0, 50)); // Giảm chiều cao
+        navbarPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 8)); // Căn phải, khoảng cách nhỏ
 		
 		JLabel tenTkLB = new JLabel("Thảo Vy");
 		tenTkLB.setBackground(new Color(245, 245, 245));
 		tenTkLB.setOpaque(true); 
 		tenTkLB.setFont(new Font("Tahoma", Font.BOLD, 12));
 		tenTkLB.setHorizontalAlignment(SwingConstants.TRAILING);
-		tenTkLB.setBounds(0, 0, 758, 54);
+        tenTkLB.setPreferredSize(new Dimension(100, 30)); // Kích thước cố định để căn chỉnh
 		navbarPanel.add(tenTkLB);
 		
 		JButton logoutBtn = new JButton("Đăng xuất");
@@ -203,8 +220,8 @@ public class AdminFrame extends JFrame {
 		logoutBtn.setContentAreaFilled(false); // Disable content area filling
 		logoutBtn.setOpaque(true);           // Disable background painting
 		logoutBtn.setBorderPainted(false);
-		logoutBtn.setBounds(757, 1, 130, 54);
-
+		logoutBtn.setPreferredSize(new Dimension(100, 30));
+		
 		//Thêm sự kiện cho nút đăng xuất
         logoutBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -284,10 +301,10 @@ public class AdminFrame extends JFrame {
             case "phieunhap":
                 selectedPanel = new JPanel(); // Thay bằng panel Phiếu nhập
                 break;
-            case "taikhoan":
-                // Truyền AdminFrame vào TaiKhoanPanel
-                selectedPanel = new TaiKhoanPanel(this); // Hiển thị TaiKhoanPanel
-                break;
+//            case "taikhoan":
+//                // Truyền AdminFrame vào TaiKhoanPanel
+////                selectedPanel = new TaiKhoanPanel(this); // Hiển thị TaiKhoanPanel
+//                break;
             default:
                 selectedPanel = new JPanel(); // Mặc định
                 System.out.println("Default panel created");

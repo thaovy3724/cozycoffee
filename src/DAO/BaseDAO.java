@@ -80,9 +80,8 @@ public abstract class BaseDAO<T>{
 		        link = db.connectDB();
 		        pstmt = link.prepareStatement(sql.toString());
 		        
-		        if (params != null) 
-		            for (int i = 0; i < params.size(); i++) 
-		                pstmt.setObject(i + 1, params.get(i));
+	            for (int i = 0; i < params.size(); i++) 
+	                pstmt.setObject(i + 1, params.get(i));
 		        
 		        // thuc thi
 		        success = pstmt.executeUpdate() > 0 ? true : false;
@@ -121,9 +120,8 @@ public abstract class BaseDAO<T>{
 		        link = db.connectDB();
 		        pstmt = link.prepareStatement(sql.toString());
 		        
-		        if (params != null) 
-		            for (int i = 0; i < params.size(); i++) 
-		                pstmt.setObject(i + 1, params.get(i));
+	            for (int i = 0; i < params.size(); i++) 
+	                pstmt.setObject(i + 1, params.get(i));
 		        
 		        // thuc thi
 		        success = pstmt.executeUpdate() > 0 ? true : false;

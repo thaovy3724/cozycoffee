@@ -161,11 +161,11 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
         ResultSet rs = null;
         boolean isExist = false;
         try {
-			StringBuilder sql = new StringBuilder("SELECT * FROM");
+			StringBuilder sql = new StringBuilder("SELECT * FROM ");
 			sql.append(table);
-			sql.append("WHERE tenDM LIKE ?");
+			sql.append(" WHERE tenDM LIKE ?");
 			if(danhMuc.getIdDM() != 0) 
-				sql.append("WHERE idDM != ?");
+				sql.append(" AND idDM != ?");
            
             // noi param
             link = db.connectDB();
