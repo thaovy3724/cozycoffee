@@ -22,7 +22,7 @@ import javax.swing.JTable;
 import java.util.List;
 import DTO.ComboItem;
 
-public class DanhMucPanel extends JPanel {
+public class DanhMucPanel2 extends JPanel {
 	private DanhMucBUS danhMucBus = new DanhMucBUS();
 	
 	private static final long serialVersionUID = 1L;
@@ -39,7 +39,7 @@ public class DanhMucPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public DanhMucPanel() {
+	public DanhMucPanel2() {
 		init();
 	}
 	
@@ -134,7 +134,7 @@ public class DanhMucPanel extends JPanel {
 		ImageHelper icon = new ImageHelper(
 				20, 
 				20,
-				DanhMucPanel.class.getResource("/ASSET/Images/searchIcon.png")
+				DanhMucPanel2.class.getResource("/ASSET/Images/searchIcon.png")
 				);
 		timKiem_Btn.setIcon(icon.getScaledImage());
 		timKiem_Btn.addActionListener(e -> timKiem());

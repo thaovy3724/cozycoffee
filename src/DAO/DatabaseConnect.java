@@ -19,24 +19,7 @@ public class DatabaseConnect {
         return DriverManager.getConnection(url, DB_USER, DB_PASS);
     }
 
-    public void close(Connection link, PreparedStatement pstmt, ResultSet rs){
-        // Đóng ResultSet nếu có
-        if (rs != null) 
-	        try {
-	        	rs.close();
-	        } catch (SQLException e) {
-	        	e.printStackTrace();
-	        }
-        
-
-        // Đóng PreparedStatement nếu có
-        if(pstmt != null) 
-        	try {
-        		pstmt.close();
-        	}catch (SQLException e) {
-            	e.printStackTrace();
-            }
-
+    public void close(Connection link){
         // Đóng Connection (link) nếu có
         if(link != null) 
         	try {

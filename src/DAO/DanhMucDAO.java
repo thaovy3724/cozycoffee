@@ -60,8 +60,9 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
             isParent = rs.next();
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
+        }finally {
+            db.close(link);
         }
-        db.close(link, pstmt, rs);
         return isParent;
 	}
 	
@@ -79,8 +80,9 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
             hasProduct = rs.next();
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
+        }finally {
+            db.close(link);
         }
-        db.close(link, pstmt, rs);
         return hasProduct;
 	}
 	
@@ -111,8 +113,9 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
 	        success = pstmt.executeUpdate() > 0 ? true : false;
 		}catch(ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-		}
-		db.close(link, pstmt, null);
+		}finally {
+            db.close(link);
+        }
 		return success;
     }
 	
@@ -131,8 +134,9 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
             while (rs.next()) result.add(mapResultSetToDTO(rs));
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
+        }finally {
+            db.close(link);
         }
-        db.close(link, pstmt, rs);
         return result;
 	}
 	
@@ -150,8 +154,9 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
             if (rs.next()) result = mapResultSetToDTO(rs);
         }catch(ClassNotFoundException | SQLException e) {
             e.printStackTrace();
+        }finally {
+            db.close(link);
         }
-        db.close(link, pstmt, rs);
         return result;
 	}
 	
@@ -179,8 +184,9 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
             isExist = rs.next();
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
+        }finally {
+            db.close(link);
         }
-        db.close(link, pstmt, rs);
         return isExist;
 	}
 }
