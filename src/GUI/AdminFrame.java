@@ -93,7 +93,6 @@ public class AdminFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(1100, 600));
         setMinimumSize(new Dimension(800, 400));
-        setLocationRelativeTo(null);
         getContentPane().setLayout(new BorderLayout());
         
 		// Menu init
@@ -111,6 +110,7 @@ public class AdminFrame extends JFrame {
         getContentPane().add(centerPanel, BorderLayout.CENTER);
 
         pack();
+        setLocationRelativeTo(null);
         setVisible(true);
 	}
 	
@@ -301,10 +301,10 @@ public class AdminFrame extends JFrame {
             case "phieunhap":
                 selectedPanel = new JPanel(); // Thay bằng panel Phiếu nhập
                 break;
-//            case "taikhoan":
-//                // Truyền AdminFrame vào TaiKhoanPanel
-////                selectedPanel = new TaiKhoanPanel(this); // Hiển thị TaiKhoanPanel
-//                break;
+           case "taikhoan":
+               // Truyền AdminFrame vào TaiKhoanPanel
+				selectedPanel = new TaiKhoanPanel(); // Hiển thị TaiKhoanPanel
+               break;
             default:
                 selectedPanel = new JPanel(); // Mặc định
                 System.out.println("Default panel created");

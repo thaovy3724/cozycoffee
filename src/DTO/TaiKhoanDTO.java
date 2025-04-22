@@ -20,6 +20,14 @@ public class TaiKhoanDTO {
         this.idNQ = idNQ;
     }
 
+    public TaiKhoanDTO(String tenTK, String matkhau, String email, int trangthai, int idNQ){
+        this.tenTK = tenTK;
+        this.matkhau = matkhau;
+        this.email = email;
+        this.trangthai = trangthai;
+        this.idNQ = idNQ;
+    }
+
     public int getIdTK() {
         return idTK;
     }

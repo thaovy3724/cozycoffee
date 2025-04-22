@@ -1,9 +1,9 @@
 package GUI;
 
 import javax.swing.table.DefaultTableModel;
-import BUS.DanhMucBUS;
-import DTO.DanhMucDTO;
-import GUI.Dialog.DanhMucDialog;
+import BUS.NhaCungCapBUS;
+import DTO.NhaCungCapDTO;
+import GUI.Dialog.NhaCungCapDialog;
 
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
@@ -18,27 +18,28 @@ import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.util.List;
 
-public class DanhMucPanel extends JPanel {
-	private DanhMucBUS danhMucBus = new DanhMucBUS();
+public class NhaCungCapPanel extends JPanel {
+	private NhaCungCapBUS nhaCungCapBus = new NhaCungCapBUS();
 
 	private static final long serialVersionUID = 1L;
 	private JButton btnAdd, btnEdit, btnDel, btnSearch, btnReset;
 	private JTable table;
-	private JPanel container = new JPanel();
 	private JTextField txtSearch;
+	private JPanel container, actionPanel, searchPanel;
+	private JScrollPane tablePane;
 	private DefaultTableModel tableModel;
-	
 	/**
 	 * Create the panel.
 	 */
-	public DanhMucPanel() {
+	public NhaCungCapPanel() {
 		setLayout(new BorderLayout(0, 0));
 		
+		container = new JPanel();
 		add(container, BorderLayout.CENTER);
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 		
 		tableModel = new DefaultTableModel(
-		   new String[] {"ID", "Tên danh mục", "Trạng thái"}, 0)
+		   new String[] {"ID", "Tên nhà cung cấp", "Email", "Điện thoại", "Trạng thái"}, 0)
 		{                                                // (2) Mở đầu khai báo lớp vô danh (anonymous class)
 	        @Override
 	        public boolean isCellEditable(int row, int column) {
@@ -57,28 +58,28 @@ public class DanhMucPanel extends JPanel {
 	}
 	
 	private void actionBoxInit() {
-		JPanel actionPanel = new JPanel();
+		actionPanel = new JPanel();
 		container.add(actionPanel);
 		actionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
 		btnAdd = new JButton("Thêm");
-		btnAdd.setIcon(new ImageIcon(DanhMucPanel.class.getResource("/ASSET/Images/icons8_add_30px.png")));
+		btnAdd.setIcon(new ImageIcon(NhaCungCapPanel.class.getResource("/ASSET/Images/icons8_add_30px.png")));
 		btnAdd.addActionListener(e->showAdd());
 		actionPanel.add(btnAdd);
 		
 		btnEdit = new JButton("Sửa");
-		btnEdit.setIcon(new ImageIcon(DanhMucPanel.class.getResource("/ASSET/Images/icons8_wrench_30px.png")));
+		btnEdit.setIcon(new ImageIcon(NhaCungCapPanel.class.getResource("/ASSET/Images/icons8_wrench_30px.png")));
 		btnEdit.addActionListener(e->showEdit());
 		actionPanel.add(btnEdit);
 		
 		btnDel = new JButton("Xóa");
-		btnDel.setIcon(new ImageIcon(DanhMucPanel.class.getResource("/ASSET/Images/icons8_cancel_30px_1.png")));
+		btnDel.setIcon(new ImageIcon(NhaCungCapPanel.class.getResource("/ASSET/Images/icons8_cancel_30px_1.png")));
 		btnDel.addActionListener(e->delete());
 		actionPanel.add(btnDel);
 	}
 	
 	private void searchBoxInit() {
-		JPanel searchPanel = new JPanel();
+		searchPanel = new JPanel();
 		container.add(searchPanel);
 		searchPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
@@ -88,13 +89,13 @@ public class DanhMucPanel extends JPanel {
 		txtSearch.setColumns(20);
 		
 		btnSearch = new JButton("Tìm");
-		ImageHelper imgSrch = new ImageHelper(20, 20, DanhMucPanel.class.getResource("/ASSET/Images/searchIcon.png"));
+		ImageHelper imgSrch = new ImageHelper(20, 20, NhaCungCapPanel.class.getResource("/ASSET/Images/searchIcon.png"));
 		btnSearch.setIcon(imgSrch.getScaledImage());
 		btnSearch.addActionListener(e->search());
 		searchPanel.add(btnSearch);
 		
 		btnReset = new JButton("Làm mới");
-		ImageHelper imgReset = new ImageHelper(20, 20, DanhMucPanel.class.getResource("/ASSET/Images/icons8_replay_30px.png"));
+		ImageHelper imgReset = new ImageHelper(20, 20, NhaCungCapPanel.class.getResource("/ASSET/Images/icons8_replay_30px.png"));
 		btnReset.setIcon(imgReset.getScaledImage());
 		btnReset.addActionListener(e->{
 			txtSearch.setText("");
@@ -104,7 +105,7 @@ public class DanhMucPanel extends JPanel {
 	}
 	
 	private void tableInit() {
-		JScrollPane tablePane = new JScrollPane();
+		tablePane = new JScrollPane();
 		container.add(tablePane);
 		
 		table = new JTable();
@@ -114,16 +115,18 @@ public class DanhMucPanel extends JPanel {
 		loadTable(null);
 	}
 	
-	private void loadTable(List<DanhMucDTO> arr) {
+	private void loadTable(List<NhaCungCapDTO> arr) {
 		tableModel.setRowCount(0); //This removes all the rows but keeps the column structure.
-		if(arr == null) arr = danhMucBus.getAll();
+		if(arr == null) arr = nhaCungCapBus.getAll();
 		// kiem tra mang co null ko
 		if(arr.size() != 0) 
-			for (DanhMucDTO danhMuc : arr) {
+			for (NhaCungCapDTO nhaCungCap : arr) {
 		        Object[] row = {
-		            danhMuc.getIdDM(),
-		            danhMuc.getTenDM(),
-		            danhMuc.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa",
+		            nhaCungCap.getIdNCC(),
+		            nhaCungCap.getTenNCC(),
+		            nhaCungCap.getEmail(),
+		            nhaCungCap.getSdt(),
+		            nhaCungCap.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa",
 		        };
 		        tableModel.addRow(row);
 		    }
@@ -133,20 +136,20 @@ public class DanhMucPanel extends JPanel {
 	private void showEdit() {
 		int selectedRow = table.getSelectedRow();
 		if (selectedRow == -1) {
-			JOptionPane.showMessageDialog(this, "Bạn chưa chọn danh mục");
+			JOptionPane.showMessageDialog(this, "Bạn chưa chọn nhà cung cấp");
 		}
 		else {
-			int idDM = (int) table.getValueAt(selectedRow, 0);
-			DanhMucDialog danhMucDialog = new DanhMucDialog();
-			danhMucDialog.showEdit(idDM);
+			int idNCC = (int) table.getValueAt(selectedRow, 0);
+			NhaCungCapDialog nhaCungCapDialog = new NhaCungCapDialog();
+			nhaCungCapDialog.showEdit(idNCC);
 			// sau khi đóng dialog, reload table 
 			loadTable(null);
 		}
 	}
 	
 	private void showAdd() {
-		DanhMucDialog danhMucDialog = new DanhMucDialog();
-		danhMucDialog.showAdd();
+		NhaCungCapDialog nhaCungCapDialog = new NhaCungCapDialog();
+		nhaCungCapDialog.showAdd();
 		// sau khi đóng dialog, reload table 
 		loadTable(null);
 	}
@@ -159,7 +162,7 @@ public class DanhMucPanel extends JPanel {
 			JOptionPane.showMessageDialog(this, "Bạn chưa nhập từ khóa tìm kiếm");
 		else {
 			// tìm kiếm: nếu không tìm thấy thì trả về null
-			List<DanhMucDTO> result = danhMucBus.search(keyWord.trim());
+			List<NhaCungCapDTO> result = nhaCungCapBus.search(keyWord.trim());
 			// hiển thị
 			loadTable(result);
 			// empty ô search
@@ -170,17 +173,17 @@ public class DanhMucPanel extends JPanel {
 	private void delete() {
 		int selectedRow = table.getSelectedRow();
 		if (selectedRow == -1) {
-			JOptionPane.showMessageDialog(this, "Bạn chưa chọn danh mục");
+			JOptionPane.showMessageDialog(this, "Bạn chưa chọn nhà cung cấp");
 		}
 		else {
-			// tiến hành xóa 
-			int idDM = (int) table.getValueAt(selectedRow, 0);
+			// tiến hành xóa
+			int idNCC = (int) table.getValueAt(selectedRow, 0);
 			// cập nhật lại CSDL
 			// kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
-			if(danhMucBus.delete(idDM))
+			if(nhaCungCapBus.delete(idNCC))
 				JOptionPane.showMessageDialog(this, "Xóa thành công");
 			else {
-				JOptionPane.showMessageDialog(this, "Bạn không thể xóa danh mục này!");
+				JOptionPane.showMessageDialog(this, "Bạn không thể xóa nhà cung cấp này");
 				// reload table
 				loadTable(null);
 			}

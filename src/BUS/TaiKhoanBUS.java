@@ -1,25 +1,59 @@
 package BUS;
 
-import DAO.NhomQuyenDAO;
 import DAO.TaiKhoanDAO;
-import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
 //import at.favre.lib.crypto.bcrypt.BCrypt;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TaiKhoanBUS {
-    private final TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
-    private final NhomQuyenDAO nhomQuyenDAO = new NhomQuyenDAO();
+    private final TaiKhoanDAO taiKhoanDao = new TaiKhoanDAO();
 
-    public List<TaiKhoanDTO> getAllTaiKhoan() {
-        return taiKhoanDAO.getAll();
+    public List<TaiKhoanDTO> getAll() {
+        return taiKhoanDao.getAll();
     }
 
-    public List<NhomQuyenDTO> getAllNhomQuyen() {
-        return nhomQuyenDAO.getAll();
-    }
+    public String add(TaiKhoanDTO taiKhoan) {
+		// kiểm tra email đã tồn tại chưa nếu có trả về thông báo lỗi
+		String error = "";
+		if(taiKhoanDao.isExist(taiKhoan)) 
+			error = "Email đã tồn tại";
+		else if(!taiKhoanDao.add(taiKhoan)) { 		// thêm mới vào CSDL
+			error = "Xảy ra lỗi trong quá trình thêm mới";
+		}
+		return error;
+	}
+
+    public TaiKhoanDTO findByIdTK(int idTK) {
+		return taiKhoanDao.findByIdTK(idTK);
+	}
+	
+	public String update(TaiKhoanDTO taiKhoan) {
+		// kiểm tra email đã tồn tại chưa nếu có trả về thông báo lỗi
+		String error = "";
+		if(taiKhoanDao.isExist(taiKhoan)) 
+			error = "Email đã tồn tại";
+		else if(!taiKhoanDao.update(taiKhoan)) 
+			error = "Xảy ra lỗi trong quá trình cập nhật";
+		
+		return error;
+	}
+
+	public boolean delete(int idTK) {
+		boolean success = false;
+		// kiểm tra nếu tài khoản của nhân viên đã tồn tại 
+		// trong hóa đơn bất kì (có khóa ngoại)
+		// -> ko xóa được
+		if(!taiKhoanDao.isEmployeeInReceipt(idTK)) {
+			if(taiKhoanDao.delete(idTK)) 
+				success = true;
+		}
+		return success;
+	}
+	
+	public List<TaiKhoanDTO> search(String keyWord){
+		return taiKhoanDao.search(keyWord);
+	}
 
 //    public List<TaiKhoanDTO> getAllTaiKhoanByIDNQ(int idNQ) {
 //        return taiKhoanDAO.getAllByIDNQ(idNQ);

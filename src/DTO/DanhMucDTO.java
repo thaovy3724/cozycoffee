@@ -15,11 +15,16 @@ public class DanhMucDTO {
 
     public DanhMucDTO(int idDM, String tenDM, int trangthai, int idDMCha) {
         this.idDM = idDM;
-        setTenDM(tenDM);
+        this.tenDM = tenDM;
         this.trangthai = trangthai;
         this.idDMCha = idDMCha;
     }
 
+    public DanhMucDTO(String tenDM, int idDMCha) {
+    	this.tenDM = tenDM;
+        this.idDMCha = idDMCha;
+    }
+    
     public int getIdDM() {
         return idDM;
     }
@@ -33,7 +38,7 @@ public class DanhMucDTO {
     }
 
     public void setTenDM(String tenDM) {
-        this.tenDM = tenDM.trim();
+        this.tenDM = tenDM;
     }
 
     public int getTrangthai() {
@@ -50,5 +55,10 @@ public class DanhMucDTO {
 
     public void setIdDMCha(int idDMCha) {
         this.idDMCha = idDMCha;
+    }
+
+    @Override
+    public String toString(){
+        return tenDM;
     }
 }

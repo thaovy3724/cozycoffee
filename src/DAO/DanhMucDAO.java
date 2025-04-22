@@ -32,7 +32,7 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
 		params.add(danhMuc.getIdDM());
 		params.add(danhMuc.getTenDM());
 		params.add(danhMuc.getTrangthai());
-		params.add(danhMuc.getIdDMCha() == -1 ? null : danhMuc.getIdDMCha());
+		params.add(danhMuc.getIdDMCha() == 0 ? null : danhMuc.getIdDMCha());
 		return super.add(params);
 	}
 	
@@ -41,7 +41,7 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
 		params.add(danhMuc.getIdDM());
 		params.add(danhMuc.getTenDM());
 		params.add(danhMuc.getTrangthai());
-		params.add(danhMuc.getIdDMCha()==-1 ? null : danhMuc.getIdDMCha());
+		params.add(danhMuc.getIdDMCha()== 0 ? null : danhMuc.getIdDMCha());
 		String condition = "idDM = "+danhMuc.getIdDM();
 		return super.update(params, condition);
 	}
@@ -89,34 +89,6 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
 	public boolean delete(int idDM) {
 		String col = "idDM";
 		return super.delete(col, idDM);
-    }
-	
-	public boolean toggleLock(boolean isLock, int idDM) {
-		Connection link = null;
-		PreparedStatement pstmt = null;
-		boolean success = false;
-		try {
-			String sql = "";
-			if(isLock)
-				// neu yeu cau khoa -> set trangthai = 0
-				sql = "UPDATE "+ table +" SET trangthai = 0 WHERE idDM = ?";
-			else 
-				// neu yeu cau mo khoa -> set trangthai = 1
-				sql = "UPDATE "+ table +" SET trangthai = 1 WHERE idDM = ?";
-
-	        link = db.connectDB();
-	        pstmt = link.prepareStatement(sql);
-	        
-	        // noi param
-	        pstmt.setInt(1, idDM);
-	        // thuc thi
-	        success = pstmt.executeUpdate() > 0 ? true : false;
-		}catch(ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-		}finally {
-            db.close(link);
-        }
-		return success;
     }
 	
 	public List<DanhMucDTO> search(String keyWord){
@@ -188,5 +160,47 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
             db.close(link);
         }
         return isExist;
+	}
+	
+	public List<DanhMucDTO> getAllActiveEdit(int idDMCon, int idDMCha){
+		Connection link = null;
+		PreparedStatement pstmt = null;
+        ResultSet rs = null;
+		List<DanhMucDTO> result = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM " + table
+            		+ " WHERE idDM = ? "
+            		+ " OR(idDM != ? AND trangthai = 1)";
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            pstmt.setInt(1, idDMCha);
+            pstmt.setInt(2, idDMCon);
+            rs = pstmt.executeQuery();
+            while (rs.next()) result.add(mapResultSetToDTO(rs));
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }finally {
+            db.close(link);
+        }
+        return result;
+	}
+	
+	public List<DanhMucDTO> getAllActive(){
+		Connection link = null;
+		PreparedStatement pstmt = null;
+        ResultSet rs = null;
+		List<DanhMucDTO> result = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM " + table + " WHERE trangthai = 1)";
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            while (rs.next()) result.add(mapResultSetToDTO(rs));
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }finally {
+            db.close(link);
+        }
+        return result;
 	}
 }

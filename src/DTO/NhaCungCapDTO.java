@@ -20,6 +20,14 @@ public class NhaCungCapDTO {
         this.trangthai = trangthai;
     }
 
+    public NhaCungCapDTO(String tenNCC, String diachi, String sdt, String email, int trangthai) {
+        this.tenNCC = tenNCC;
+        this.diachi = diachi;
+        this.sdt = sdt;
+        this.email = email;
+        this.trangthai = trangthai;
+    }
+
     public int getIdNCC() {
         return idNCC;
     }
