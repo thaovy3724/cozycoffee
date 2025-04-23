@@ -191,9 +191,30 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
         ResultSet rs = null;
 		List<DanhMucDTO> result = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM " + table + " WHERE trangthai = 1)";
+            String sql = "SELECT * FROM " + table + " WHERE trangthai = 1";
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            while (rs.next()) result.add(mapResultSetToDTO(rs));
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }finally {
+            db.close(link);
+        }
+        return result;
+	}
+
+    public List<DanhMucDTO> getAllActiveExcept(int idDM){
+		Connection link = null;
+		PreparedStatement pstmt = null;
+        ResultSet rs = null;
+		List<DanhMucDTO> result = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM " + table
+            		+ " WHERE idDM != ? AND trangthai = 1)";
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            pstmt.setInt(1, idDM);
             rs = pstmt.executeQuery();
             while (rs.next()) result.add(mapResultSetToDTO(rs));
         } catch (ClassNotFoundException | SQLException e) {

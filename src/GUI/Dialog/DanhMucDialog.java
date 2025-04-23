@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import BUS.DanhMucBUS;
-import DTO.ComboItem;
 import DTO.DanhMucDTO;
 
 import java.awt.GridBagLayout;
@@ -225,7 +224,6 @@ public class DanhMucDialog extends JDialog {
 		// reset action button
 		btnSubmit.setText("Thêm");
 		btnSubmit.setActionCommand("add");
-		setModal(true);
 		setVisible(true);
 	}
 
@@ -259,7 +257,7 @@ public class DanhMucDialog extends JDialog {
 		
 		// tenDM
 		if(txtTenDM.getText().trim().equals("")) {
-			errTenDM.setText("Tên không được");
+			errTenDM.setText("Tên danh mục không được để trống");
 			isError = true;
 		}
 		
@@ -281,7 +279,7 @@ public class DanhMucDialog extends JDialog {
 			int beginIndex = actionCommand.indexOf('_')+1;
 			if(beginIndex == 0) {
 				// add
-				error = danhMucBus.add(new DanhMucDTO(tenDM, idDMCha));
+				error = danhMucBus.add(new DanhMucDTO(tenDM, trangthai, idDMCha));
 			}else {
 				// update
 				int idDM = Integer.parseInt(actionCommand.substring(beginIndex));

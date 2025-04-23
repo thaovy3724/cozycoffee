@@ -13,6 +13,10 @@ public class DanhMucBUS {
 	public List<DanhMucDTO> getAllActiveEdit(int idDMCon, int idDMCha){
 		return danhMucDao.getAllActiveEdit(idDMCon, idDMCha);
 	}
+
+	public List<DanhMucDTO> getAllActiveExcept(int idDM){
+		return danhMucDao.getAllActiveExcept(idDM);
+	}
 	
 	public List<DanhMucDTO> getAllActive(){
 		return danhMucDao.getAllActive();

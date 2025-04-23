@@ -212,13 +212,14 @@ public class NhaCungCapDialog extends JDialog {
 			contentPanel.add(lblTrangThai, gbc_lblTrangThai);
 		}
 		{
-			cboTrangThai = new JComboBox();
 			cboTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 			GridBagConstraints gbc_cboTrangThai = new GridBagConstraints();
 			gbc_cboTrangThai.insets = new Insets(0, 0, 5, 5);
 			gbc_cboTrangThai.fill = GridBagConstraints.HORIZONTAL;
 			gbc_cboTrangThai.gridx = 2;
 			gbc_cboTrangThai.gridy = 9;
+			cboTrangThai.addItem("Hoạt động");
+			cboTrangThai.addItem("Bị khóa");
 			contentPanel.add(cboTrangThai, gbc_cboTrangThai);
 		}
 	}
@@ -265,7 +266,6 @@ public class NhaCungCapDialog extends JDialog {
 
 		btnSubmit.setText("Thêm");
 		btnSubmit.setActionCommand("add");
-		setModal(true);
 		setVisible(true);
 	}
 
@@ -298,9 +298,22 @@ public class NhaCungCapDialog extends JDialog {
 		}
 
 		// diachi
-
+		if(txtDiaChi.getText().trim().isEmpty()){
+			errDiaChi.setText("Địa chỉ không được để trống");
+			isError = true;
+		}
+		
 		// dienthoai
-
+		String dienThoaiRegex = "^0\\d{9}$";
+		String dienThoai = txtDienThoai.getText();
+		if(dienThoai.trim().isEmpty()){
+			errDienThoai.setText("Điện thoại không được để trống");
+			isError = true;
+		}else if(!dienThoai.matches(dienThoaiRegex)) {
+			errDienThoai.setText("Điện thoại không đúng định dạng");
+			isError = true;
+		}
+		
 		// email
 		/* Email có định dạng:
 		* 		+ Tên người dùng (có thể bao gồm ._%+-): [a-zA-Z0-9._%+-]
@@ -309,7 +322,7 @@ public class NhaCungCapDialog extends JDialog {
 		* */
 		String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 		String email = txtEmail.getText();
-		if(txtEmail.getText().trim().isEmpty()){
+		if(email.trim().isEmpty()){
 			errEmail.setText("Email không được để trống");
 			isError = true;
 		}else if(!email.matches(emailRegex)){

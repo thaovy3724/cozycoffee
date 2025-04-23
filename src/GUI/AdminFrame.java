@@ -296,7 +296,7 @@ public class AdminFrame extends JFrame {
                 selectedPanel = new DanhMucPanel();
                 break;
             case "nhacungcap":
-                selectedPanel = new JPanel(); // Thay bằng panel Nhà cung cấp
+                selectedPanel = new NhaCungCapPanel(); // Thay bằng panel Nhà cung cấp
                 break;
             case "phieunhap":
                 selectedPanel = new JPanel(); // Thay bằng panel Phiếu nhập

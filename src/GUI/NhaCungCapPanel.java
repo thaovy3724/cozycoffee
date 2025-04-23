@@ -180,12 +180,13 @@ public class NhaCungCapPanel extends JPanel {
 			int idNCC = (int) table.getValueAt(selectedRow, 0);
 			// cập nhật lại CSDL
 			// kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
-			if(nhaCungCapBus.delete(idNCC))
+			if(nhaCungCapBus.delete(idNCC)) {
 				JOptionPane.showMessageDialog(this, "Xóa thành công");
-			else {
-				JOptionPane.showMessageDialog(this, "Bạn không thể xóa nhà cung cấp này");
 				// reload table
 				loadTable(null);
+			}
+			else {
+				JOptionPane.showMessageDialog(this, "Bạn không thể xóa nhà cung cấp này");
 			}
 		}
 	}

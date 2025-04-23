@@ -177,12 +177,13 @@ public class DanhMucPanel extends JPanel {
 			int idDM = (int) table.getValueAt(selectedRow, 0);
 			// cập nhật lại CSDL
 			// kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
-			if(danhMucBus.delete(idDM))
+			if(danhMucBus.delete(idDM)) {
 				JOptionPane.showMessageDialog(this, "Xóa thành công");
-			else {
-				JOptionPane.showMessageDialog(this, "Bạn không thể xóa danh mục này!");
 				// reload table
 				loadTable(null);
+			}
+			else {
+				JOptionPane.showMessageDialog(this, "Bạn không thể xóa danh mục này!");
 			}
 		}
 	}

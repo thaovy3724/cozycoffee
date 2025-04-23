@@ -1,9 +1,9 @@
 package GUI;
 
 import javax.swing.table.DefaultTableModel;
-import BUS.TaiKhoanBUS;
-import DTO.TaiKhoanDTO;
-import GUI.Dialog.TaiKhoanDialog;
+import BUS.SanPhamBUS;
+import DTO.SanPhamDTO;
+import GUI.Dialog.SanPhamDialog;
 
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
@@ -19,7 +19,7 @@ import java.awt.Font;
 import java.util.List;
 
 public class SanPhamPanel extends JPanel {
-	private TaiKhoanBUS taiKhoanBus;
+	private SanPhamBUS sanPhamBus;
 
 	private static final long serialVersionUID = 1L;
 	private JButton btnAdd, btnEdit, btnDel, btnSearch, btnReset;
@@ -27,7 +27,7 @@ public class SanPhamPanel extends JPanel {
 	private JPanel container;
 	private JTextField txtSearch;
 	private DefaultTableModel tableModel;
-	private List<TaiKhoanDTO>taiKhoanList;
+	private List<SanPhamDTO>sanPhamList;
 	/**
 	 * Create the panel.
 	 */
@@ -38,9 +38,9 @@ public class SanPhamPanel extends JPanel {
 		add(container, BorderLayout.CENTER);
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 		
-		taiKhoanBus = new TaiKhoanBUS();
+		sanPhamBus = new SanPhamBUS();
 		tableModel = new DefaultTableModel(
-		   new String[] {"ID", "Tên tài khoản", "Email", "Trạng thái"}, 0)
+		   new String[] {"ID", "Tên sản phẩm", "Giá bán", "Trạng thái"}, 0)
 		{                                                // (2) Mở đầu khai báo lớp vô danh (anonymous class)
 	        @Override
 	        public boolean isCellEditable(int row, int column) {
@@ -116,17 +116,17 @@ public class SanPhamPanel extends JPanel {
 		loadTable(null);
 	}
 	
-	private void loadTable(List<TaiKhoanDTO> arr) {
+	private void loadTable(List<SanPhamDTO> arr) {
 		tableModel.setRowCount(0); //This removes all the rows but keeps the column structure.
-		if(arr == null) arr = taiKhoanBus.getAll();
+		if(arr == null) arr = sanPhamBus.getAll();
 		// kiem tra mang co null ko
 		if(arr.size() != 0) 
-			for (TaiKhoanDTO taiKhoan : arr) {
+			for (SanPhamDTO sanPham : arr) {
 		        Object[] row = {
-		            taiKhoan.getIdTK(),
-		            taiKhoan.getTenTK(),
-					taiKhoan.getEmail(),
-		            taiKhoan.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa",
+		            sanPham.getIdSP(),
+		            sanPham.getTenSP(),
+					sanPham.getGiaban(),
+		            sanPham.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa",
 		        };
 		        tableModel.addRow(row);
 		    }
@@ -136,20 +136,20 @@ public class SanPhamPanel extends JPanel {
 	private void showEdit() {
 		int selectedRow = table.getSelectedRow();
 		if (selectedRow == -1) {
-			JOptionPane.showMessageDialog(this, "Bạn chưa chọn tài khoản");
+			JOptionPane.showMessageDialog(this, "Bạn chưa chọn sản phẩm");
 		}
 		else {
-			int idTK = (int) table.getValueAt(selectedRow, 0);
-			TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog();
-			taiKhoanDialog.showEdit(idTK);
+			int idSP = (int) table.getValueAt(selectedRow, 0);
+			SanPhamDialog sanPhamDialog = new SanPhamDialog();
+			sanPhamDialog.showEdit(idSP);
 			// sau khi đóng dialog, reload table 
 			loadTable(null);
 		}
 	}
 	
 	private void showAdd() {
-		TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog();
-		taiKhoanDialog.showAdd();
+		SanPhamDialog sanPhamDialog = new SanPhamDialog();
+		sanPhamDialog.showAdd();
 		// sau khi đóng dialog, reload table 
 		loadTable(null);
 	}
@@ -162,7 +162,7 @@ public class SanPhamPanel extends JPanel {
 			JOptionPane.showMessageDialog(this, "Bạn chưa nhập từ khóa tìm kiếm");
 		else {
 			// tìm kiếm: nếu không tìm thấy thì trả về null
-			List<TaiKhoanDTO> result = taiKhoanBus.search(keyWord.trim());
+			List<SanPhamDTO> result = sanPhamBus.search(keyWord.trim());
 			// hiển thị
 			loadTable(result);
 			// empty ô search
@@ -173,17 +173,17 @@ public class SanPhamPanel extends JPanel {
 	private void delete() {
 		int selectedRow = table.getSelectedRow();
 		if (selectedRow == -1) {
-			JOptionPane.showMessageDialog(this, "Bạn chưa chọn danh mục");
+			JOptionPane.showMessageDialog(this, "Bạn chưa chọn sản phẩm");
 		}
 		else {
 			// tiến hành xóa
-			int idTK = (int) table.getValueAt(selectedRow, 0);
+			int idSP = (int) table.getValueAt(selectedRow, 0);
 			// cập nhật lại CSDL
 			// kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
-			if(taiKhoanBus.delete(idTK))
+			if(sanPhamBus.delete(idSP))
 				JOptionPane.showMessageDialog(this, "Xóa thành công");
 			else {
-				JOptionPane.showMessageDialog(this, "Bạn không thể xóa tài khoản này");
+				JOptionPane.showMessageDialog(this, "Bạn không thể xóa sản phẩm này");
 				// reload table
 				loadTable(null);
 			}

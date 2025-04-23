@@ -42,7 +42,7 @@ public class NhaCungCapBUS {
 		// kiểm tra nếu tài khoản của nhà cung cấp đã tồn tại 
 		// trong phiếu nhập bất kì (có khóa ngoại)
 		// -> ko xóa được
-		if(!nhaCungCapDao.isEmployeeInInvoice(idNCC)) {
+		if(!nhaCungCapDao.isSupplierInInvoice(idNCC)) {
 			if(nhaCungCapDao.delete(idNCC)) 
 				success = true;
 		}

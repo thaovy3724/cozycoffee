@@ -27,4 +27,9 @@ public class NhomQuyenDTO {
     public void setTenNQ(String tenNQ) {
         this.tenNQ = tenNQ;
     }
+    
+    @Override
+    public String toString(){
+        return tenNQ;
+    }
 }

@@ -8,11 +8,16 @@ public class SanPhamDTO {
     private int trangthai;
     private int idDM;
 
-    public SanPhamDTO() {
-    }
-
     public SanPhamDTO(int idSP, String tenSP, int giaban, String hinhanh, int trangthai, int idDM) {
         this.idSP = idSP;
+        this.tenSP = tenSP;
+        this.giaban = giaban;
+        this.hinhanh = hinhanh;
+        this.trangthai = trangthai;
+        this.idDM = idDM;
+    }
+
+    public SanPhamDTO(String tenSP, int giaban, String hinhanh, int trangthai, int idDM) {
         this.tenSP = tenSP;
         this.giaban = giaban;
         this.hinhanh = hinhanh;

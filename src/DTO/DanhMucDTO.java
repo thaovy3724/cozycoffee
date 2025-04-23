@@ -20,8 +20,9 @@ public class DanhMucDTO {
         this.idDMCha = idDMCha;
     }
 
-    public DanhMucDTO(String tenDM, int idDMCha) {
+    public DanhMucDTO(String tenDM, int trangthai, int idDMCha) {
     	this.tenDM = tenDM;
+    	this.trangthai = trangthai;
         this.idDMCha = idDMCha;
     }
     

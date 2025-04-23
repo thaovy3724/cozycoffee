@@ -42,7 +42,7 @@ public class TaiKhoanDialog extends JDialog {
 	 */
 	public TaiKhoanDialog() {
 		setTitle("Thêm tài khoản");
-		setSize(569, 457);
+		setSize(418, 457);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(255, 255, 255));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -236,7 +236,7 @@ public class TaiKhoanDialog extends JDialog {
 		{
 			cboTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 			GridBagConstraints gbc_cboTrangThai = new GridBagConstraints();
-			gbc_cboTrangThai.insets = new Insets(0, 0, 5, 0);
+			gbc_cboTrangThai.insets = new Insets(0, 0, 5, 10);
 			gbc_cboTrangThai.fill = GridBagConstraints.HORIZONTAL;
 			gbc_cboTrangThai.gridx = 2;
 			gbc_cboTrangThai.gridy = 11;

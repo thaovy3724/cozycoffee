@@ -15,7 +15,7 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
 		 "idNCC",
 		 "tenNCC",
          "diachi",
-         "sđt",
+         "sdt",
          "email",
 		 "trangthai"
 		));
@@ -27,7 +27,7 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
                 rs.getInt("idNCC"),
                 rs.getString("tenNCC"),
                 rs.getString("diachi"),
-                rs.getString("sđt"),
+                rs.getString("sdt"),
                 rs.getString("email"),
                 rs.getInt("trangthai")
         );
@@ -64,7 +64,7 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
         try {
 			StringBuilder sql = new StringBuilder("SELECT * FROM ");
 			sql.append(table);
-			sql.append(" WHERE tenNNC LIKE ?");
+			sql.append(" WHERE tenNCC LIKE ?");
 			sql.append(" OR email = ?");
 			sql.append(" OR sdt = ?");
 			if(ncc.getIdNCC() != 0) 
@@ -90,7 +90,7 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
         return isExist;
 	}
 
-    public boolean isEmployeeInInvoice(int idNCC){
+    public boolean isSupplierInInvoice(int idNCC){
         Connection link = null;
 		PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -121,7 +121,7 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
         ResultSet rs = null;
 		List<NhaCungCapDTO> result = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM " + table + " WHERE idDNCC LIKE ? OR tenDNCC LIKE ?";
+            String sql = "SELECT * FROM " + table + " WHERE idNCC LIKE ? OR tenNCC LIKE ?";
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
             pstmt.setString(1, "%" + keyWord + "%");
