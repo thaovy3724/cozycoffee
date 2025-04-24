@@ -1,41 +1,23 @@
 package DAO;
 
+import DTO.DanhMucDTO;
 import DTO.NhomQuyenDTO;
-import DTO.TaiKhoanDTO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class NhomQuyenDAO {
-    private String tableName = "nhomquyen";
-    private List<String> tableColumns = List.of(
-            "idNQ",
-            "tenNQ"
-    );
+public class NhomQuyenDAO extends BaseDAO<NhomQuyenDTO>{
+	public NhomQuyenDAO() {
+		super(
+		"nhomquyen",
+		List.of(
+        "idNQ",
+        "tenNQ"));
+	}
 
-    public List<NhomQuyenDTO> getAll() {
-        DatabaseConnection db = new DatabaseConnection();
-        String sql = "SELECT * FROM " + tableName;
-        List<NhomQuyenDTO> list = new ArrayList<>();
-
-        try {
-            db.prepareStatement(sql);
-            try (ResultSet rs = db.getAll(null)) {
-                while (rs.next()) {
-                    NhomQuyenDTO nhomQuyen = mapResultSetToDTO(rs);
-                    list.add(nhomQuyen);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
-        }
-
-        return list;
-    }
 
     public NhomQuyenDTO mapResultSetToDTO(ResultSet rs) throws SQLException {
         return new NhomQuyenDTO(
@@ -43,4 +25,24 @@ public class NhomQuyenDAO {
                 rs.getString("tenNQ")
         );
     }
+
+    public NhomQuyenDTO findByIdNQ(int idNQ) {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        NhomQuyenDTO result = null;
+        try {
+            String sql = "SELECT * FROM " + table + " WHERE idNQ = ?";
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            pstmt.setInt(1,idNQ);
+            rs = pstmt.executeQuery();
+            if (rs.next()) result = mapResultSetToDTO(rs);
+        }catch(ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }finally {
+            db.close(link);
+        }
+        return result;
+	}
 }

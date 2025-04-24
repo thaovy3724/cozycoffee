@@ -1,182 +1,174 @@
 package DAO;
 
-import DTO.TaiKhoanDTO;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public abstract class BaseDAO<T> implements IBaseDAO<T> {
-    protected String tableName;
+public abstract class BaseDAO<T>{
+    protected String table;
     protected List<String> tableColumns;
-    public BaseDAO(String tableName, List<String> tableColumns) {
-        this.tableName = tableName;
-        this.tableColumns = tableColumns;
+	protected DatabaseConnect db;
+	
+    public BaseDAO(String table, List<String> tableColumns) {
+    	this.table = table;
+    	this.tableColumns = tableColumns;
+    	db = new DatabaseConnect();
     }
-
-    @Override
+    
     public List<T> getAll() {
-        DatabaseConnection db = new DatabaseConnection();
-        List<T> list = new ArrayList<>();
-        String sql = "SELECT * FROM " + tableName;
-
-        try {
-            db.prepareStatement(sql);
-            try (ResultSet rs = db.getAll(null)) {
-                while (rs.next()) {
-                    T entity = mapResultSetToDTO(rs);
-                    list.add(entity);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
-        }
-
-        return list;
+		List<T> list = new ArrayList<>();
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try{
+			link = db.connectDB();
+			String sql = "SELECT * FROM " + table;
+			pstmt = link.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+            while (rs.next()) list.add(mapResultSetToDTO(rs));
+		}catch(ClassNotFoundException | SQLException e){
+			e.printStackTrace();
+		}finally {
+			db.close(link);
+		}
+		return list;
     }
 
-    @Override
-    public T findById(String column, int id) {
-        DatabaseConnection db = new DatabaseConnection();
-        String sql = "SELECT * FROM " + tableName + " WHERE " + column + " = ?";
-        List<Object> params = new ArrayList<>();
-        params.add(id);
-        T entity = null;
-
-        try {
-            db.prepareStatement(sql);
-            try (ResultSet rs = db.getAll(params)) {
-                if (rs.next()) {
-                    entity = mapResultSetToDTO(rs);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            db.close();
-        }
-        return entity;
+    public int getNewAutoIncrementNumber() {
+    	Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int newID = -1;
+		try {
+			link = db.connectDB();
+			String sql = "SELECT AUTO_INCREMENT as newID FROM information_schema.TABLES " +
+	                "WHERE TABLE_SCHEMA = '" + db.getDBName() + "' " + 
+	                "AND TABLE_NAME = '" + table + "'";
+			pstmt = link.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+            if(rs.next()) newID = rs.getInt("newID");
+		}catch(ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}finally {
+			db.close(link);
+		}
+		return newID;
+    }
+    
+    public boolean add(List<Object> params) {
+    	Connection link = null;
+		PreparedStatement pstmt = null;
+		boolean success = false;
+		try {
+			if (params != null && params.size() == tableColumns.size()) {
+				// tao sql
+				StringBuilder sql = new StringBuilder("INSERT INTO ");
+				
+		        //Tên table
+		        sql.append(table);
+		        sql.append(" (");
+		        //Danh sách cột của table
+		        sql.append(String.join(",", tableColumns));
+		        sql.append(") VALUES (");
+		        //Với mỗi tham số, thêm một character "?"
+		        sql.append(String.join(",", Collections.nCopies(params.size(), "?")));
+		        sql.append(")");
+		        
+		        // noi param
+		        link = db.connectDB();
+		        pstmt = link.prepareStatement(sql.toString());
+		        
+	            for (int i = 0; i < params.size(); i++) 
+	                pstmt.setObject(i + 1, params.get(i));
+		        
+		        // thuc thi
+		        success = pstmt.executeUpdate() > 0 ? true : false;
+			}
+		}catch(ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}finally {
+			db.close(link);
+		}
+		return success;
     }
 
-    @Override
-    public boolean isExist(String column, Object value) {
-        DatabaseConnection db = new DatabaseConnection();
-        String sql = "SELECT COUNT(*) FROM " + tableName + " WHERE " + column + " = ?";
-        List<Object> params = new ArrayList<>();
-        params.add(value);
-        boolean exists = false;
-
-        try {
-            db.prepareStatement(sql);
-            try (ResultSet rs = db.getAll(params)) {
-                if (rs.next()) {
-                     exists= rs.getInt(1) > 0;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
-        }
-        return exists;
+    public boolean update(List<Object> params, String condition) {
+    	Connection link = null;
+		PreparedStatement pstmt = null;
+		boolean success = false;
+		try {
+			if (params != null && params.size() == tableColumns.size()) {
+			// tao sql
+				StringBuilder sql = new StringBuilder("UPDATE ");
+				
+		        //Tên table
+		        sql.append(table);
+		        sql.append(" SET ");
+		        
+		        // Generate SET clause with column names
+		        for (int i = 0; i < tableColumns.size(); i++) {
+		            sql.append(tableColumns.get(i)).append(" = ?");
+		            if (i < tableColumns.size() - 1) {
+		                sql.append(", ");
+		            }
+		        }
+		        // Add condition (WHERE clause) -> where id = ...
+		        sql.append(" WHERE ").append(condition);
+		        
+		        // noi param
+		        link = db.connectDB();
+		        pstmt = link.prepareStatement(sql.toString());
+		        
+	            for (int i = 0; i < params.size(); i++) 
+	                pstmt.setObject(i + 1, params.get(i));
+		        
+		        // thuc thi
+		        success = pstmt.executeUpdate() > 0 ? true : false;
+			}
+		}catch(ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}finally {
+			db.close(link);
+		}
+		return success;
     }
-
-    @Override
-    public boolean isExist(String column, Object value, String excludedColumn, Object excludedValue) {
-        DatabaseConnection db = new DatabaseConnection();
-        String sql = "SELECT COUNT(*) FROM " + tableName + " WHERE " + column + " = ? AND " + excludedColumn + " != ?" ;
-        List<Object> params = new ArrayList<>();
-        params.add(value);
-        params.add(excludedValue);
-        boolean exists = false;
-
-        try {
-            db.prepareStatement(sql);
-            try (ResultSet rs = db.getAll(params)) {
-                if (rs.next()) {
-                    exists= rs.getInt(1) > 0;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
-        }
-        return exists;
-    }
-
-//    @Override
-//    public boolean isExist(Map<String, Object> equals, Map<String, Object> notEquals) {
-//        DatabaseConnection db = new DatabaseConnection();
-//        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM " + tableName + " WHERE ");
-//        List<Object> params = new ArrayList<>();
-//
-//        List<String> conditions = new ArrayList<>();
-//        for(Map.Entry<String, Object> eCondition: equals.entrySet()) {
-//            conditions.add(eCondition.getKey() + " = ?");
-//            params.add(eCondition.getValue());
-//        }
-//        for(Map.Entry<String, Object> neCondition: notEquals.entrySet()) {
-//            conditions.add(neCondition.getKey() + " != ?");
-//            params.add(neCondition.getValue());
-//        }
-//
-//        try {
-//            db.prepareStatement(sql);
-//            ResultSet rs = db.getAll(params);
-//            if (rs.next()) {
-//                return rs.getInt(1) > 0;
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            db.close();
-//        }
-//        return false;
-//
-//        sql.append(String.join(" AND ", conditions));
-//    }
-
-    @Override
-    public boolean add(T entity) {
-        DatabaseConnection db = new DatabaseConnection();
-        List<Object> params = mapDTOToParams(entity);
-        //Đảm bảo phải có tham số truyền vào
-        //và số lượng tham số bằng với số cột để tránh gọi truy vấn sql không cần thiết
-        if (params == null || params.size() != tableColumns.size()) {
-            return false;
-        }
-        StringBuilder sql = new StringBuilder("INSERT INTO ");
-
-        //Tên table
-        sql.append(tableName);
-        sql.append(" (");
-        //Danh sách cột của table
-        sql.append(String.join(",", tableColumns));
-        sql.append(") VALUES (");
-        //Với mỗi tham số, thêm một character "?"
-        sql.append(String.join(",", Collections.nCopies(params.size(), "?")));
-        sql.append(")");
-
-        try {
-            db.prepareStatement(sql.toString());
-            return db.execute(params);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
-        }
-
-        return false;
+		
+	public boolean delete(String column, Object value) {
+    	Connection link = null;
+		PreparedStatement pstmt = null;
+		boolean success = false;
+		try {
+			// tao sql
+				StringBuilder sql = new StringBuilder("DELETE FROM ");
+				
+		        //Tên table
+		        sql.append(table);
+		        
+		        // Add condition (WHERE clause) -> where id = ...
+		        sql.append(" WHERE ");
+		        sql.append(column);
+		        sql.append(" = ?");
+		        
+		        // noi param
+		        link = db.connectDB();
+		        pstmt = link.prepareStatement(sql.toString());
+		        pstmt.setObject(1, value);
+		        
+		        // thuc thi
+		        success = pstmt.executeUpdate() > 0 ? true : false;
+		}catch(ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}finally {
+			db.close(link);
+		}
+		return success;
     }
 
     // *** Các phương thức trừu tượng mà lớp con phải triển khai
-//    protected abstract String getTableName();
-//    protected abstract List<String> getTableColumns();
     protected abstract T mapResultSetToDTO(ResultSet rs) throws SQLException;
-    public abstract List<Object> mapDTOToParams(T entity);
     // ***
 }

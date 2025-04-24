@@ -1,12 +1,16 @@
 package DTO;
 
 public class DanhMucDTO {
-    private int idDM;
+	private int idDM;
     private String tenDM;
     private int trangthai;
     private int idDMCha;
 
     public DanhMucDTO() {
+    	idDM = 0;
+    	tenDM = "";
+    	trangthai = 1;
+    	idDMCha = 0;
     }
 
     public DanhMucDTO(int idDM, String tenDM, int trangthai, int idDMCha) {
@@ -16,6 +20,12 @@ public class DanhMucDTO {
         this.idDMCha = idDMCha;
     }
 
+    public DanhMucDTO(String tenDM, int trangthai, int idDMCha) {
+    	this.tenDM = tenDM;
+    	this.trangthai = trangthai;
+        this.idDMCha = idDMCha;
+    }
+    
     public int getIdDM() {
         return idDM;
     }
@@ -46,5 +56,10 @@ public class DanhMucDTO {
 
     public void setIdDMCha(int idDMCha) {
         this.idDMCha = idDMCha;
+    }
+
+    @Override
+    public String toString(){
+        return tenDM;
     }
 }

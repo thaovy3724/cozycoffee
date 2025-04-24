@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="bcrypt-0.10.2-optimized">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/src/lib/bcrypt-0.10.2-optimized.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

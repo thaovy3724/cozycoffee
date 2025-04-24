@@ -1,26 +1,23 @@
 package DTO;
 
-import java.util.Objects;
-
 public class SanPhamDTO {
-    private int idSP;
+	private int idSP;
     private String tenSP;
     private int giaban;
     private String hinhanh;
-    private boolean trangthai;
+    private int trangthai;
     private int idDM;
 
-    public SanPhamDTO() {
-        this.idSP = 0;
-        this.tenSP = "";
-        this.giaban = 0;
-        this.hinhanh = "";
-        this.trangthai = false;
-        this.idDM = 0;
+    public SanPhamDTO(int idSP, String tenSP, int giaban, String hinhanh, int trangthai, int idDM) {
+        this.idSP = idSP;
+        this.tenSP = tenSP;
+        this.giaban = giaban;
+        this.hinhanh = hinhanh;
+        this.trangthai = trangthai;
+        this.idDM = idDM;
     }
 
-    public SanPhamDTO(int idSP, String tenSP, int giaban, String hinhanh, boolean trangthai, int idDM) {
-        this.idSP = idSP;
+    public SanPhamDTO(String tenSP, int giaban, String hinhanh, int trangthai, int idDM) {
         this.tenSP = tenSP;
         this.giaban = giaban;
         this.hinhanh = hinhanh;
@@ -60,11 +57,11 @@ public class SanPhamDTO {
         this.hinhanh = hinhanh;
     }
 
-    public boolean getTrangthai() {
+    public int getTrangthai() {
         return trangthai;
     }
 
-    public void setTrangthai(boolean trangthai) {
+    public void setTrangthai(int trangthai) {
         this.trangthai = trangthai;
     }
 
@@ -74,30 +71,5 @@ public class SanPhamDTO {
 
     public void setIdDM(int idDM) {
         this.idDM = idDM;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SanPhamDTO)) return false;
-        SanPhamDTO that = (SanPhamDTO) o;
-        return idSP == that.idSP && giaban == that.giaban && trangthai == that.trangthai && idDM == that.idDM && Objects.equals(tenSP, that.tenSP) && Objects.equals(hinhanh, that.hinhanh);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(idSP, tenSP, giaban, hinhanh, trangthai, idDM);
-    }
-
-    @Override
-    public String toString() {
-        return "SanPhamDTO{" +
-                "idSP=" + idSP +
-                ", tenSP='" + tenSP + '\'' +
-                ", giaban=" + giaban +
-                ", hinhanh='" + hinhanh + '\'' +
-                ", trangthai=" + trangthai +
-                ", idDM=" + idDM +
-                '}';
     }
 }

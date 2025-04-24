@@ -20,8 +20,8 @@ import java.awt.Font;
 import java.awt.Color;
 
 /*
-* Do ở frame đăng nhập tạm thời có một tính năng nên tui để actionListener trong cái khởi tạo luôn nha
-* */
+ * Do ở frame đăng nhập tạm thời có một tính năng nên tui để actionListener trong cái khởi tạo luôn nha
+ * */
 
 public class DangNhapFrame extends JFrame {
 	private TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();
