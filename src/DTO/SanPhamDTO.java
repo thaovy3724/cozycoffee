@@ -1,23 +1,18 @@
 package DTO;
 
 public class SanPhamDTO {
-	private int idSP;
+    private int idSP;
     private String tenSP;
     private int giaban;
     private String hinhanh;
     private int trangthai;
     private int idDM;
 
-    public SanPhamDTO(int idSP, String tenSP, int giaban, String hinhanh, int trangthai, int idDM) {
-        this.idSP = idSP;
-        this.tenSP = tenSP;
-        this.giaban = giaban;
-        this.hinhanh = hinhanh;
-        this.trangthai = trangthai;
-        this.idDM = idDM;
+    public SanPhamDTO() {
     }
 
-    public SanPhamDTO(String tenSP, int giaban, String hinhanh, int trangthai, int idDM) {
+    public SanPhamDTO(int idSP, String tenSP, int giaban, String hinhanh, int trangthai, int idDM) {
+        this.idSP = idSP;
         this.tenSP = tenSP;
         this.giaban = giaban;
         this.hinhanh = hinhanh;
@@ -72,4 +67,9 @@ public class SanPhamDTO {
     public void setIdDM(int idDM) {
         this.idDM = idDM;
     }
+    @Override
+    public String toString(){
+        return tenSP !=null ? tenSP: "Khong xac dinh";
+    }
+  
 }

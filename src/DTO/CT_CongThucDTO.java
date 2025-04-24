@@ -1,7 +1,7 @@
 package DTO;
 
 public class CT_CongThucDTO {
-	private int idCT;
+    private int idCT;
     private int idNL;
     private float soluong;
 

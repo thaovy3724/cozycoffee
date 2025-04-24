@@ -1,19 +1,25 @@
 package DTO;
 
 public class CongThucDTO {
-	private int idCT;
+    private int idCT;
     private String mota;
-    private int trangthai;
     private int idSP;
 
     public CongThucDTO() {
+        idCT = 0;
+        mota = "";
+        idSP = 0;
     }
-    
-    public CongThucDTO(int idCT, String mota, int trangthai, int idSP) {
-        this.idCT = idCT;
-        this.mota = mota;
-        this.trangthai = trangthai;
+
+    public CongThucDTO(int idCT, int idSP,String mota) {
+        this.idCT = idCT; 
         this.idSP = idSP;
+        this.mota = mota;
+    }
+    public CongThucDTO( int idSP, String mota) {
+ 
+        this.idSP = idSP;
+        this.mota = mota;
     }
 
     // Getter và Setter cho idCT
@@ -34,15 +40,7 @@ public class CongThucDTO {
         this.mota = mota;
     }
 
-    // Getter và Setter cho trangthai
-    public int getTrangthai() {
-        return trangthai;
-    }
-
-    public void setTrangthai(int trangthai) {
-        this.trangthai = trangthai;
-    }
-    
+   
     // Getter và Setter cho idSP
     public int getIdSP() {
         return idSP;
