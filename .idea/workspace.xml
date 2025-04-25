@@ -5,24 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0b6e49eb-ad6e-47e1-be09-0e789ce97c9e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/jcalendar_1_3_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cozycoffee.eml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/mysql_connector_j_9_2_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/mysql_connector_j_9_2_0.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/BUS/TaiKhoanBUS.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BUS/TaiKhoanBUS.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/TaiKhoanDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/TaiKhoanDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/HoaDonDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/HoaDonDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/Dialog/TaiKhoanDialog.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/Dialog/TaiKhoanDialog.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/module-info.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BUS/TaiKhoanBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/TaiKhoanBUS.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DAO/TaiKhoanDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/TaiKhoanDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DTO/HoaDonDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DTO/HoaDonDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/AdminFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/AdminFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

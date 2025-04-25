@@ -55,9 +55,9 @@ public class TaiKhoanBUS {
 		return taiKhoanDAO.search(keyWord);
 	}
 
-//    public List<TaiKhoanDTO> getAllTaiKhoanByIDNQ(int idNQ) {
-//        return taiKhoanDAO.getAllByIDNQ(idNQ);
-//    }
+    public List<TaiKhoanDTO> getAllTaiKhoanByIDNQ(int idNQ) {
+        return taiKhoanDAO.getAllByIDNQ(idNQ);
+    }
 
 //    // Hash mật khẩu bằng BCrypt
 //    private String hashPassword(String plainPassword) {

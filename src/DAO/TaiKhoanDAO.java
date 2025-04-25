@@ -166,28 +166,29 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
 //        );
 //    }
 
-//    public List<TaiKhoanDTO> getAllByIDNQ(int idNQ) {
-//        DatabaseConnection db = new DatabaseConnection();
-//        StringBuilder sql = new StringBuilder("SELECT * FROM " + tableName + " WHERE idNQ = ?");
-//        List<Object> params = new ArrayList<>();
-//        params.add(idNQ);
-//        List<TaiKhoanDTO> list = new ArrayList<>();
-//        try {
-//            db.prepareStatement(sql.toString());
-//            try (ResultSet rs = db.getAll(params)) {
-//                while (rs.next()) {
-//                    TaiKhoanDTO item = mapResultSetToDTO(rs);
-//                    list.add(item);
-//                }
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            db.close();
-//        }
-//
-//        return list;
-//    }
+    public List<TaiKhoanDTO> getAllByIDNQ(int idNQ) {
+        Connection link = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<TaiKhoanDTO> result = new ArrayList<>();
+
+        try {
+            String sql = "SELECT * FROM " + table + " WHERE idNQ = ?";
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            pstmt.setInt(1, idNQ);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                result.add(mapResultSetToDTO(rs));
+            }
+        } catch(ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.close(link);
+        }
+
+        return result;
+    }
 //
 //    // Tìm kiếm tài khoản theo từ khóa
 //    public List<TaiKhoanDTO> search(String kyw) {
