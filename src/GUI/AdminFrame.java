@@ -252,7 +252,7 @@ public class AdminFrame extends JFrame {
                 selectedPanel = new JPanel(); // Thay bằng panel Thống kê
                 break;
             case "hoadon":
-                selectedPanel = new JPanel(); // Thay bằng panel Hóa đơn
+                selectedPanel = new GUI.HoaDonPanel(); // Thay bằng panel Hóa đơn
                 break;
             case "sanpham":
                 selectedPanel = new JPanel(); // Thay bằng panel Sản phẩm
