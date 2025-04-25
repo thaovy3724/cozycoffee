@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component jdk="JavaSE-21" jdk_type="JavaSDK">
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="com.jgoodies.forms_1.9.0.v20240327-0800.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/com.jgoodies.forms_1.9.0.v20240327-0800.jar!/"/>
+	</lib>
+	<lib name="com.jgoodies.common_1.8.1.v20240327-0800.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/com.jgoodies.common_1.8.1.v20240327-0800.jar!/"/>
+	</lib>
+	<levels>
+		<level name="jcalendar-1.3.2" value="project"/>
+		<level name="mysql-connector-j-9.2.0" value="project"/>
+	</levels>
+</component>

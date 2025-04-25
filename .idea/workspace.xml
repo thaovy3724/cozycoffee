@@ -5,94 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0b6e49eb-ad6e-47e1-be09-0e789ce97c9e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/jcalendar_1_3_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cozycoffee.eml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/bcrypt_0_10_2_optimized.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/jcalendar_1_3_2.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/mysql_connector_j_9_2_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/mysql_connector_j_9_2_0.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" afterPath="$PROJECT_DIR$/.project" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.core.resources.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/org.eclipse.core.resources.prefs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Readme.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Readme.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/ASSET/Images/searchIcon.png" beforeDir="false" afterPath="$PROJECT_DIR$/bin/ASSET/Images/searchIcon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/BUS/DanhMucBUS.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BUS/DanhMucBUS.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/BUS/HoaDonBUS.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/BUS/SanPhamBUS.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BUS/SanPhamBUS.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/BUS/TaiKhoanBUS.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BUS/TaiKhoanBUS.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/CONFIG/Config.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/BaseDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/BaseDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/CTHoaDonDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/DanhMucDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/DanhMucDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/DatabaseConnection.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/HoaDonDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/IBaseDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/NhomQuyenDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/NhomQuyenDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/SanPhamDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/SanPhamDAO.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/DAO/TaiKhoanDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/TaiKhoanDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/CTHoaDonDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/ComboItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/ComboItem.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/DanhMucDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/DanhMucDTO.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/DTO/HoaDonDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/HoaDonDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/NhomQuyenDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/NhomQuyenDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/SanPhamDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/SanPhamDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/TaiKhoanDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/TaiKhoanDTO.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/DangNhapFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DangNhapFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/DanhMucPanel$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DanhMucPanel$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/DanhMucPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DanhMucPanel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/HoaDonPanel$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/HoaDonPanel$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/HoaDonPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/TaiKhoanPanel$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/TaiKhoanPanel$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/TaiKhoanPanel$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/TaiKhoanPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/TaiKhoanPanel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/img/LogoDangNhap - temp.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/img/LogoDangNhap.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/lib/bcrypt-0.10.2-optimized.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/lib/jcalendar-1.3.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/lib/mysql-connector-j-9.2.0.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/coffeeshop.sql" beforeDir="false" afterPath="$PROJECT_DIR$/coffeeshop.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cozycoffee.eml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ASSET/Images/searchIcon.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/ASSET/Images/searchIcon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BUS/DanhMucBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/DanhMucBUS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BUS/HoaDonBUS.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BUS/SanPhamBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/SanPhamBUS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/GUI/Dialog/TaiKhoanDialog.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/Dialog/TaiKhoanDialog.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/module-info.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BUS/TaiKhoanBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/TaiKhoanBUS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CONFIG/Config.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/BaseDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/BaseDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/CTHoaDonDAO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/DanhMucDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/DanhMucDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/DatabaseConnection.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/HoaDonDAO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/IBaseDAO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/NhomQuyenDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/NhomQuyenDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/SanPhamDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/SanPhamDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DAO/TaiKhoanDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/TaiKhoanDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DTO/CTHoaDonDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DTO/ComboItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DTO/ComboItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DTO/DanhMucDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DTO/DanhMucDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DTO/HoaDonDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DTO/HoaDonDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DTO/NhomQuyenDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DTO/NhomQuyenDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DTO/SanPhamDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DTO/SanPhamDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DTO/TaiKhoanDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DTO/TaiKhoanDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/AdminFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/AdminFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/DangNhapFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/DangNhapFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/DanhMucPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/DanhMucPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/HoaDonPanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/TaiKhoanPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/TaiKhoanPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/img/LogoDangNhap - temp.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/img/LogoDangNhap.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/bcrypt-0.10.2-optimized.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/jcalendar-1.3.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/mysql-connector-j-9.2.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,7 +71,7 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;TrongHiuuu&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ACER/eclipse-workspace/cozycoffee/src/lib/jcalendar-1.3.2.jar&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/ACER/eclipse-workspace/cozycoffee/src/lib/mysql-connector-j-9.2.0.jar&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
