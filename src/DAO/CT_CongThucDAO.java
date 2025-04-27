@@ -1,22 +1,19 @@
 package DAO;
 
-import java.util.ArrayList;
-
 import DTO.CT_CongThucDTO;
-import DTO.CongThucDTO;
+import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
 
 public class CT_CongThucDAO extends BaseDAO<CT_CongThucDTO> {
     public CT_CongThucDAO() {
         super(
-                "ct_congthuc",
-                List.of(
-                        "idCT",
-                        "idNL",
-                        "soluong"
-
-                ));
+            "ct_congthuc",
+            List.of(
+                "idCT",
+                "idNL",
+                "soluong"
+            ));
     }
 
     @Override
@@ -24,31 +21,24 @@ public class CT_CongThucDAO extends BaseDAO<CT_CongThucDTO> {
         return new CT_CongThucDTO(
                 rs.getInt("idCT"),
                 rs.getInt("idNL"),
-                rs.getFloat("soluong"));
+                rs.getFloat("soluong")
+        );
     }
 
-    public boolean add(CT_CongThucDTO ct) {
+    public boolean add(CT_CongThucDTO ctDetail) {
         List<Object> params = new ArrayList<>();
-        params.add(ct.getIdCT());
-        params.add(ct.getIdNL());
-        params.add(ct.getSoluong());
+        params.add(ctDetail.getIdCT());
+        params.add(ctDetail.getIdNL());
+        params.add(ctDetail.getSoluong());
         return super.add(params);
     }
 
     public boolean deleteByCongThuc(int idCT) {
-        return super.delete("idCT", idCT);
+        String col = "idCT";
+        return super.delete(col, idCT);
     }
 
-    // public boolean update(CongThucDTO ct) {
-    //     List<Object> params = new ArrayList<>();
-    //     params.add(ct.getIdCT());
-    //     params.add(ct.getMota());
-    //     params.add(ct.getIdSP() == 0 ? null : ct.getIdSP());
-    //     String condition = "idCT = " + ct.getIdCT();
-    //     return super.update(params, condition);
-    // }
-
-    public List<CT_CongThucDTO> getByCongThuc(int idCT) {
+    public List<CT_CongThucDTO> getChiTietCongThuc(int idCT) {
         Connection link = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -70,4 +60,3 @@ public class CT_CongThucDAO extends BaseDAO<CT_CongThucDTO> {
         return result;
     }
 }
-

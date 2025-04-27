@@ -5,7 +5,8 @@ public class NguyenLieuDTO {
     private String donvi;
     private String tenNL;
     private int trangthai;
-    
+
+  
     public NguyenLieuDTO(int idNL, String tenNL) {
         this.idNL = idNL;
         this.tenNL = tenNL;

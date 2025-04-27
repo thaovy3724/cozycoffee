@@ -19,6 +19,15 @@ public class SanPhamDTO {
         this.trangthai = trangthai;
         this.idDM = idDM;
     }
+    public SanPhamDTO( String tenSP, int giaban, String hinhanh, int trangthai, int idDM) {
+     
+        this.tenSP = tenSP;
+        this.giaban = giaban;
+        this.hinhanh = hinhanh;
+        this.trangthai = trangthai;
+        this.idDM = idDM;
+    }
+
 
     public int getIdSP() {
         return idSP;

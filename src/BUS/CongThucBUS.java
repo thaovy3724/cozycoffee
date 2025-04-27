@@ -1,40 +1,32 @@
 package BUS;
+
 import DTO.CongThucDTO;
 import DTO.CT_CongThucDTO;
-import DTO.NguyenLieuDTO;
 import DAO.CongThucDAO;
-import DAO.CT_CongThucDAO;
 import DAO.SanPhamDAO;
-import DAO.NguyenLieuDAO;
 import java.util.List;
-import java.util.ArrayList;
 
 public class CongThucBUS {
     private final CongThucDAO congThucDao = new CongThucDAO();
-    private final CT_CongThucDAO ctCongThucDao = new CT_CongThucDAO();
     private final SanPhamDAO sanPhamDao = new SanPhamDAO();
-    private final NguyenLieuDAO nguyenLieuDao = new NguyenLieuDAO();
+    private final CT_CongThucBUS ctCongThucBus = new CT_CongThucBUS();
+    private static int nextIdCT = 1; // Biến tĩnh để tự động tăng idCT
 
-    public List<CongThucDTO> getAll(){
+    public List<CongThucDTO> getAll() {
         return congThucDao.getAll();
     }
-    
-    public List<CongThucDTO> getAllActiveEdit(int idCT, int idSP){
+
+    public List<CongThucDTO> getAllActiveEdit(int idCT, int idSP) {
         return congThucDao.getAllActiveEdit(idCT, idSP);
     }
-    
-    public List<CongThucDTO> getAllActive(){
+
+    public List<CongThucDTO> getAllActive() {
         return congThucDao.getAllActive();
     }
-    
+
     public CongThucDTO findByIdCT(int idCT) {
         return congThucDao.findByIdCT(idCT);
     }
-    public List<CT_CongThucDTO> getChiTietCongThuc(int idCT){
-        return ctCongThucDao.getByCongThuc(idCT);
-    }
-
-    
 
     public String add(CongThucDTO ct, List<CT_CongThucDTO> chiTietList) {
         if (ct.getMota() == null || ct.getMota().trim().isEmpty()) {
@@ -50,16 +42,20 @@ public class CongThucBUS {
             return "Sản phẩm đã có công thức, không thể thêm công thức mới";
         }
 
+        // Gán idCT tự động
+        ct.setIdCT(nextIdCT++);
+
         boolean success = congThucDao.add(ct);
         if (success) {
             CongThucDTO addedCongThuc = congThucDao.findByIdSP(ct.getIdSP()).get(0);
             for (CT_CongThucDTO chiTiet : chiTietList) {
                 chiTiet.setIdCT(addedCongThuc.getIdCT());
-                ctCongThucDao.add(chiTiet);
+                ctCongThucBus.add(chiTiet);
             }
         }
         return success ? "" : "Không thể thêm công thức";
     }
+
     public String update(CongThucDTO ct, List<CT_CongThucDTO> chiTietList) {
         if (ct.getIdCT() <= 0 || congThucDao.findByIdCT(ct.getIdCT()) == null) {
             return "Công thức không tồn tại";
@@ -75,18 +71,16 @@ public class CongThucBUS {
 
         boolean success = congThucDao.update(ct);
         if (success) {
-            ctCongThucDao.deleteByCongThuc(ct.getIdCT());
+            ctCongThucBus.deleteByCongThuc(ct.getIdCT());
             for (CT_CongThucDTO chiTiet : chiTietList) {
                 chiTiet.setIdCT(ct.getIdCT());
-                ctCongThucDao.add(chiTiet);
+                ctCongThucBus.add(chiTiet);
             }
         }
         return success ? "" : "Không thể cập nhật công thức";
     }
-   
 
     public boolean delete(int idCT) {
-        
         CongThucDTO ct = congThucDao.findByIdCT(idCT);
         if (ct == null) {
             return false; // Công thức không tồn tại
@@ -103,12 +97,11 @@ public class CongThucBUS {
             return false;
         }
 
-        ctCongThucDao.deleteByCongThuc(idCT);
+        ctCongThucBus.deleteByCongThuc(idCT);
         return congThucDao.delete(idCT);
     }
-    
-    public List<CongThucDTO> search(String keyWord){
+
+    public List<CongThucDTO> search(String keyWord) {
         return congThucDao.search(keyWord);
-        }
-    
+    }
 }

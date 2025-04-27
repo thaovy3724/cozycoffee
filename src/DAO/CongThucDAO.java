@@ -5,16 +5,15 @@ import DTO.CongThucDTO;
 import java.util.List;
 import java.sql.*;
 
-public class CongThucDAO extends BaseDAO<CongThucDTO>{
+public class CongThucDAO extends BaseDAO<CongThucDTO> {
     public CongThucDAO() {
         super(
-        "congthuc", 
-        List.of(
-         "idCT",
-         "mota",
-         "idSP"
-        
-        ));
+            "congthuc", 
+            List.of(
+                "idCT",
+                "mota",
+                "idSP"
+            ));
     }
 
     @Override
@@ -23,13 +22,12 @@ public class CongThucDAO extends BaseDAO<CongThucDTO>{
                 rs.getInt("idCT"),
                 rs.getInt("idSP"),
                 rs.getString("mota")
-                
         );
     }
     
     public boolean add(CongThucDTO ct) {
         List<Object> params = new ArrayList<>();
-        params.add(ct.getIdCT());
+        params.add(ct.getIdCT()); // ID đã được gán tự động ở BUS
         params.add(ct.getMota());
         params.add(ct.getIdSP() == 0 ? null : ct.getIdSP());
         return super.add(params);
@@ -39,11 +37,10 @@ public class CongThucDAO extends BaseDAO<CongThucDTO>{
         List<Object> params = new ArrayList<>();
         params.add(ct.getIdCT());
         params.add(ct.getMota());
-        params.add(ct.getIdSP()== 0 ? null : ct.getIdSP());
-        String condition = "idCT = "+ct.getIdCT();
+        params.add(ct.getIdSP() == 0 ? null : ct.getIdSP());
+        String condition = "idCT = " + ct.getIdCT();
         return super.update(params, condition);
     }
-    
 
     public boolean isProduct(int idSP) {
         Connection link = null;
@@ -59,7 +56,7 @@ public class CongThucDAO extends BaseDAO<CongThucDTO>{
             hasProduct = rs.next();
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             db.close(link);
         }
         return hasProduct;
@@ -70,7 +67,7 @@ public class CongThucDAO extends BaseDAO<CongThucDTO>{
         return super.delete(col, idCT);
     }
     
-    public List<CongThucDTO> search(String keyWord){
+    public List<CongThucDTO> search(String keyWord) {
         Connection link = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -80,12 +77,11 @@ public class CongThucDAO extends BaseDAO<CongThucDTO>{
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
             pstmt.setString(1, "%" + keyWord + "%");
-            pstmt.setString(2, "%" + keyWord + "%");
             rs = pstmt.executeQuery();
             while (rs.next()) result.add(mapResultSetToDTO(rs));
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             db.close(link);
         }
         return result;
@@ -100,18 +96,19 @@ public class CongThucDAO extends BaseDAO<CongThucDTO>{
             String sql = "SELECT * FROM " + table + " WHERE idCT = ?";
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
-            pstmt.setInt(1,idCT);
+            pstmt.setInt(1, idCT);
     
             rs = pstmt.executeQuery();
             if (rs.next()) result = mapResultSetToDTO(rs);
-        }catch(ClassNotFoundException | SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             db.close(link);
         }
         return result;
     }
-    public List<CongThucDTO> findByIdSP(int idSP){
+
+    public List<CongThucDTO> findByIdSP(int idSP) {
         Connection link = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -122,16 +119,15 @@ public class CongThucDAO extends BaseDAO<CongThucDTO>{
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1, idSP);
             rs = pstmt.executeQuery();
-            while(rs.next()) result.add(mapResultSetToDTO(rs));
-        }
-        catch (ClassNotFoundException | SQLException e) {
+            while (rs.next()) result.add(mapResultSetToDTO(rs));
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-
-        }finally {
+        } finally {
             db.close(link);
         }
         return result;
     }
+
     public boolean isExist(CongThucDTO ct) {
         Connection link = null;
         PreparedStatement pstmt = null;
@@ -140,29 +136,29 @@ public class CongThucDAO extends BaseDAO<CongThucDTO>{
         try {
             StringBuilder sql = new StringBuilder("SELECT * FROM ");
             sql.append(table);
-            sql.append(" WHERE idSP LIKE ?");
-            if(ct.getIdCT() != 0) 
+            sql.append(" WHERE idSP = ?");
+            if (ct.getIdCT() != 0) {
                 sql.append(" AND idCT != ?");
+            }
            
-            // noi param
             link = db.connectDB();
             pstmt = link.prepareStatement(sql.toString());
             pstmt.setInt(1, ct.getIdSP());
-            if(ct.getIdCT() != 0) 
+            if (ct.getIdCT() != 0) {
                 pstmt.setInt(2, ct.getIdCT());
+            }
             
-            // thuc thi
             rs = pstmt.executeQuery();
             isExist = rs.next();
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             db.close(link);
         }
         return isExist;
     }
     
-    public List<CongThucDTO> getAllActiveEdit(int idCT,int idSP){
+    public List<CongThucDTO> getAllActiveEdit(int idCT, int idSP) {
         Connection link = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -178,13 +174,13 @@ public class CongThucDAO extends BaseDAO<CongThucDTO>{
             while (rs.next()) result.add(mapResultSetToDTO(rs));
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             db.close(link);
         }
         return result;
     }
     
-    public List<CongThucDTO> getAllActive(){
+    public List<CongThucDTO> getAllActive() {
         Connection link = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -197,7 +193,7 @@ public class CongThucDAO extends BaseDAO<CongThucDTO>{
             while (rs.next()) result.add(mapResultSetToDTO(rs));
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             db.close(link);
         }
         return result;
