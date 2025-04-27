@@ -46,17 +46,81 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
 		return super.add(params);
 	}
 	
-	public boolean update(TaiKhoanDTO taiKhoan) {
-		List<Object> params = new ArrayList<>();
-		params.add(taiKhoan.getIdTK());
-		params.add(taiKhoan.getTenTK());
-		params.add(taiKhoan.getMatkhau());
-		params.add(taiKhoan.getEmail());
-		params.add(taiKhoan.getTrangthai());
-		params.add(taiKhoan.getIdNQ());
-		String condition = "idTK = "+taiKhoan.getIdTK();
-		return super.update(params, condition);
-	}
+//	public boolean update(TaiKhoanDTO taiKhoan) {
+//		List<Object> params = new ArrayList<>();
+//		params.add(taiKhoan.getIdTK());
+//		params.add(taiKhoan.getTenTK());
+//        if (!taiKhoan.getMatkhau().equals("")) {
+//            params.add(taiKhoan.getMatkhau());
+//        }
+//		params.add(taiKhoan.getEmail());
+//		params.add(taiKhoan.getTrangthai());
+//		params.add(taiKhoan.getIdNQ());
+//		String condition = "idTK = "+taiKhoan.getIdTK();
+//		return super.update(params, condition);
+//	}
+
+    public boolean updateInfo(TaiKhoanDTO taiKhoan) {
+        Connection link = null;
+        PreparedStatement pstmt = null;
+        boolean success = false;
+        try {
+            List<Object> params = new ArrayList<>();
+            params.add(taiKhoan.getTenTK());
+            params.add(taiKhoan.getEmail());
+            params.add(taiKhoan.getTrangthai());
+            params.add(taiKhoan.getIdNQ());
+            params.add(taiKhoan.getIdTK());
+            String sql =
+                    "UPDATE taikhoan " +
+                        "SET " +
+                            "tenTK = ?, " +
+                            "email = ?, " +
+                            "trangthai = ?, " +
+                            "idNQ = ? " +
+                        "WHERE idTK = ?";
+
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            for (int i = 0; i < params.size(); i++) {
+                pstmt.setObject(i+1, params.get(i));
+            }
+            success = pstmt.executeUpdate() > 0;
+
+        } catch(ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.close(link);
+        }
+
+        return success;
+    }
+
+    public boolean updatePassword(TaiKhoanDTO taikhoan) {
+        Connection link = null;
+        PreparedStatement pstmt = null;
+        boolean success = false;
+        try {
+            List<Object> params = new ArrayList<>();
+            params.add(taikhoan.getMatkhau());
+            params.add(taikhoan.getIdTK());
+            String sql = "UPDATE taikhoan SET matkhau = ? WHERE idTK = ?";
+
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            for (int i = 0; i < params.size() ; i++) {
+                pstmt.setObject(i+1, params.get(i));
+            }
+
+            success = pstmt.executeUpdate() > 0;
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.close(link);
+        }
+
+        return success;
+    }
 
     public boolean isExist(TaiKhoanDTO taiKhoan) {
 		Connection link = null;
@@ -187,6 +251,26 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
             db.close(link);
         }
 
+        return result;
+    }
+
+    public TaiKhoanDTO findByTenTK(String tenTK) {
+        Connection link = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        TaiKhoanDTO result = null;
+        try {
+            String sql = "SELECT * FROM " + table + " WHERE tenTK = ?";
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            pstmt.setString(1, tenTK);
+            rs = pstmt.executeQuery();
+            if (rs.next()) result = mapResultSetToDTO(rs);
+        }catch(ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }finally {
+            db.close(link);
+        }
         return result;
     }
 //

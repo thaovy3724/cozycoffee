@@ -2,9 +2,10 @@ package BUS;
 
 import DAO.TaiKhoanDAO;
 import DTO.TaiKhoanDTO;
-//import at.favre.lib.crypto.bcrypt.BCrypt;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
+import java.util.Map;
 
 public class TaiKhoanBUS {
     private final TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
@@ -28,14 +29,23 @@ public class TaiKhoanBUS {
 		return taiKhoanDAO.findByIdTK(idTK);
 	}
 	
-	public String update(TaiKhoanDTO taiKhoan) {
+	public String updateInfo(TaiKhoanDTO taiKhoan) {
 		// kiểm tra email đã tồn tại chưa nếu có trả về thông báo lỗi
 		String error = "";
 		if(taiKhoanDAO.isExist(taiKhoan))
 			error = "Email đã tồn tại";
-		else if(!taiKhoanDAO.update(taiKhoan))
+		else if(!taiKhoanDAO.updateInfo(taiKhoan))
 			error = "Xảy ra lỗi trong quá trình cập nhật";
 		
+		return error;
+	}
+
+	public String updatePassword(TaiKhoanDTO taiKhoan) {
+		String error = "";
+		if (!taiKhoanDAO.updatePassword(taiKhoan)) {
+			error = "Xảy ra lỗi trong quá trình đổi mật khẩu";
+		}
+
 		return error;
 	}
 
@@ -59,15 +69,16 @@ public class TaiKhoanBUS {
         return taiKhoanDAO.getAllByIDNQ(idNQ);
     }
 
-//    // Hash mật khẩu bằng BCrypt
-//    private String hashPassword(String plainPassword) {
-//        return BCrypt.withDefaults().hashToString(12, plainPassword.toCharArray());
-//    }
-//
-//    // Kiểm tra mật khẩu
-//    private boolean checkPassword(String plainPassword, String hashedPassword) {
-//        return BCrypt.verifyer().verify(plainPassword.toCharArray(), hashedPassword).verified;
-//    }
+	// TrongHiuuu 27/04/2025: Thêm hash password và check hashedPassword
+    // Hash mật khẩu bằng BCrypt
+    public String hashPassword(String plainPassword) {
+        return BCrypt.hashpw(plainPassword, BCrypt.gensalt());
+    }
+
+    // Kiểm tra mật khẩu
+    public boolean checkPassword(String plainPassword, String hashedPassword) {
+		return BCrypt.checkpw(plainPassword, hashedPassword);
+    }
 
 //    public List<String> add(TaiKhoanDTO taiKhoan) {
 //        // Kiểm tra logic nghiệp vụ trước khi thêm
@@ -116,25 +127,56 @@ public class TaiKhoanBUS {
 //        return message;
 //    }
 //
-//    public boolean lock(TaiKhoanDTO taiKhoan) {
-//        if (!taiKhoanDAO.isExist("idTK", taiKhoan.getIdTK())) {
-//            return false; // Tài khoản không tồn tại
-//        }
-//        return taiKhoanDAO.lock(taiKhoan);
-//    }
-//
-//    public boolean unlock(TaiKhoanDTO taiKhoan) {
-//        if (!taiKhoanDAO.isExist("idTK", taiKhoan.getIdTK())) {
-//            return false; // Tài khoản không tồn tại
-//        }
-//        return taiKhoanDAO.unlock(taiKhoan);
-//    }
-//
-//    public List<TaiKhoanDTO> search(String kyw) {
-//        return taiKhoanDAO.search(kyw);
-//    }
-//
-    public TaiKhoanDTO checkLogin(String tenTK, String matkhau) {
-        return taiKhoanDAO.checkLogin(tenTK, matkhau);
+	//TrongHiuuu 27/04/2025: Thêm struct mới để thông báo lỗi đăng nhập chi tiết hơn
+	public class LoginResult {
+		private TaiKhoanDTO taiKhoan;
+		private String message;
+
+		public LoginResult() {
+			this.taiKhoan = null;
+			this.message = "";
+		}
+
+		public LoginResult(TaiKhoanDTO taiKhoan, String message) {
+			this.taiKhoan = taiKhoan;
+			this.message = message;
+		}
+
+		public TaiKhoanDTO getTaiKhoan() {
+			return taiKhoan;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+
+		public void setTaiKhoan(TaiKhoanDTO taiKhoan) {
+			this.taiKhoan = taiKhoan;
+		}
+
+		public void setMessage(String message) {
+			this.message = message;
+		}
+	}
+
+    public LoginResult checkLogin(String tenTK, String matkhau) {
+		LoginResult result = new LoginResult();
+		TaiKhoanDTO taiKhoan = taiKhoanDAO.findByTenTK(tenTK);
+		if (taiKhoan == null) {
+			result.setMessage("Tài khoản không tồn tại");
+		} else {
+			try {
+				if (checkPassword(matkhau, taiKhoan.getMatkhau())) {
+					result.setTaiKhoan(taiKhoan);
+					result.setMessage("Đăng nhập thành công");
+				}
+				else result.setMessage("Mật khẩu không chính xác");
+			} catch (IllegalArgumentException e) {
+				//Nếu như tài khoản có password chưa được hash thì sẽ có lỗi "Invalid salt version
+				result.setMessage("Mật khẩu không chính xác");
+				e.printStackTrace();
+			}
+		}
+		return result;
     }
 }

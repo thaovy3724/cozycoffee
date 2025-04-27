@@ -1,7 +1,6 @@
 package GUI;
 
 import BUS.TaiKhoanBUS;
-import DTO.TaiKhoanDTO;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -91,15 +90,15 @@ public class DangNhapFrame extends JFrame {
 				String matkhau = new String(passwordField.getPassword()).trim();
 				StringBuilder message = new StringBuilder();
 				if (!tenTK.isEmpty() && !matkhau.isEmpty()) {
-					TaiKhoanDTO loggedInUser = taiKhoanBUS.checkLogin(tenTK, matkhau);
-					if(loggedInUser != null) {
-						JOptionPane.showMessageDialog(null, "Đăng nhập thành công!");
+					TaiKhoanBUS.LoginResult loginResult = taiKhoanBUS.checkLogin(tenTK, matkhau);
+					if(loginResult.getTaiKhoan() != null) {
+						JOptionPane.showMessageDialog(null, loginResult.getMessage());
 						// Đóng frame đăng nhập và mở AdminFrame
 						dispose();
 						//Lưu tài khoản vào phiên làm việc hiện tại của AdminFrame
-						new AdminFrame(loggedInUser).setVisible(true);
+						new AdminFrame(loginResult.getTaiKhoan()).setVisible(true);
 					} else {
-						JOptionPane.showMessageDialog(null, "Tài khoản không tồn tại");
+						JOptionPane.showMessageDialog(null, loginResult.getMessage());
 					}
 				} else {
 					if (tenTK.isEmpty()) {
