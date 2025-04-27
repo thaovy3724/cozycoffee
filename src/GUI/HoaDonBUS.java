@@ -1,4 +1,4 @@
-package BUS;
+package GUI;
 
 import DAO.CTHoaDonDAO;
 import DAO.HoaDonDAO;
