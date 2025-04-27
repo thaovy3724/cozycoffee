@@ -72,7 +72,7 @@
       <module name="cozycoffee" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="GUI.*" />
+          <option name="PATTERN" value="BUS.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -85,7 +85,7 @@
       <module name="cozycoffee" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="GUI.*" />
+          <option name="PATTERN" value="BUS.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
