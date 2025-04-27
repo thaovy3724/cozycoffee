@@ -5,8 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0b6e49eb-ad6e-47e1-be09-0e789ce97c9e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/jbcrypt_0_4.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/BUS/TaiKhoanBUS.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BUS/TaiKhoanBUS.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/DAO/TaiKhoanDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/TaiKhoanDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/GUI/Dialog/TaiKhoanDialog.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/Dialog/TaiKhoanDialog.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/GUI/TaiKhoanPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/TaiKhoanPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/module-info.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cozycoffee.eml" beforeDir="false" afterPath="$PROJECT_DIR$/cozycoffee.eml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BUS/TaiKhoanBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/TaiKhoanBUS.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DAO/TaiKhoanDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/TaiKhoanDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Dialog/TaiKhoanDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Dialog/TaiKhoanDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/TaiKhoanPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/TaiKhoanPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,7 +66,7 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;TrongHiuuu&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ACER/eclipse-workspace/cozycoffee/src/lib/mysql-connector-j-9.2.0.jar&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/ACER/eclipse-workspace/cozycoffee/src/lib/jbcrypt-0.4.jar&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
