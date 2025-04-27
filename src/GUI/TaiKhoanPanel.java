@@ -180,8 +180,9 @@ public class TaiKhoanPanel extends JPanel {
 			int idTK = (int) table.getValueAt(selectedRow, 0);
 			// cập nhật lại CSDL
 			// kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
-			if(taiKhoanBus.delete(idTK))
+			if (taiKhoanBus.delete(idTK)) {
 				JOptionPane.showMessageDialog(this, "Xóa thành công");
+			}
 			else {
 				JOptionPane.showMessageDialog(this, "Bạn không thể xóa tài khoản này");
 				// reload table
