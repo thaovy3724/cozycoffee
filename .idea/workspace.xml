@@ -5,9 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0b6e49eb-ad6e-47e1-be09-0e789ce97c9e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/BUS/TaiKhoanBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/TaiKhoanBUS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/TaiKhoanDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/TaiKhoanDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/DangNhapFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/DangNhapFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/Dialog/TaiKhoanDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Dialog/TaiKhoanDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/TaiKhoanPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/TaiKhoanPanel.java" afterDir="false" />
     </list>
