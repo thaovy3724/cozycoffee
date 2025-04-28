@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="font-asian-7.1.4">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/lib/iText7/font-asian-7.1.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
