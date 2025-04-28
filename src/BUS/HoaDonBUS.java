@@ -166,8 +166,8 @@ public class HoaDonBUS {
         String abouslutePath = Paths.get(System.getProperty("user.dir"), "src", relativeFolderPath)
                 // System.getProperty("user.dir"): Lấy thư mục làm việc hiện tại
                 // Paths.get() xây dựng đối tượng kiểu đường dẫn, dùng để nối các thành phần đường dẫn lại thành một Path hoàn chỉnh
-                // => Đường dẫn sau 2 method này sẽ có dạng: C:/...something.../src/BUS/../invoice-pdf
-                .normalize() // Xử lý các phần tử như ., .., / => ../ lùi 1 cấp. Cuối cùng đường dẫn có dạng C:/...something.../src/invoice-pdf
+                // => Đường dẫn sau 2 method này sẽ có dạng: C:/...something.../src/invoice-pdf
+                .normalize() // Xử lý các phần tử như ., .., /
                 .toAbsolutePath() // Đảm bảo là đường dẫn tuyệt đối (thêm cho chắc ăn thui)
                 .toString();
 
