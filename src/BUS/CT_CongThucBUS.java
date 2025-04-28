@@ -1,30 +1,28 @@
 package BUS;
 
-import DTO.CT_CongThucDTO;
 import DAO.CT_CongThucDAO;
+import DAO.NguyenLieuDAO;
+import DTO.CT_CongThucDTO;
 import java.util.List;
 
 public class CT_CongThucBUS {
     private final CT_CongThucDAO ctCongThucDao = new CT_CongThucDAO();
+    private final NguyenLieuDAO nguyenLieuDao = new NguyenLieuDAO();
 
-    public boolean add(CT_CongThucDTO ctDetail) {
+    public String add(CT_CongThucDTO ctDetail) {
         if (ctDetail.getIdCT() <= 0) {
-            System.out.println("Lỗi: idCT không hợp lệ: " + ctDetail.getIdCT());
-            return false;
+            return "ID công thức không hợp lệ";
         }
         if (ctDetail.getIdNL() <= 0) {
-            System.out.println("Lỗi: idNL không hợp lệ: " + ctDetail.getIdNL());
-            return false;
+            return "ID nguyên liệu không hợp lệ";
         }
         if (ctDetail.getSoluong() <= 0) {
-            System.out.println("Lỗi: Số lượng không hợp lệ: " + ctDetail.getSoluong());
-            return false;
+            return "Số lượng phải lớn hơn 0";
         }
-        boolean success = ctCongThucDao.add(ctDetail);
-        if (!success) {
-            System.out.println("Lỗi: Không thể thêm chi tiết công thức cho idCT: " + ctDetail.getIdCT() + ", idNL: " + ctDetail.getIdNL());
+        if (nguyenLieuDao.findByIdNL(ctDetail.getIdNL()) == null) {
+            return "Nguyên liệu không tồn tại";
         }
-        return success;
+        return ctCongThucDao.add(ctDetail);
     }
 
     public boolean deleteByCongThuc(int idCT) {

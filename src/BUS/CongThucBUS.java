@@ -10,7 +10,6 @@ public class CongThucBUS {
     private final CongThucDAO congThucDao = new CongThucDAO();
     private final SanPhamDAO sanPhamDao = new SanPhamDAO();
     private final CT_CongThucBUS ctCongThucBus = new CT_CongThucBUS();
-    private static int nextIdCT = 1; // Biến tĩnh để tự động tăng idCT
 
     public List<CongThucDTO> getAll() {
         return congThucDao.getAll();
@@ -42,18 +41,23 @@ public class CongThucBUS {
             return "Sản phẩm đã có công thức, không thể thêm công thức mới";
         }
 
-        // Gán idCT tự động
-        ct.setIdCT(nextIdCT++);
+        // Gọi CongThucDAO.add và lấy idCT được sinh tự động
+        int newIdCT = congThucDao.add(ct);
+        if (newIdCT == -1) {
+            return "Không thể thêm công thức";
+        }
 
-        boolean success = congThucDao.add(ct);
-        if (success) {
-            CongThucDTO addedCongThuc = congThucDao.findByIdSP(ct.getIdSP()).get(0);
-            for (CT_CongThucDTO chiTiet : chiTietList) {
-                chiTiet.setIdCT(addedCongThuc.getIdCT());
-                ctCongThucBus.add(chiTiet);
+        // Cập nhật idCT cho chi tiết công thức và thêm vào ct_congthuc
+        for (CT_CongThucDTO chiTiet : chiTietList) {
+            chiTiet.setIdCT(newIdCT);
+            String error = ctCongThucBus.add(chiTiet);
+            if (!error.isEmpty()) {
+                // Xóa công thức đã thêm để đảm bảo tính toàn vẹn
+                congThucDao.delete(newIdCT);
+                return error;
             }
         }
-        return success ? "" : "Không thể thêm công thức";
+        return "";
     }
 
     public String update(CongThucDTO ct, List<CT_CongThucDTO> chiTietList) {
@@ -74,7 +78,10 @@ public class CongThucBUS {
             ctCongThucBus.deleteByCongThuc(ct.getIdCT());
             for (CT_CongThucDTO chiTiet : chiTietList) {
                 chiTiet.setIdCT(ct.getIdCT());
-                ctCongThucBus.add(chiTiet);
+                String error = ctCongThucBus.add(chiTiet);
+                if (!error.isEmpty()) {
+                    return error;
+                }
             }
         }
         return success ? "" : "Không thể cập nhật công thức";

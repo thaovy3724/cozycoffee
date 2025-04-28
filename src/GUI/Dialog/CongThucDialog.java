@@ -143,6 +143,8 @@ public class CongThucDialog extends JDialog {
                 ? nguyenLieuList.get(0)
                 : new NguyenLieuDTO(0, "---Chọn nguyên liệu---");
             tableModel.addRow(new Object[] { defaultNguyenLieu, "", "Xóa" });
+            tableNguyenLieu.revalidate();
+            tableNguyenLieu.repaint();
         });
         btnAdd.addMouseListener(new MouseAdapter() {
             @Override
@@ -156,7 +158,7 @@ public class CongThucDialog extends JDialog {
         });
         GridBagConstraints gbc_btnAdd = new GridBagConstraints();
         gbc_btnAdd.anchor = GridBagConstraints.WEST;
-        gbc_btnAdd.insets = new Insets(0, 0, 5, 0); // Giảm insets.bottom từ 5 xuống 5 (hoặc nhỏ hơn nếu cần)
+        gbc_btnAdd.insets = new Insets(0, 0, 5, 0);
         gbc_btnAdd.gridx = 1;
         gbc_btnAdd.gridy = 5;
         contentPanel.add(btnAdd, gbc_btnAdd);
@@ -166,7 +168,7 @@ public class CongThucDialog extends JDialog {
         errMoTa.setFont(new Font("Segoe UI", Font.ITALIC, 12));
         GridBagConstraints gbc_errMoTa = new GridBagConstraints();
         gbc_errMoTa.anchor = GridBagConstraints.WEST;
-        gbc_errMoTa.insets = new Insets(0, 0, 5, 0); // Điều chỉnh insets để gần hơn
+        gbc_errMoTa.insets = new Insets(0, 0, 5, 0);
         gbc_errMoTa.gridx = 1;
         gbc_errMoTa.gridy = 6;
         contentPanel.add(errMoTa, gbc_errMoTa);
@@ -176,7 +178,7 @@ public class CongThucDialog extends JDialog {
         tableModel = new DefaultTableModel(new Object[] { "Nguyên liệu", "Số lượng", "Thao tác" }, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column != 2;
+                return column != 2 || column == 2;
             }
         };
 
@@ -252,7 +254,7 @@ public class CongThucDialog extends JDialog {
         }}));
 
         tableNguyenLieu.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());
-        tableNguyenLieu.getColumnModel().getColumn(2).setCellEditor(new ButtonEditor(new JTextField()));
+        tableNguyenLieu.getColumnModel().getColumn(2).setCellEditor(new ButtonEditor());
 
         tableNguyenLieu.getColumnModel().getColumn(0).setPreferredWidth(250);
         tableNguyenLieu.getColumnModel().getColumn(1).setPreferredWidth(100);
@@ -264,10 +266,10 @@ public class CongThucDialog extends JDialog {
         scrollPane.setBorder(new LineBorder(new Color(189, 189, 189), 1));
         GridBagConstraints gbc_scrollPane = new GridBagConstraints();
         gbc_scrollPane.gridheight = 4;
-        gbc_scrollPane.insets = new Insets(2, 0, 5, 0); // Giảm insets.top từ 10 xuống 2
+        gbc_scrollPane.insets = new Insets(2, 0, 5, 0);
         gbc_scrollPane.fill = GridBagConstraints.BOTH;
         gbc_scrollPane.gridx = 1;
-        gbc_scrollPane.gridy = 7; // Đặt ngay dưới errMoTa
+        gbc_scrollPane.gridy = 7;
         contentPanel.add(scrollPane, gbc_scrollPane);
     }
 
@@ -279,7 +281,7 @@ public class CongThucDialog extends JDialog {
         gbc_actionPanel.gridwidth = 2;
         gbc_actionPanel.fill = GridBagConstraints.HORIZONTAL;
         gbc_actionPanel.gridx = 0;
-        gbc_actionPanel.gridy = 11; // Điều chỉnh để phù hợp với các thay đổi
+        gbc_actionPanel.gridy = 11;
         contentPanel.add(actionPanel, gbc_actionPanel);
         actionPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
 
@@ -334,40 +336,61 @@ public class CongThucDialog extends JDialog {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (isSelected) {
+                setBackground(new Color(239, 83, 80));
+            } else {
+                setBackground(new Color(244, 67, 54));
+            }
             return this;
         }
     }
 
     class ButtonEditor extends AbstractCellEditor implements TableCellEditor {
         private JButton button;
-        private String label;
         private int row;
+        private boolean isPushed;
 
-        public ButtonEditor(JTextField txt) {
-            button = new JButton();
-            button.setText("Xóa");
+        public ButtonEditor() {
+            button = new JButton("Xóa");
             button.setBackground(new Color(244, 67, 54));
             button.setForeground(Color.WHITE);
             button.setOpaque(true);
             button.setFont(new Font("Segoe UI", Font.PLAIN, 12));
             button.setBorderPainted(false);
-            button.addActionListener(e -> {
-                fireEditingStopped();
-                tableModel.removeRow(row);
-            });
         }
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             this.row = row;
-            label = (value == null) ? "Xóa" : value.toString();
-            button.setText(label);
+            isPushed = false;
+            for (ActionListener al : button.getActionListeners()) {
+                button.removeActionListener(al);
+            }
+            button.addActionListener(e -> {
+                isPushed = true;
+                fireEditingStopped();
+            });
             return button;
         }
 
         @Override
         public Object getCellEditorValue() {
-            return label;
+            if (isPushed) {
+                SwingUtilities.invokeLater(() -> {
+                    if (row >= 0 && row < tableModel.getRowCount()) {
+                        tableModel.removeRow(row);
+                        tableNguyenLieu.revalidate();
+                        tableNguyenLieu.repaint();
+                    }
+                });
+            }
+            return "Xóa";
+        }
+
+        @Override
+        public boolean stopCellEditing() {
+            isPushed = false;
+            return super.stopCellEditing();
         }
     }
 
@@ -540,57 +563,74 @@ public class CongThucDialog extends JDialog {
             SanPhamDTO sanPhamSelected = (SanPhamDTO) cboSP.getSelectedItem();
             int idSP = sanPhamSelected.getIdSP();
 
-            if (tableNguyenLieu.getCellEditor() != null) {
+            if (tableNguyenLieu.isEditing()) {
                 tableNguyenLieu.getCellEditor().stopCellEditing();
             }
 
             java.util.List<CT_CongThucDTO> chiTietList = new java.util.ArrayList<>();
             HashSet<Integer> usedIdNL = new HashSet<>();
             System.out.println("Số hàng trong tableModel: " + tableModel.getRowCount());
+
+            if (tableModel.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, "Vui lòng thêm ít nhất một nguyên liệu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             for (int i = 0; i < tableModel.getRowCount(); i++) {
                 NguyenLieuDTO nl = (NguyenLieuDTO) tableModel.getValueAt(i, 0);
                 Object soLuongObj = tableModel.getValueAt(i, 1);
                 String soLuongStr = soLuongObj != null ? soLuongObj.toString().trim() : "";
                 System.out.println("Hàng " + i + ": Nguyên liệu = " + (nl != null ? nl.getTenNL() : "null") + ", Số lượng = " + soLuongStr);
 
-                if (nl != null && nl.getIdNL() != 0 && !soLuongStr.isEmpty()) {
-                    if (usedIdNL.contains(nl.getIdNL())) {
-                        JOptionPane.showMessageDialog(this, "Nguyên liệu '" + nl.getTenNL() + "' đã được chọn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    usedIdNL.add(nl.getIdNL());
-                    try {
-                        float soLuong = Float.parseFloat(soLuongStr);
-                        if (soLuong <= 0) {
-                            JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
-                        chiTietList.add(new CT_CongThucDTO(0, nl.getIdNL(), soLuong));
-                        System.out.println("submitForm: Nguyên liệu gửi: " + nl.getTenNL() + ", Số lượng: " + soLuong);
-                    } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(this, "Số lượng phải là số hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                } else {
-                    System.out.println("Hàng " + i + " bị bỏ qua: Nguyên liệu hoặc số lượng không hợp lệ.");
+                if (nl == null || nl.getIdNL() == 0) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng chọn nguyên liệu hợp lệ tại hàng " + (i + 1) + "!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-            }
+                if (soLuongStr.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Số lượng không được để trống tại hàng " + (i + 1) + "!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-            if (chiTietList.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Vui lòng thêm ít nhất một nguyên liệu hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
+                if (usedIdNL.contains(nl.getIdNL())) {
+                    JOptionPane.showMessageDialog(this, "Nguyên liệu '" + nl.getTenNL() + "' đã được chọn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                usedIdNL.add(nl.getIdNL());
+
+                try {
+                    float soLuong = Float.parseFloat(soLuongStr);
+                    if (soLuong <= 0) {
+                        JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0 tại hàng " + (i + 1) + "!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    chiTietList.add(new CT_CongThucDTO(0, nl.getIdNL(), soLuong));
+                    System.out.println("submitForm: Nguyên liệu gửi: " + nl.getTenNL() + ", Số lượng: " + soLuong);
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Số lượng phải là số hợp lệ tại hàng " + (i + 1) + "!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }
 
             String error = "";
             String actionCommand = btnSubmit.getActionCommand();
             int beginIndex = actionCommand.indexOf('_') + 1;
-            if (beginIndex == 0) {
-                CongThucDTO ct = new CongThucDTO(idSP, mota);
-                error = congThucBus.add(ct, chiTietList);
-            } else {
-                int idCT = Integer.parseInt(actionCommand.substring(beginIndex));
-                CongThucDTO ct = new CongThucDTO(idCT, idSP, mota);
-                error = congThucBus.update(ct, chiTietList);
+            try {
+                if (beginIndex == 0) {
+                    CongThucDTO ct = new CongThucDTO(idSP, mota);
+                    error = congThucBus.add(ct, chiTietList);
+                } else {
+                    int idCT = Integer.parseInt(actionCommand.substring(beginIndex));
+                    CongThucDTO ct = new CongThucDTO(idCT, idSP, mota);
+                    error = congThucBus.update(ct, chiTietList);
+                }
+            } catch (Exception e) {
+                if (e.getCause() instanceof java.sql.SQLIntegrityConstraintViolationException) {
+                    JOptionPane.showMessageDialog(this, "Lỗi: Không thể thêm/cập nhật công thức do trùng khóa chính. Vui lòng kiểm tra cơ sở dữ liệu!", "Lỗi cơ sở dữ liệu", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+                e.printStackTrace();
+                return;
             }
 
             if (!error.isEmpty()) {
