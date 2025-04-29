@@ -27,10 +27,12 @@ public class TaiKhoanPanel extends JPanel {
 	private JPanel container;
 	private JTextField txtSearch;
 	private DefaultTableModel tableModel;
+	private AdminFrametest adminFrame;
 	/**
 	 * Create the panel.
 	 */
-	public TaiKhoanPanel() {
+	public TaiKhoanPanel(AdminFrametest adminFrame) {
+		this.adminFrame = adminFrame;
 		setLayout(new BorderLayout(0, 0));
 		
 		container = new JPanel();
@@ -138,7 +140,7 @@ public class TaiKhoanPanel extends JPanel {
 		}
 		else {
 			int idTK = (int) table.getValueAt(selectedRow, 0);
-			TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog();
+			TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog(adminFrame);
 			taiKhoanDialog.showEdit(idTK);
 			// sau khi đóng dialog, reload table 
 			loadTable(null);
@@ -146,7 +148,7 @@ public class TaiKhoanPanel extends JPanel {
 	}
 	
 	private void showAdd() {
-		TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog();
+		TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog(adminFrame);
 		taiKhoanDialog.showAdd();
 		// sau khi đóng dialog, reload table 
 		loadTable(null);

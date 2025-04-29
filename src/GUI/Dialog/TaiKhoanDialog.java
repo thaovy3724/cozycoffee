@@ -3,31 +3,29 @@ package GUI.Dialog;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import BUS.TaiKhoanBUS;
 import BUS.NhomQuyenBUS;
 import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
+import GUI.AdminFrametest;
 
 import java.awt.GridBagLayout;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.List;
 import java.awt.Font;
-import javax.swing.JTextField;
 import java.awt.Color;
-import javax.swing.JComboBox;
 
 public class TaiKhoanDialog extends JDialog {
 	private TaiKhoanBUS taiKhoanBus = new TaiKhoanBUS();
 	private NhomQuyenBUS nhomQuyenBus = new NhomQuyenBUS();
+
+	//TrongHiuuu 23/4
+	private AdminFrametest adminFrame;
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
@@ -40,7 +38,10 @@ public class TaiKhoanDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public TaiKhoanDialog() {
+	public TaiKhoanDialog(AdminFrametest adminFrame) {
+		//TrongHiuuu 23/4
+		this.adminFrame = adminFrame;
+
 		setTitle("Thêm tài khoản");
 		setSize(418, 457);
 		getContentPane().setLayout(new BorderLayout());
@@ -118,7 +119,7 @@ public class TaiKhoanDialog extends JDialog {
 			contentPanel.add(lblMatKhau, gbc_lblMatKhau);
 		}
 		{
-			txtMatKhau = new JTextField();
+			txtMatKhau = new JPasswordField();
 			txtMatKhau.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 			txtMatKhau.setColumns(10);
 			GridBagConstraints gbc_txtMatKhau = new GridBagConstraints();
@@ -150,7 +151,7 @@ public class TaiKhoanDialog extends JDialog {
 			contentPanel.add(lblMatKhauConfirm, gbc_lblMatKhauConfirm);
 		}
 		{
-			txtMatKhauConfirm = new JTextField();
+			txtMatKhauConfirm = new JPasswordField();
 			txtMatKhauConfirm.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 			txtMatKhauConfirm.setColumns(10);
 			GridBagConstraints gbc_txtMatKhauConfirm = new GridBagConstraints();
@@ -388,13 +389,16 @@ public class TaiKhoanDialog extends JDialog {
 			String error = "";
 			String actionCommand = btnSubmit.getActionCommand();
 			int beginIndex = actionCommand.indexOf('_')+1;
+			//TrongHiuuu 23/4
+			TaiKhoanDTO taiKhoan = new TaiKhoanDTO(tenTK, matKhau, email, trangthai, idNQ);
 			if(beginIndex == 0) {
 				// add
-				error = taiKhoanBus.add(new TaiKhoanDTO(tenTK, matKhau, email, trangthai, idNQ));
+				error = taiKhoanBus.add(taiKhoan);
 			}else {
 				// update
 				int idTK = Integer.parseInt(actionCommand.substring(beginIndex));
-				error = taiKhoanBus.update(new TaiKhoanDTO(idTK, tenTK, matKhau, email, trangthai, idNQ));
+				taiKhoan.setIdTK(idTK);
+				error = taiKhoanBus.update(taiKhoan);
 			}
 			
 			// show message
@@ -406,8 +410,14 @@ public class TaiKhoanDialog extends JDialog {
 				// success
 				if(beginIndex == 0) 
 					JOptionPane.showMessageDialog(this, "Thêm thành công ");
-				else 
+				else {
+					//TrongHiuuu 23/4
 					JOptionPane.showMessageDialog(this, "Cập nhật thành công ");
+					if (taiKhoan.getIdTK() == adminFrame.getCurrentUser().getIdTK()) {
+						// Cập nhật currentUser với thông tin mới
+						adminFrame.setCurrentUser(taiKhoan);
+					}
+				}
 			}
 		}
 	}

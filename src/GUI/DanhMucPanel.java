@@ -172,7 +172,7 @@ public class DanhMucPanel extends JPanel {
 		if (selectedRow == -1) {
 			JOptionPane.showMessageDialog(this, "Bạn chưa chọn danh mục");
 		}
-		else {
+		else if(JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa danh mục này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
 			// tiến hành xóa 
 			int idDM = (int) table.getValueAt(selectedRow, 0);
 			// cập nhật lại CSDL

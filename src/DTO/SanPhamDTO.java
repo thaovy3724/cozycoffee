@@ -72,4 +72,9 @@ public class SanPhamDTO {
     public void setIdDM(int idDM) {
         this.idDM = idDM;
     }
+
+    @Override 
+    public String toString(){
+        return tenSP;
+    }
 }

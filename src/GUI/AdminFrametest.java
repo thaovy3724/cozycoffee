@@ -24,34 +24,20 @@ import java.awt.event.ActionEvent;
 import javax.swing.JToggleButton;
 import java.awt.Color;
 import java.awt.Dimension;
-public class AdminFrame extends JFrame {
+public class AdminFrametest extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel menuPanel;
     private JPanel navbarPanel;
 	private JPanel dynamicPanel;
     private JToggleButton lastSelectedButton;
-
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new AdminFrame();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JLabel tenTkLB;
 
 	/**
 	 * Create the frame.
 	 */
-	
+
+	//TrongHiuuu 23/4
 	 //Thuộc tính currentUser - người dùng đang đăng nhập hiện tại trên adminFrame
     private TaiKhoanDTO currentUser;
 
@@ -63,27 +49,11 @@ public class AdminFrame extends JFrame {
     // Setter cho currentUser
     public void setCurrentUser(TaiKhoanDTO currentUser) {
         this.currentUser = currentUser;
-    }
-    
-    // Refresh navbar
-    public void refreshNavbar() {
-        getContentPane().remove(navbarPanel); // Bỏ navbar cũ
-        navbarPanel = navbarInit(); // Tạo lại navbar với thông tin mới
-        getContentPane().add(navbarPanel);
-        /*
-        * revalidate() yêu cầu trình quản lý bố cục (layout manager) của container
-        * (ở đây là getContentPane()) cập nhật lại kích thước và vị trí của
-        * các thành phần giao diện bên trong nó (chứ chưa được hiển thị) => dùng thêm repaint().
-        * */
-        revalidate();
-        /*
-        * repaint() yêu cầu hệ thống vẽ lại giao diện của thành phần được gọi
-        * (ở đây là cả AdminFrame, hay nói rộng hơn là các đối tượng có kiểu là AdminFrame)
-        * */
-        repaint();
+		tenTkLB.setText(currentUser.getTenTK());
     }
 
-	public AdminFrame() {
+	public AdminFrametest(TaiKhoanDTO currentUser) {
+		this.currentUser = currentUser;
 		init();
 	}
 	
@@ -128,7 +98,7 @@ public class AdminFrame extends JFrame {
         		
 		JLabel logoLB = new JLabel("");
 		logoLB.setHorizontalAlignment(SwingConstants.CENTER);
-		ImageHelper logoIcon = new ImageHelper(180, 120, AdminFrame.class.getResource("/ASSET/Images/logoRmBg.png"));
+		ImageHelper logoIcon = new ImageHelper(180, 120, AdminFrametest.class.getResource("/ASSET/Images/logoRmBg.png"));
 		// Set the scaled icon to the JLabel
 		logoLB.setIcon(logoIcon.getScaledImage());
 		menuPanel.add(logoLB, gbc);
@@ -148,7 +118,6 @@ public class AdminFrame extends JFrame {
 		gbc.gridy++;
 		JToggleButton sanphamBtn = new JToggleButton("Sản phẩm");
 		sanphamBtn.setActionCommand("sanpham");
-        toggleBtnInit(sanphamBtn);
 		sanphamBtn.setBounds(10, 230, 180, 36);
 		menuPanel.add(sanphamBtn, gbc);
 		
@@ -205,8 +174,9 @@ public class AdminFrame extends JFrame {
 		navbarPanel.setBackground(new Color(245, 245, 245));
         navbarPanel.setPreferredSize(new Dimension(0, 50)); // Giảm chiều cao
         navbarPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 8)); // Căn phải, khoảng cách nhỏ
-		
-		JLabel tenTkLB = new JLabel("Thảo Vy");
+
+		//TrongHiuuu 23/4 - hiện tên tài khoản
+		tenTkLB = new JLabel(currentUser.getTenTK());
 		tenTkLB.setBackground(new Color(245, 245, 245));
 		tenTkLB.setOpaque(true); 
 		tenTkLB.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -216,7 +186,7 @@ public class AdminFrame extends JFrame {
 		
 		JButton logoutBtn = new JButton("Đăng xuất");
 		logoutBtn.setBackground(new Color(245, 245, 245));
-		ImageHelper logoutIcon = new ImageHelper(20, 20, AdminFrame.class.getResource("/ASSET/Images/logout.png"));
+		ImageHelper logoutIcon = new ImageHelper(20, 20, AdminFrametest.class.getResource("/ASSET/Images/logout.png"));
 		logoutBtn.setIcon(logoutIcon.getScaledImage());
 		logoutBtn.setContentAreaFilled(false); // Disable content area filling
 		logoutBtn.setOpaque(true);           // Disable background painting
@@ -291,7 +261,7 @@ public class AdminFrame extends JFrame {
                 selectedPanel = new NguyenLieuPanel(); // Thay bằng panel Nguyên liệu
                 break;
             case "congthuc":
-                selectedPanel = new CongThucPanel(); // Thay bằng panel Công thức
+                selectedPanel = new JPanel(); // Thay bằng panel Công thức
                 break;
             case "danhmuc":
                 selectedPanel = new DanhMucPanel();
@@ -300,12 +270,16 @@ public class AdminFrame extends JFrame {
                 selectedPanel = new NhaCungCapPanel(); // Thay bằng panel Nhà cung cấp
                 break;
             case "phieunhap":
-                selectedPanel = new BanHangPanel(new TaiKhoanDTO(1, "Thảo Vy", "0794988554Vyle.", "thaovy@gmail.com", 1, 2)); // Thay bằng panel Phiếu nhập
+                selectedPanel = new JPanel(); // Thay bằng panel Phiếu nhập
                 break;
-        //    case "taikhoan":
-        //        // Truyền AdminFrame vào TaiKhoanPanel
-		// 		selectedPanel = new TaiKhoanPanel(); // Hiển thị TaiKhoanPanel
-        //        break;
+			
+			// case "banhang":
+			// 	selectedPanel = new BanHangPanel(currentUser);
+			// 	break;
+            case "taikhoan":
+               // Truyền AdminFrame vào TaiKhoanPanel
+				selectedPanel = new TaiKhoanPanel(this); // Hiển thị TaiKhoanPanel
+               break;
             default:
                 selectedPanel = new JPanel(); // Mặc định
                 System.out.println("Default panel created");
@@ -319,7 +293,7 @@ public class AdminFrame extends JFrame {
 
 	 private int showOptionDialog(String title, String message) {
 	        int confirm = JOptionPane.showConfirmDialog(
-	                AdminFrame.this, // Parent component (AdminFrame)
+	                AdminFrametest.this, // Parent component (AdminFrame)
 	                message,
 	                title,
 	                JOptionPane.YES_NO_OPTION // Tùy chọn Yes/No

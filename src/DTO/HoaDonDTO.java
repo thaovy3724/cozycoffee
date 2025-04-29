@@ -1,16 +1,21 @@
 package DTO;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 public class HoaDonDTO {
 	private int idHD;
-    private String ngaytao;
+    private LocalDate ngaytao;
     private int idTK;
 
-    public HoaDonDTO() {
+    public HoaDonDTO(int idHD, Object ngaytao, int idTK) {
+        this.idHD = idHD;
+        setNgaytao(ngaytao);
+        this.idTK = idTK;
     }
 
-    public HoaDonDTO(int idHD, String ngaytao, int idTK) {
-        this.idHD = idHD;
-        this.ngaytao = ngaytao;
+    public HoaDonDTO(Object ngaytao, int idTK) {
+        setNgaytao(ngaytao);
         this.idTK = idTK;
     }
 
@@ -22,12 +27,20 @@ public class HoaDonDTO {
         this.idHD = idHD;
     }
 
-    public String getNgaytao() {
+    public LocalDate getNgaytao() {
         return ngaytao;
     }
 
-    public void setNgaytao(String ngaytao) {
-        this.ngaytao = ngaytao;
+    public void setNgaytao(Object ngaytao) {
+        if (ngaytao instanceof LocalDate) {
+            this.ngaytao = (LocalDate) ngaytao;
+        }else if (ngaytao instanceof java.sql.Date) {
+            this.ngaytao = ((java.sql.Date) ngaytao).toLocalDate();
+        } else if (ngaytao instanceof java.util.Date) {
+            this.ngaytao = ((java.util.Date) ngaytao).toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+        } else this.ngaytao = null; 
     }
 
     public int getIdTK() {

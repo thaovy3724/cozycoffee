@@ -27,7 +27,6 @@ public class SanPhamPanel extends JPanel {
 	private JPanel container;
 	private JTextField txtSearch;
 	private DefaultTableModel tableModel;
-	private List<SanPhamDTO>sanPhamList;
 	/**
 	 * Create the panel.
 	 */
@@ -63,17 +62,17 @@ public class SanPhamPanel extends JPanel {
 		container.add(actionPanel);
 		actionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-		JButton btnAdd = new JButton("Thêm");
+		btnAdd = new JButton("Thêm");
 		btnAdd.setIcon(new ImageIcon(SanPhamPanel.class.getResource("/ASSET/Images/icons8_add_30px.png")));
 		btnAdd.addActionListener(e->showAdd());
 		actionPanel.add(btnAdd);
 		
-		JButton btnEdit = new JButton("Sửa");
+		btnEdit = new JButton("Sửa");
 		btnEdit.setIcon(new ImageIcon(SanPhamPanel.class.getResource("/ASSET/Images/icons8_wrench_30px.png")));
 		btnEdit.addActionListener(e->showEdit());
 		actionPanel.add(btnEdit);
 		
-		JButton btnDel = new JButton("Xóa");
+		btnDel = new JButton("Xóa");
 		btnDel.setIcon(new ImageIcon(SanPhamPanel.class.getResource("/ASSET/Images/icons8_cancel_30px_1.png")));
 		btnDel.addActionListener(e->delete());
 		actionPanel.add(btnDel);
@@ -95,7 +94,7 @@ public class SanPhamPanel extends JPanel {
 		btnSearch.addActionListener(e->search());
 		searchPanel.add(btnSearch);
 		
-		JButton btnReset = new JButton("Làm mới");
+		btnReset = new JButton("Làm mới");
 		ImageHelper imgReset = new ImageHelper(20, 20, SanPhamPanel.class.getResource("/ASSET/Images/icons8_replay_30px.png"));
 		btnReset.setIcon(imgReset.getScaledImage());
 		btnReset.addActionListener(e->{
@@ -180,12 +179,13 @@ public class SanPhamPanel extends JPanel {
 			int idSP = (int) table.getValueAt(selectedRow, 0);
 			// cập nhật lại CSDL
 			// kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
-			if(sanPhamBus.delete(idSP))
+			if(sanPhamBus.delete(idSP)) {
 				JOptionPane.showMessageDialog(this, "Xóa thành công");
-			else {
-				JOptionPane.showMessageDialog(this, "Bạn không thể xóa sản phẩm này");
 				// reload table
 				loadTable(null);
+			}
+			else {
+				JOptionPane.showMessageDialog(this, "Bạn không thể xóa sản phẩm này");
 			}
 		}
 	}

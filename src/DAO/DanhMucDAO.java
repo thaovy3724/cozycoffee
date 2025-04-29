@@ -211,7 +211,7 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
 		List<DanhMucDTO> result = new ArrayList<>();
         try {
             String sql = "SELECT * FROM " + table
-            		+ " WHERE idDM != ? AND trangthai = 1)";
+            		+ " WHERE idDM = ? OR trangthai = 1";
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1, idDM);
