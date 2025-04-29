@@ -8,7 +8,6 @@ import DTO.CTHoaDonDTO;
 import DTO.HoaDonDTO;
 import DTO.SanPhamDTO;
 import DTO.TaiKhoanDTO;
-import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -70,6 +69,15 @@ public class HoaDonBUS {
         if (!success) {
             throw new IllegalStateException("Không thể thêm hóa đơn");
         }
+    }
+
+    public long getAllHDTongTien(List<HoaDonDTO> hoaDonDTOList) {
+        long tongtien = 0;
+        for(HoaDonDTO hd: hoaDonDTOList) {
+            tongtien += hoaDonDAO.getTongTienByIDHD(hd.getIdHD());
+        }
+
+        return tongtien;
     }
 
     // Tìm kiếm hóa đơn theo khoảng tổng tiền

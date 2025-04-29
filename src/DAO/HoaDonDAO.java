@@ -75,6 +75,31 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO> {
         return result;
     }
 
+    public long getTongTienByIDHD(int idHD) {
+        Connection link = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        long tongtien = 0;
+
+        try {
+            String sql = "SELECT sum(ct.gialucdat * ct.soluong) AS tongtien " +
+                    "FROM hoadon hd " +
+                    "INNER JOIN ct_hoadon ct on hd.idHD = ct.idHD " +
+                    "WHERE hd.idHD = ?";
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            pstmt.setInt(1, idHD);
+            rs = pstmt.executeQuery();
+            if (rs.next()) tongtien = rs.getLong("tongtien");
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            db.close(link);
+        }
+
+        return tongtien;
+    }
+
     public List<HoaDonDTO> searchByDate(Date start, Date end) {
         Connection link = null;
         PreparedStatement pstmt = null;
