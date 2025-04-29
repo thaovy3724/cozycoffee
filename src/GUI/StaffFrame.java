@@ -86,7 +86,7 @@ public class StaffFrame extends JFrame {
         centerPanel.add(navbarInit(), BorderLayout.NORTH);
 
         dynamicPanel = new JPanel(new BorderLayout());
-        dynamicPanel.setBackground(new Color(255, 255, 255));
+        dynamicPanel.setBackground(new Color(255, 240, 220));
         dynamicPanel.setLayout(new BorderLayout());
         centerPanel.add(dynamicPanel, BorderLayout.CENTER);
         getContentPane().add(centerPanel, BorderLayout.CENTER);
@@ -100,7 +100,7 @@ public class StaffFrame extends JFrame {
 
     public JPanel menuInit() {
         menuPanel = new JPanel();
-        menuPanel.setBackground(new Color(139, 69, 19)); // Darker, modern background color
+        menuPanel.setBackground(new Color(240, 187, 120)); // Darker, modern background color
         menuPanel.setPreferredSize(new Dimension(240, 0)); // Slightly wider for better spacing
         menuPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -201,7 +201,7 @@ public class StaffFrame extends JFrame {
 
     public JPanel navbarInit() {
         navbarPanel = new JPanel();
-        navbarPanel.setBackground(new Color(139, 69, 19));
+        navbarPanel.setBackground(new Color(240, 187, 120));
         navbarPanel.setPreferredSize(new Dimension(0, 60));
         navbarPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 15, 10));
         navbarPanel.setBorder(new EmptyBorder(5, 10, 5, 10));

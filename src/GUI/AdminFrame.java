@@ -85,7 +85,7 @@ public class AdminFrame extends JFrame {
         centerPanel.add(navbarInit(), BorderLayout.NORTH);
 
         dynamicPanel = new JPanel(new BorderLayout());
-        dynamicPanel.setBackground(new Color(255, 255, 255));
+        dynamicPanel.setBackground(new Color(255, 240, 220));
         dynamicPanel.setLayout(new BorderLayout());
         centerPanel.add(dynamicPanel, BorderLayout.CENTER);
         getContentPane().add(centerPanel, BorderLayout.CENTER);
@@ -99,7 +99,7 @@ public class AdminFrame extends JFrame {
 
     public JPanel menuInit() {
         menuPanel = new JPanel();
-        menuPanel.setBackground(new Color(139, 69, 19));
+        menuPanel.setBackground(new Color(240, 187, 120));
         menuPanel.setPreferredSize(new Dimension(220, 0));
         GridBagLayout gbl_menuPanel = new GridBagLayout();
         gbl_menuPanel.rowHeights = new int[]{0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -128,14 +128,6 @@ public class AdminFrame extends JFrame {
                 JToggleButton btnThongKe = new JToggleButton("Thống kê");
                 btnThongKe.setBackground(new Color(250, 250, 210));
                 ImageHelper iconThongKe = new ImageHelper(30, 30, AdminFrame.class.getResource("/ASSET/Images/1.png"));
-                
-                JSeparator separator = new JSeparator();
-                separator.setForeground(UIManager.getColor("ScrollBar.background"));
-                GridBagConstraints gbc_separator = new GridBagConstraints();
-                gbc_separator.insets = new Insets(0, 0, 5, 0);
-                gbc_separator.gridx = 0;
-                gbc_separator.gridy = 1;
-                menuPanel.add(separator, gbc_separator);
                 btnThongKe.setIcon(iconThongKe.getScaledImage());
                 btnThongKe.setActionCommand("thongke");
                 btnThongKe.setPreferredSize(new Dimension(200, 50));
@@ -295,7 +287,7 @@ public class AdminFrame extends JFrame {
 
     public JPanel navbarInit() {
         navbarPanel = new JPanel();
-        navbarPanel.setBackground(new Color(139, 69, 19));
+        navbarPanel.setBackground(new Color(240, 187, 120));
         navbarPanel.setPreferredSize(new Dimension(0, 60));
         navbarPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 15, 10));
         navbarPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
