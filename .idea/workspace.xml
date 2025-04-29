@@ -5,36 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4ba96afb-e570-48cd-aec9-c13fe4e8f4f6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/GUI/Dialog/DoiMatKhauDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/font_asian_7_1_4.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/io_7_1_4.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/jbcrypt_0_4.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/jcalendar_1_3_2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/kernel_7_1_4.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/layout_7_1_4.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/mysql_connector_j_9_2_0.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/slf4j_api_1_7_25.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/slf4j_simple_1_7_25.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/DangNhapFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DangNhapFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/test.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/invoice-pdf/hoadon-1.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/bin/invoice-pdf/hoadon-1.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/lib/iText7/font-asian-7.1.4.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/lib/iText7/io-7.1.4.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/lib/iText7/kernel-7.1.4.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/lib/iText7/layout-7.1.4.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/lib/iText7/slf4j-api-1.7.25.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/lib/iText7/slf4j-simple-1.7.25.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/lib/jbcrypt-0.4.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cozycoffee.eml" beforeDir="false" afterPath="$PROJECT_DIR$/cozycoffee.eml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/invoice-pdf/hoadon-1.pdf" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/AdminFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/AdminFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/DangNhapFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/DangNhapFrame.java" afterDir="false" />
