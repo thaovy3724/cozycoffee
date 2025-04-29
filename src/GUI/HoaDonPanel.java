@@ -331,15 +331,6 @@ public class HoaDonPanel extends JPanel {
 		JOptionPane.showMessageDialog(null, message, title,JOptionPane.ERROR_MESSAGE);
 	}
 
-	// *** Các hàm load map để hiển thị tên của đối tượng tương ứng với id ***
-	// Load map nhân viên
-	//	private void loadNhanVienMap() {
-	//		List<TaiKhoanDTO> nhanVienList = taiKhoanBUS.getAllTaiKhoanByIDNQ(2);
-	//		for (TaiKhoanDTO tk : nhanVienList) {
-	//			this.nhanVienMap.put(tk.getIdTK(), tk.getHoten());
-	//		}
-	//	}
-
 	// Load map sản phẩm
 	private void loadSanPhamMap() {
 		List<SanPhamDTO> sanPhamList = sanPhamBUS.getAll();
