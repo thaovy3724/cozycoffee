@@ -1,9 +1,11 @@
 package DTO;
 
+import java.sql.Date;
+
 public class PhieuNhapDTO {
 	private int idPN;
-    private String ngaytao;
-    private String ngaycapnhat;
+    private Date ngaytao;
+    private Date ngaycapnhat;
     private int idTK;
     private int idNCC;
     private int idTT;
@@ -11,7 +13,7 @@ public class PhieuNhapDTO {
     public PhieuNhapDTO() {
     }
 
-    public PhieuNhapDTO(int idPN, String ngaytao, String ngaycapnhat, int idTK, int idNCC, int idTT) {
+    public PhieuNhapDTO(int idPN, Date ngaytao, Date ngaycapnhat, int idTK, int idNCC, int idTT) {
         this.idPN = idPN;
         this.ngaytao = ngaytao;
         this.ngaycapnhat = ngaycapnhat;
@@ -28,19 +30,19 @@ public class PhieuNhapDTO {
         this.idPN = idPN;
     }
 
-    public String getNgaytao() {
+    public Date getNgaytao() {
         return ngaytao;
     }
 
-    public void setNgaytao(String ngaytao) {
+    public void setNgaytao(Date ngaytao) {
         this.ngaytao = ngaytao;
     }
 
-    public String getNgaycapnhat() {
+    public Date getNgaycapnhat() {
         return ngaycapnhat;
     }
 
-    public void setNgaycapnhat(String ngaycapnhat) {
+    public void setNgaycapnhat(Date ngaycapnhat) {
         this.ngaycapnhat = ngaycapnhat;
     }
 

@@ -1,17 +1,19 @@
 package DTO;
 
+import java.time.LocalDate;
+
 public class Lo_NguyenLieuDTO {
 	private int idNL;
     private int idPN;
     private float soluongnhap;
     private float tonkho;
     private int dongia;
-    private String hsd;
+    private LocalDate hsd;
 
     public Lo_NguyenLieuDTO() {
     }
 
-    public Lo_NguyenLieuDTO(int idNL, int idPN, float soluongnhap, float tonkho, int dongia, String hsd) {
+    public Lo_NguyenLieuDTO(int idNL, int idPN, float soluongnhap, float tonkho, int dongia, LocalDate hsd) {
         this.idNL = idNL;
         this.idPN = idPN;
         this.soluongnhap = soluongnhap;
@@ -60,11 +62,11 @@ public class Lo_NguyenLieuDTO {
         this.dongia = dongia;
     }
 
-    public String getHsd() {
+    public LocalDate getHsd() {
         return hsd;
     }
 
-    public void setHsd(String hsd) {
+    public void setHsd(LocalDate hsd) {
         this.hsd = hsd;
     }
 }
