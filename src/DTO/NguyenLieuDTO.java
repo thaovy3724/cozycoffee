@@ -60,7 +60,7 @@ public class NguyenLieuDTO {
     @Override
     public String toString() {
         
-        return tenNL; // Hiển thị tên nguyên liệu trong JComboBox
+        return tenNL; 
     }
     @Override
     public boolean equals(Object obj) {

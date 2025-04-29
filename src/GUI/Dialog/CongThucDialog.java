@@ -6,9 +6,10 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
-
+import java.util.List;
 import BUS.CongThucBUS;
 import BUS.CT_CongThucBUS;
 import BUS.SanPhamBUS;
@@ -32,7 +33,7 @@ public class CongThucDialog extends JDialog {
     private JTable tableNguyenLieu;
     private DefaultTableModel tableModel;
     private JScrollPane scrollPane;
-    private java.util.List<NguyenLieuDTO> nguyenLieuList;
+    private List<NguyenLieuDTO> nguyenLieuList;
 
     public CongThucDialog() {
         setTitle("Thêm công thức");
@@ -178,7 +179,7 @@ public class CongThucDialog extends JDialog {
         tableModel = new DefaultTableModel(new Object[] { "Nguyên liệu", "Số lượng", "Thao tác" }, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column != 2 || column == 2;
+                return true;
             }
         };
 
@@ -394,7 +395,7 @@ public class CongThucDialog extends JDialog {
         }
     }
 
-    private void loadComboBoxSP(java.util.List<SanPhamDTO> arr) {
+    private void loadComboBoxSP(List<SanPhamDTO> arr) {
         if (cboSP == null) {
             throw new IllegalStateException("cboSP is not initialized");
         }
@@ -412,7 +413,7 @@ public class CongThucDialog extends JDialog {
     }
 
     public void showAdd() {
-        java.util.List<SanPhamDTO> listSP = sanPhamBus.getAllActive();
+        List<SanPhamDTO> listSP = sanPhamBus.getAllActive();
         loadComboBoxSP(listSP);
 
         tableModel.setRowCount(0);
@@ -435,7 +436,7 @@ public class CongThucDialog extends JDialog {
         }
         txtMoTa.setText(ct.getMota());
 
-        java.util.List<SanPhamDTO> listSP = sanPhamBus.getAll();
+       List<SanPhamDTO> listSP = sanPhamBus.getAll();
         loadComboBoxSP(listSP);
 
         if (ct.getIdSP() != 0) {
@@ -452,7 +453,7 @@ public class CongThucDialog extends JDialog {
 
         tableModel.setColumnIdentifiers(new Object[] { "Nguyên liệu", "Số lượng", "Thao tác" });
         tableModel.setRowCount(0);
-        java.util.List<CT_CongThucDTO> chiTietList = ctCongThucBus.getChiTietCongThuc(idCT);
+            List<CT_CongThucDTO> chiTietList = ctCongThucBus.getChiTietCongThuc(idCT);
         if (chiTietList != null && !chiTietList.isEmpty()) {
             for (CT_CongThucDTO ctDetail : chiTietList) {
                 NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(ctDetail.getIdNL());
@@ -499,7 +500,7 @@ public class CongThucDialog extends JDialog {
         });
 
         txtMoTa.setText(ct.getMota());
-        java.util.List<SanPhamDTO> listSP = sanPhamBus.getAll();
+        List<SanPhamDTO> listSP = sanPhamBus.getAll();
         loadComboBoxSP(listSP);
 
         if (ct.getIdSP() != 0) {
@@ -516,7 +517,7 @@ public class CongThucDialog extends JDialog {
 
         tableModel.setColumnIdentifiers(new Object[] { "Nguyên liệu", "Số lượng" });
         tableModel.setRowCount(0);
-        java.util.List<CT_CongThucDTO> chiTietList = ctCongThucBus.getChiTietCongThuc(idCT);
+        List<CT_CongThucDTO> chiTietList = ctCongThucBus.getChiTietCongThuc(idCT);
         System.out.println("Số nguyên liệu tìm thấy: " + (chiTietList != null ? chiTietList.size() : 0));
         if (chiTietList != null && !chiTietList.isEmpty()) {
             for (CT_CongThucDTO ctDetail : chiTietList) {
@@ -565,9 +566,9 @@ public class CongThucDialog extends JDialog {
 
             if (tableNguyenLieu.isEditing()) {
                 tableNguyenLieu.getCellEditor().stopCellEditing();
-            }
+            } // kiem tra table co dang trong trang thai chinh sua khong
 
-            java.util.List<CT_CongThucDTO> chiTietList = new java.util.ArrayList<>();
+           List<CT_CongThucDTO> chiTietList = new ArrayList<>();
             HashSet<Integer> usedIdNL = new HashSet<>();
             System.out.println("Số hàng trong tableModel: " + tableModel.getRowCount());
 

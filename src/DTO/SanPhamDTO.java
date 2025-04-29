@@ -78,7 +78,7 @@ public class SanPhamDTO {
     }
     @Override
     public String toString(){
-        return tenSP !=null ? tenSP: "Khong xac dinh";
+        return tenSP;
     }
   
 }
