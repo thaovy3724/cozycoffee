@@ -7,6 +7,30 @@
 	<lib name="com.jgoodies.common_1.8.1.v20240327-0800.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/com.jgoodies.common_1.8.1.v20240327-0800.jar!/"/>
 	</lib>
+	<lib name="mysql-connector-j-9.2.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/src/lib/mysql-connector-j-9.2.0.jar!/"/>
+	</lib>
+	<lib name="jcalendar-1.3.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/src/lib/jcalendar-1.3.2.jar!/"/>
+	</lib>
+	<lib name="jbcrypt-0.4.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/src/lib/jbcrypt-0.4.jar!/"/>
+	</lib>
+	<lib name="slf4j-api-1.7.25.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/src/lib/iText7/slf4j-api-1.7.25.jar!/"/>
+	</lib>
+	<lib name="slf4j-simple-1.7.25.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/src/lib/iText7/slf4j-simple-1.7.25.jar!/"/>
+	</lib>
+	<lib name="layout-7.1.4.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/src/lib/iText7/layout-7.1.4.jar!/"/>
+	</lib>
+	<lib name="kernel-7.1.4.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/src/lib/iText7/kernel-7.1.4.jar!/"/>
+	</lib>
+	<lib name="io-7.1.4.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/src/lib/iText7/io-7.1.4.jar!/"/>
+	</lib>
 	<levels>
 		<level name="jcalendar-1.3.2" value="project"/>
 		<level name="mysql-connector-j-9.2.0" value="project"/>

@@ -22,5 +22,13 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/slf4j-api-1.7.25"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/slf4j-simple-1.7.25"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/font-asian-7.1.4"/>
+	<classpathentry kind="lib" path="src/lib/mysql-connector-j-9.2.0.jar"/>
+	<classpathentry kind="lib" path="src/lib/jcalendar-1.3.2.jar"/>
+	<classpathentry kind="lib" path="src/lib/jbcrypt-0.4.jar"/>
+	<classpathentry kind="lib" path="src/lib/iText7/slf4j-api-1.7.25.jar"/>
+	<classpathentry kind="lib" path="src/lib/iText7/slf4j-simple-1.7.25.jar"/>
+	<classpathentry kind="lib" path="src/lib/iText7/layout-7.1.4.jar"/>
+	<classpathentry kind="lib" path="src/lib/iText7/kernel-7.1.4.jar"/>
+	<classpathentry kind="lib" path="src/lib/iText7/io-7.1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
