@@ -5,20 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4ba96afb-e570-48cd-aec9-c13fe4e8f4f6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/bin/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/BUS/HoaDonBUS.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BUS/HoaDonBUS.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DAO/HoaDonDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DAO/HoaDonDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/Lo_NguyenLieuDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/Lo_NguyenLieuDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/DTO/PhieuNhapDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/PhieuNhapDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/AdminFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/AdminFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GUI/HoaDonPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/HoaDonPanel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/invoice-pdf/hoadon-1.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/bin/invoice-pdf/hoadon-1.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/invoice-pdf/hoadon-1.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BUS/HoaDonBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/HoaDonBUS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/HoaDonDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/HoaDonDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DTO/Lo_NguyenLieuDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DTO/Lo_NguyenLieuDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DTO/PhieuNhapDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DTO/PhieuNhapDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/AdminFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/AdminFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/DangNhapFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/DangNhapFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/HoaDonPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/HoaDonPanel.java" afterDir="false" />
