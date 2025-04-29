@@ -1,6 +1,8 @@
 package GUI;
 
 import DTO.TaiKhoanDTO;
+import GUI.Dialog.DoiMatKhauDialog;
+
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.BorderLayout;
@@ -181,8 +183,26 @@ public class AdminFrame extends JFrame {
 		tenTkLB.setOpaque(true); 
 		tenTkLB.setFont(new Font("Tahoma", Font.BOLD, 12));
 		tenTkLB.setHorizontalAlignment(SwingConstants.TRAILING);
-        tenTkLB.setPreferredSize(new Dimension(100, 30)); // Kích thước cố định để căn chỉnh
+        tenTkLB.setPreferredSize(new Dimension(120, 30)); // Kích thước cố định để căn chỉnh
 		navbarPanel.add(tenTkLB);
+
+		// Nút đổi mật khẩu
+		JButton changePasswordBtn = new JButton("Đổi mật khẩu");
+		changePasswordBtn.setBackground(new Color(245, 245, 245));
+		changePasswordBtn.setFont(new Font("Tahoma", Font.BOLD, 12));
+		changePasswordBtn.setHorizontalAlignment(SwingConstants.TRAILING);
+		changePasswordBtn.setContentAreaFilled(false);
+		changePasswordBtn.setOpaque(true);
+		changePasswordBtn.setBorderPainted(false);
+		changePasswordBtn.setPreferredSize(new Dimension(120, 30));
+
+		changePasswordBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Mở dialog đổi mật khẩu
+				new DoiMatKhauDialog(AdminFrame.this);
+			}
+		});
+		navbarPanel.add(changePasswordBtn);
 		
 		JButton logoutBtn = new JButton("Đăng xuất");
 		logoutBtn.setBackground(new Color(245, 245, 245));
@@ -191,7 +211,7 @@ public class AdminFrame extends JFrame {
 		logoutBtn.setContentAreaFilled(false); // Disable content area filling
 		logoutBtn.setOpaque(true);           // Disable background painting
 		logoutBtn.setBorderPainted(false);
-		logoutBtn.setPreferredSize(new Dimension(100, 30));
+		logoutBtn.setPreferredSize(new Dimension(120, 30));
 		
 		//Thêm sự kiện cho nút đăng xuất
         logoutBtn.addActionListener(new ActionListener() {
