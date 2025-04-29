@@ -269,7 +269,7 @@ public class AdminFrame extends JFrame {
 
         switch (panelType) {
             case "thongke":
-                selectedPanel = new JPanel(); // Thay bằng panel Thống kê
+                selectedPanel = new ThongKePanel(); // Thay bằng panel Thống kê
                 break;
             case "hoadon":
                 selectedPanel = new GUI.HoaDonPanel(); // Thay bằng panel Hóa đơn
