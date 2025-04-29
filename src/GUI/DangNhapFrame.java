@@ -1,5 +1,7 @@
 package GUI;
 
+import BUS.TaiKhoanBUS;
+
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,9 +16,15 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Color;
+
+/*
+ * Do ở frame đăng nhập tạm thời có một tính năng nên tui để actionListener trong cái khởi tạo luôn nha
+ * */
 
 public class DangNhapFrame extends JFrame {
-	private JTextField textField;
+	private TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();
+	private JTextField textTenTK;
 	private JPasswordField passwordField;
 
 	public DangNhapFrame() {
@@ -25,12 +33,13 @@ public class DangNhapFrame extends JFrame {
 		setSize(800, 500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
+		setLocationRelativeTo(null);
 
 		// Icon (JLabel)
 		JLabel lblIcon = new JLabel("");
 		lblIcon.setBounds(50, 75, 350, 350);
 		// Thêm hình ảnh (thay đường dẫn bằng file ảnh của bạn)
-		lblIcon.setIcon(new ImageIcon("C:\\Users\\ACER\\eclipse-workspace\\QuanLyQuanCaPhe\\src\\img\\LogoDangNhap.jpg"));
+		lblIcon.setIcon(new ImageIcon("src/img/LogoDangNhap.jpg"));
 		getContentPane().add(lblIcon);
 
 		// Form đăng nhập (JPanel)
@@ -39,39 +48,68 @@ public class DangNhapFrame extends JFrame {
 		panel.setLayout(null);
 		getContentPane().add(panel);
 
-		// Username Label và TextField
-		JLabel lblUsername = new JLabel("XIN CHÀO");
-		lblUsername.setAlignmentX(Component.CENTER_ALIGNMENT);
-		lblUsername.setFont(new Font("Inter", Font.BOLD, 14));
-		lblUsername.setBounds(115, 10, 80, 25);
-		panel.add(lblUsername);
+		// Tiêu đề "Xin chào"
+		JLabel lblFormHeader = new JLabel("XIN CHÀO");
+		lblFormHeader.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblFormHeader.setFont(new Font("Inter", Font.BOLD, 14));
+		lblFormHeader.setBounds(115, 10, 80, 25);
+		panel.add(lblFormHeader);
 
-		textField = new JTextField();
-		textField.setBounds(100, 50, 180, 25);
-		panel.add(textField);
+		// label tenTK
+		JLabel lblUsername_1 = new JLabel("Tên tài khoản");
+		lblUsername_1.setBounds(20, 50, 80, 25);
+		panel.add(lblUsername_1);
 
-		// Password Label và PasswordField
-		JLabel lblPassword = new JLabel("Mật khẩu");
-		lblPassword.setBounds(20, 100, 80, 25);
-		panel.add(lblPassword);
+		// tenTK field
+		textTenTK = new JTextField();
+		textTenTK.setBounds(100, 50, 180, 25);
+		panel.add(textTenTK);
 
+		// label matkhau
+		JLabel lblMatKhau = new JLabel("Mật khẩu");
+		lblMatKhau.setBounds(20, 100, 80, 25);
+		panel.add(lblMatKhau);
+
+		//password field
 		passwordField = new JPasswordField();
 		passwordField.setBounds(100, 100, 180, 25);
 		panel.add(passwordField);
 
 		// Nút Login
 		JButton btnLogin = new JButton("ĐĂNG NHẬP");
+		btnLogin.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnLogin.setForeground(new Color(255, 255, 255));
+		btnLogin.setBackground(new Color(128, 128, 255));
 		btnLogin.setBounds(30, 175, 240, 60);
 		panel.add(btnLogin);
-
-		JLabel lblUsername_1 = new JLabel("Tên tài khoản");
-		lblUsername_1.setBounds(20, 50, 80, 25);
-		panel.add(lblUsername_1);
 
 		// Sự kiện cho nút Login
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Login clicked!");
+				String tenTK = textTenTK.getText().trim();
+				String matkhau = new String(passwordField.getPassword()).trim();
+				StringBuilder message = new StringBuilder();
+				if (!tenTK.isEmpty() && !matkhau.isEmpty()) {
+					TaiKhoanBUS.LoginResult loginResult = taiKhoanBUS.checkLogin(tenTK, matkhau);
+					if(loginResult.getTaiKhoan() != null) {
+						JOptionPane.showMessageDialog(null, loginResult.getMessage());
+						// Đóng frame đăng nhập và mở AdminFrame
+						dispose();
+						//Lưu tài khoản vào phiên làm việc hiện tại của AdminFrame
+						new AdminFrame(loginResult.getTaiKhoan()).setVisible(true);
+					} else {
+						JOptionPane.showMessageDialog(null, loginResult.getMessage());
+					}
+				} else {
+					if (tenTK.isEmpty()) {
+						message.append("Vui lòng nhập tên tài khoản \n");
+					}
+					if (matkhau.isEmpty()) {
+						message.append("Vui lòng nhập mật khẩu \n");
+					}
+
+					JOptionPane.showMessageDialog(null, message.toString());
+				}
 			}
 		});
 	}

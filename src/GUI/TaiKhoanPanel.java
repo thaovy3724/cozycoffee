@@ -27,11 +27,11 @@ public class TaiKhoanPanel extends JPanel {
 	private JPanel container;
 	private JTextField txtSearch;
 	private DefaultTableModel tableModel;
-	private AdminFrametest adminFrame;
+	private AdminFrame adminFrame;
 	/**
 	 * Create the panel.
 	 */
-	public TaiKhoanPanel(AdminFrametest adminFrame) {
+	public TaiKhoanPanel(AdminFrame adminFrame) {
 		this.adminFrame = adminFrame;
 		setLayout(new BorderLayout(0, 0));
 		
@@ -180,8 +180,9 @@ public class TaiKhoanPanel extends JPanel {
 			int idTK = (int) table.getValueAt(selectedRow, 0);
 			// cập nhật lại CSDL
 			// kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
-			if(taiKhoanBus.delete(idTK))
+			if (taiKhoanBus.delete(idTK)) {
 				JOptionPane.showMessageDialog(this, "Xóa thành công");
+			}
 			else {
 				JOptionPane.showMessageDialog(this, "Bạn không thể xóa tài khoản này");
 				// reload table

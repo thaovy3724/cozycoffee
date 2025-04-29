@@ -8,7 +8,6 @@ import java.util.List;
 
 public class CongThucBUS {
     private final CongThucDAO congThucDao = new CongThucDAO();
-    private final SanPhamDAO sanPhamDao = new SanPhamDAO();
     private final CT_CongThucBUS ctCongThucBus = new CT_CongThucBUS();
 
     public List<CongThucDTO> getAll() {
@@ -28,14 +27,6 @@ public class CongThucBUS {
     }
 
     public String add(CongThucDTO ct, List<CT_CongThucDTO> chiTietList) {
-        if (ct.getMota() == null || ct.getMota().trim().isEmpty()) {
-            return "Mô tả không được để trống";
-        }
-
-        // if (!sanPhamDao.exists(ct.getIdSP())) {
-        //     return "Sản phẩm không tồn tại";
-        // }
-
         List<CongThucDTO> congThucList = congThucDao.findByIdSP(ct.getIdSP());
         if (congThucList != null && !congThucList.isEmpty()) {
             return "Sản phẩm đã có công thức, không thể thêm công thức mới";
@@ -65,14 +56,6 @@ public class CongThucBUS {
             return "Công thức không tồn tại";
         }
 
-        if (ct.getMota() == null || ct.getMota().trim().isEmpty()) {
-            return "Mô tả không được để trống";
-        }
-
-        // if (!sanPhamDao.exists(ct.getIdSP())) {
-        //     return "Sản phẩm không tồn tại";
-        // }
-
         boolean success = congThucDao.update(ct);
         if (success) {
             ctCongThucBus.deleteByCongThuc(ct.getIdCT());
@@ -88,23 +71,6 @@ public class CongThucBUS {
     }
 
     public boolean delete(int idCT) {
-        CongThucDTO ct = congThucDao.findByIdCT(idCT);
-        if (ct == null) {
-            return false; // Công thức không tồn tại
-        }
-        int idSP = ct.getIdSP();
-        // Kiểm tra idSP có tồn tại trong bảng sanpham
-        // if (!sanPhamDao.exists(idSP)) {
-        //     return false; // Sản phẩm không tồn tại
-        // }
-        // Kiểm tra xem idSP có công thức nào khác ngoài idCT hiện tại
-        List<CongThucDTO> congThucList = congThucDao.findByIdSP(idSP);
-        if (congThucList != null && congThucList.size() > 1) {
-            // Có công thức khác liên kết với idSP, không cho phép xóa
-            return false;
-        }
-
-        ctCongThucBus.deleteByCongThuc(idCT);
         return congThucDao.delete(idCT);
     }
 

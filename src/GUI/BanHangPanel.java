@@ -14,7 +14,6 @@ import javax.swing.JOptionPane;
 import java.awt.GridBagConstraints;
 import java.awt.Font;
 import java.awt.Insets;
-import java.io.File;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
 
 import BUS.DanhMucBUS;
@@ -41,7 +39,6 @@ import DTO.TaiKhoanDTO;
 import javax.swing.JComboBox;
 import java.awt.Component;
 import javax.swing.Box;
-import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import java.awt.FlowLayout;
 
@@ -225,7 +222,7 @@ public class BanHangPanel extends JPanel {
 		{                                                //(2) Mở đầu khai báo lớp vô danh (anonymous class)
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				return column == 2; //Chỉ cho sửa Số lượng + Thao tác
+				return column == 2; //Chỉ cho sửa Số lượng
 			}
 	    };   
 
@@ -374,15 +371,20 @@ public class BanHangPanel extends JPanel {
 			LocalDate currentDate = LocalDate.now();
 			HoaDonDTO hoadon = new HoaDonDTO(currentDate, currentUser.getIdTK());
 			// trả về idHD mới nhất (nếu thành công), thất bại trả về -1 
-			int result = hoaDonBus.add(hoadon, orderDetail); 
-			if(result != -1){
+			int newIdHD = hoaDonBus.add(hoadon, orderDetail); 
+			if(newIdHD != -1){
 				// Nếu thanh toán thành công, in hóa đơn ra file PDF
-                JOptionPane.showMessageDialog(this, "Tạo hóa đơn thành công");
-			}else JOptionPane.showMessageDialog(this, "Đã có lỗi khi tạo hóa đơn");
+				try{
+					hoaDonBus.printHoaDon(newIdHD);
+				}catch(Exception e){
+					JOptionPane.showMessageDialog(this, "Đã có lỗi khi in hóa đơn", "Lỗi", JOptionPane.ERROR_MESSAGE);
+					e.printStackTrace();
+				}
+			}else JOptionPane.showMessageDialog(this, "Đã có lỗi khi tạo hóa đơn", "Lỗi", JOptionPane.ERROR_MESSAGE);
 			
 			// Remove all order detail
 			tableModel.setRowCount(0);
-		} else JOptionPane.showMessageDialog(this, "Bạn chưa thêm chi tiết");
+		} else JOptionPane.showMessageDialog(this, "Bạn chưa thêm chi tiết", "Lỗi", JOptionPane.ERROR_MESSAGE);
 
 	}
 

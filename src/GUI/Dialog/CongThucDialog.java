@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class CongThucDialog extends JDialog {
     private JTable tableNguyenLieu;
     private DefaultTableModel tableModel;
     private JScrollPane scrollPane;
-    private java.util.List<NguyenLieuDTO> nguyenLieuList;
+    private List<NguyenLieuDTO> nguyenLieuList;
 
     public CongThucDialog() {
         setTitle("Thêm công thức");
@@ -65,7 +66,7 @@ public class CongThucDialog extends JDialog {
         contentPanel.add(lblTitle, gbc_lblTitle);
 
         textFieldInit();
-        initTable();
+        tableInit();
         actionInit();
 
         setLocationRelativeTo(null);
@@ -132,6 +133,16 @@ public class CongThucDialog extends JDialog {
         gbc_txtMoTa.gridy = 3;
         contentPanel.add(txtMoTaScroll, gbc_txtMoTa);
 
+        errMoTa = new JLabel();
+        errMoTa.setForeground(new Color(211, 47, 47));
+        errMoTa.setFont(new Font("Segoe UI", Font.ITALIC, 12));
+        GridBagConstraints gbc_errMoTa = new GridBagConstraints();
+        gbc_errMoTa.anchor = GridBagConstraints.WEST;
+        gbc_errMoTa.insets = new Insets(0, 0, 5, 0);
+        gbc_errMoTa.gridx = 1;
+        gbc_errMoTa.gridy = 6;
+        contentPanel.add(errMoTa, gbc_errMoTa);
+
         btnAdd = new JButton("Thêm nguyên liệu");
         btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnAdd.setBackground(new Color(0, 128, 0));
@@ -140,13 +151,12 @@ public class CongThucDialog extends JDialog {
         btnAdd.setBorderPainted(false);
         btnAdd.setIcon(new ImageIcon(getClass().getResource("/ASSET/Images/icons8_add_30px.png")));
         btnAdd.addActionListener(e -> {
-            NguyenLieuDTO defaultNguyenLieu = nguyenLieuList != null && !nguyenLieuList.isEmpty()
-                ? nguyenLieuList.get(0)
-                : new NguyenLieuDTO(0, "---Chọn nguyên liệu---");
+            NguyenLieuDTO defaultNguyenLieu = new NguyenLieuDTO(0, "---Chọn nguyên liệu---");
             tableModel.addRow(new Object[] { defaultNguyenLieu, "", "Xóa" });
             tableNguyenLieu.revalidate();
             tableNguyenLieu.repaint();
         });
+        // tùy chỉnh button "Thêm" khi hover
         btnAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -163,21 +173,16 @@ public class CongThucDialog extends JDialog {
         gbc_btnAdd.gridx = 1;
         gbc_btnAdd.gridy = 5;
         contentPanel.add(btnAdd, gbc_btnAdd);
-
-        errMoTa = new JLabel();
-        errMoTa.setForeground(new Color(211, 47, 47));
-        errMoTa.setFont(new Font("Segoe UI", Font.ITALIC, 12));
-        GridBagConstraints gbc_errMoTa = new GridBagConstraints();
-        gbc_errMoTa.anchor = GridBagConstraints.WEST;
-        gbc_errMoTa.insets = new Insets(0, 0, 5, 0);
-        gbc_errMoTa.gridx = 1;
-        gbc_errMoTa.gridy = 6;
-        contentPanel.add(errMoTa, gbc_errMoTa);
     }
 
-    private void initTable() {
-        tableModel = new DefaultTableModel(new Object[] { "Nguyên liệu", "Số lượng", "Thao tác" }, 0);
-        
+    private void tableInit() {
+        tableModel = new DefaultTableModel(new Object[] { "Nguyên liệu", "Số lượng", "Đơn vị", "Thao tác" }, 0)
+        {
+            @Override
+			public boolean isCellEditable(int row, int column) {
+				return column != 2; // Không cho sửa đơn vị
+			}
+        };
         tableNguyenLieu = new JTable(tableModel);
         tableNguyenLieu.setRowHeight(35);
         tableNguyenLieu.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -188,30 +193,30 @@ public class CongThucDialog extends JDialog {
         tableNguyenLieu.getTableHeader().setForeground(Color.WHITE);
         tableNguyenLieu.setSelectionBackground(new Color(187, 222, 251));
 
-        nguyenLieuList = nguyenLieuBus.getAllActive();
+        nguyenLieuList = nguyenLieuBus.getAll();
 
+        // setCellEditor
+        // --> dùng khi người dùng chỉnh sửa ô
+        // --> Component để chỉnh sửa (có tương tác)
         tableNguyenLieu.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<NguyenLieuDTO>()) {
-            private JComboBox<NguyenLieuDTO> comboBox;
+            private JComboBox<NguyenLieuDTO> cboNguyenLieu = new JComboBox<>();
 
+            // Phương thức được gọi khi người dùng bắt đầu chỉnh sửa ô
             @Override
             public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-                comboBox = new JComboBox<>();
-                comboBox.addItem(new NguyenLieuDTO(0, "---Chọn nguyên liệu---"));
+                cboNguyenLieu = new JComboBox<>();
+                cboNguyenLieu.addItem(new NguyenLieuDTO(0, "---Chọn nguyên liệu---"));
                 for (NguyenLieuDTO nl : nguyenLieuList) {
-                    comboBox.addItem(nl);
+                    cboNguyenLieu.addItem(nl);
                 }
-                if (value instanceof NguyenLieuDTO) {
-                    comboBox.setSelectedItem(value);
-                } else {
-                    comboBox.setSelectedIndex(0);
-                }
-                comboBox.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-                return comboBox;
+                cboNguyenLieu.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+                return cboNguyenLieu;
             }
 
+            // Khi người dùng chọn xong, phương thức trả về 1 đối tượng NguyenLieuDTO được chọn
             @Override
             public Object getCellEditorValue() {
-                return comboBox.getSelectedItem();
+                return cboNguyenLieu.getSelectedItem();
             }
 
             @Override
@@ -221,6 +226,9 @@ public class CongThucDialog extends JDialog {
             }
         });
 
+        // setCellRender
+        // --> dùng khi ô hiển thị dữ liệu
+        // --> Componet hiển thị (không tương tác)
         tableNguyenLieu.getColumnModel().getColumn(0).setCellRenderer(new TableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -229,11 +237,11 @@ public class CongThucDialog extends JDialog {
                 for (NguyenLieuDTO nl : nguyenLieuList) {
                     comboBox.addItem(nl);
                 }
-                if (value instanceof NguyenLieuDTO) {
-                    comboBox.setSelectedItem(value);
-                } else {
-                    comboBox.setSelectedIndex(0);
-                }
+                // if (value instanceof NguyenLieuDTO) {
+                //     comboBox.setSelectedItem(value);
+                // } else {
+                //     comboBox.setSelectedIndex(0);
+                // }
                 comboBox.setFont(new Font("Segoe UI", Font.PLAIN, 13));
                 if (isSelected) {
                     comboBox.setBackground(table.getSelectionBackground());
@@ -249,12 +257,13 @@ public class CongThucDialog extends JDialog {
             setBorder(new LineBorder(new Color(189, 189, 189), 1));
         }}));
 
-        tableNguyenLieu.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());
-        tableNguyenLieu.getColumnModel().getColumn(2).setCellEditor(new ButtonEditor());
+        tableNguyenLieu.getColumnModel().getColumn(3).setCellRenderer(new ButtonRenderer());
+        tableNguyenLieu.getColumnModel().getColumn(3).setCellEditor(new ButtonEditor());
 
         tableNguyenLieu.getColumnModel().getColumn(0).setPreferredWidth(250);
         tableNguyenLieu.getColumnModel().getColumn(1).setPreferredWidth(100);
         tableNguyenLieu.getColumnModel().getColumn(2).setPreferredWidth(80);
+        tableNguyenLieu.getColumnModel().getColumn(3).setPreferredWidth(80);
 
         scrollPane = new JScrollPane();
         scrollPane.setPreferredSize(new Dimension(500, 120));
@@ -401,11 +410,11 @@ public class CongThucDialog extends JDialog {
         loadComboBoxSP(listSP);
 
         tableModel.setRowCount(0);
-        if (nguyenLieuList != null && !nguyenLieuList.isEmpty()) {
-            tableModel.addRow(new Object[] { nguyenLieuList.get(0), "", "Xóa" });
-        } else {
-            tableModel.addRow(new Object[] { new NguyenLieuDTO(0, "---Chọn nguyên liệu---"), "", "Xóa" });
-        }
+        // if (nguyenLieuList != null && !nguyenLieuList.isEmpty()) {
+        //     tableModel.addRow(new Object[] { nguyenLieuList.get(0), "", "Xóa" });
+        // } else {
+        //     tableModel.addRow(new Object[] { new NguyenLieuDTO(0, "---Chọn nguyên liệu---"), "", "Xóa" });
+        // }
 
         btnSubmit.setText("Thêm");
         btnSubmit.setActionCommand("add");
@@ -420,37 +429,32 @@ public class CongThucDialog extends JDialog {
         }
         txtMoTa.setText(ct.getMota());
 
-        java.util.List<SanPhamDTO> listSP = sanPhamBus.getAll();
+        List<SanPhamDTO> listSP = sanPhamBus.getAll();
         loadComboBoxSP(listSP);
 
-        if (ct.getIdSP() != 0) {
-            for (int i = 0; i < cboSP.getItemCount(); i++) {
-                SanPhamDTO sp = cboSP.getItemAt(i);
-                if (sp.getIdSP() == ct.getIdSP()) {
-                    cboSP.setSelectedIndex(i);
-                    break;
-                }
+        for (int i = 0; i < cboSP.getItemCount(); i++) {
+            SanPhamDTO sp = cboSP.getItemAt(i);
+            if (sp.getIdSP() == ct.getIdSP()) {
+                cboSP.setSelectedIndex(i);
+                break;
             }
-        } else {
-            cboSP.setSelectedIndex(0);
         }
 
-        tableModel.setColumnIdentifiers(new Object[] { "Nguyên liệu", "Số lượng", "Thao tác" });
-        tableModel.setRowCount(0);
-        java.util.List<CT_CongThucDTO> chiTietList = ctCongThucBus.getChiTietCongThuc(idCT);
-        if (chiTietList != null && !chiTietList.isEmpty()) {
-            for (CT_CongThucDTO ctDetail : chiTietList) {
-                NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(ctDetail.getIdNL());
-                if (nl != null) {
-                    tableModel.addRow(new Object[] { nl, ctDetail.getSoluong(), "Xóa" });
-                }
+        // tableModel.setColumnIdentifiers(new Object[] { "Nguyên liệu", "Số lượng", "Đơn vị", "Thao tác" });
+        // tableModel.setRowCount(0);
+        List<CT_CongThucDTO> chiTietList = ctCongThucBus.getChiTietCongThuc(idCT);
+        for (CT_CongThucDTO ctDetail : chiTietList) {
+            NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(ctDetail.getIdNL());
+            if (nl != null) {
+                tableModel.addRow(new Object[] { nl, ctDetail.getSoluong(), nl.getDonvi(), "Xóa" });
             }
         }
-        if (tableModel.getRowCount() == 0 && nguyenLieuList != null && !nguyenLieuList.isEmpty()) {
-            tableModel.addRow(new Object[] { nguyenLieuList.get(0), "", "Xóa" });
-        } else if (tableModel.getRowCount() == 0) {
-            tableModel.addRow(new Object[] { new NguyenLieuDTO(0, "---Chọn nguyên liệu---"), "", "Xóa" });
-        }
+        
+        // if (tableModel.getRowCount() == 0 && nguyenLieuList != null && !nguyenLieuList.isEmpty()) {
+        //     tableModel.addRow(new Object[] { nguyenLieuList.get(0), "", "Xóa" });
+        // } else if (tableModel.getRowCount() == 0) {
+        //     tableModel.addRow(new Object[] { new NguyenLieuDTO(0, "---Chọn nguyên liệu---"), "", "Xóa" });
+        // }
 
         btnSubmit.setText("Cập nhật");
         btnSubmit.setActionCommand("edit_" + idCT);
@@ -470,89 +474,90 @@ public class CongThucDialog extends JDialog {
         txtMoTa.setEditable(false);
         btnAdd.setVisible(false);
         btnSubmit.setVisible(false);
-        btnCancel.setText("Đóng");
-        btnCancel.setBackground(new Color(117, 117, 117));
-        btnCancel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                btnCancel.setBackground(new Color(158, 158, 158));
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                btnCancel.setBackground(new Color(117, 117, 117));
-            }
-        });
+        // btnCancel.setText("Đóng");
+        // btnCancel.setBackground(new Color(117, 117, 117));
+        // btnCancel.addMouseListener(new MouseAdapter() {
+        //     @Override
+        //     public void mouseEntered(MouseEvent e) {
+        //         btnCancel.setBackground(new Color(158, 158, 158));
+        //     }
+        //     @Override
+        //     public void mouseExited(MouseEvent e) {
+        //         btnCancel.setBackground(new Color(117, 117, 117));
+        //     }
+        // });
 
         txtMoTa.setText(ct.getMota());
-        java.util.List<SanPhamDTO> listSP = sanPhamBus.getAll();
+        List<SanPhamDTO> listSP = sanPhamBus.getAll();
         loadComboBoxSP(listSP);
 
-        if (ct.getIdSP() != 0) {
-            for (int i = 0; i < cboSP.getItemCount(); i++) {
-                SanPhamDTO sp = cboSP.getItemAt(i);
-                if (sp.getIdSP() == ct.getIdSP()) {
-                    cboSP.setSelectedIndex(i);
-                    break;
-                }
+        for (int i = 0; i < cboSP.getItemCount(); i++) {
+            SanPhamDTO sp = cboSP.getItemAt(i);
+            if (sp.getIdSP() == ct.getIdSP()) {
+                cboSP.setSelectedIndex(i);
+                break;
             }
-        } else {
-            cboSP.setSelectedIndex(0);
         }
 
-        tableModel.setColumnIdentifiers(new Object[] { "Nguyên liệu", "Số lượng" });
-        tableModel.setRowCount(0);
-        java.util.List<CT_CongThucDTO> chiTietList = ctCongThucBus.getChiTietCongThuc(idCT);
+        // tableModel.setColumnIdentifiers(new Object[] { "Nguyên liệu", "Số lượng", "Đơn vị"});
+        // tableModel.setRowCount(0);
+        List<CT_CongThucDTO> chiTietList = ctCongThucBus.getChiTietCongThuc(idCT);
         System.out.println("Số nguyên liệu tìm thấy: " + (chiTietList != null ? chiTietList.size() : 0));
-        if (chiTietList != null && !chiTietList.isEmpty()) {
-            for (CT_CongThucDTO ctDetail : chiTietList) {
-                NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(ctDetail.getIdNL());
-                if (nl != null) {
-                    tableModel.addRow(new Object[] { nl, ctDetail.getSoluong() });
-                    System.out.println("Thêm nguyên liệu: " + nl.getTenNL() + ", Số lượng: " + ctDetail.getSoluong());
-                } else {
-                    System.out.println("Không tìm thấy nguyên liệu với idNL: " + ctDetail.getIdNL());
-                }
-            }
-        } else {
-            System.out.println("Không có chi tiết công thức nào cho idCT: " + idCT);
+        for (CT_CongThucDTO ctDetail : chiTietList) {
+            NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(ctDetail.getIdNL());
+            tableModel.addRow(new Object[] { nl, ctDetail.getSoluong(), nl.getDonvi()});
+            System.out.println("Thêm nguyên liệu: " + nl.getTenNL() + ", Số lượng: " + ctDetail.getSoluong());
         }
-
+        
         tableNguyenLieu.setEnabled(false);
         tableNguyenLieu.getColumnModel().getColumn(0).setPreferredWidth(250);
         tableNguyenLieu.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tableNguyenLieu.getColumnModel().getColumn(2).setPreferredWidth(80);
 
         setVisible(true);
     }
 
     private boolean isError() {
+        // remove errors
         errTenSP.setText("");
         errMoTa.setText("");
+
         boolean isError = false;
 
+        // sản phẩm
         if (cboSP.getSelectedItem() == null || cboSP.getSelectedItem().toString().equals("---Chọn sản phẩm---")) {
             errTenSP.setText("Vui lòng chọn sản phẩm!");
             isError = true;
         }
 
+        // mô tả
         if (txtMoTa.getText().trim().isEmpty()) {
             errMoTa.setText("Mô tả không được để trống!");
             isError = true;
         }
 
+        // chi tiết công thức
+
+
         return isError;
     }
 
     private void submitForm() {
+        // dừng chỉnh sửa
+        if (tableNguyenLieu.isEditing()) {
+            tableNguyenLieu.getCellEditor().stopCellEditing();
+        }
+
+        // validate
         if (!isError()) {
+            // collect data
             String mota = txtMoTa.getText();
             SanPhamDTO sanPhamSelected = (SanPhamDTO) cboSP.getSelectedItem();
             int idSP = sanPhamSelected.getIdSP();
 
-            if (tableNguyenLieu.isEditing()) {
-                tableNguyenLieu.getCellEditor().stopCellEditing();
-            }
+            
 
-            java.util.List<CT_CongThucDTO> chiTietList = new java.util.ArrayList<>();
+            List<CT_CongThucDTO> chiTietList = new ArrayList<>();
             HashSet<Integer> usedIdNL = new HashSet<>();
             System.out.println("Số hàng trong tableModel: " + tableModel.getRowCount());
 

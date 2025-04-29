@@ -40,8 +40,9 @@ public class CongThucPanel extends JPanel {
 
         // Xóa cột "Trạng thái" khỏi tableModel
         tableModel = new DefaultTableModel(
-            new String[] {"IdCT", "Tên sản phẩm"}, 0) { // Chỉ giữ 3 cột
-            @Override
+            new String[] {"Mã công thức", "Tên sản phẩm"}, 0) { // Chỉ giữ 3 cột
+            
+                @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Không cho phép sửa ô nào cả
             }
@@ -126,18 +127,15 @@ public class CongThucPanel extends JPanel {
         tableModel.setRowCount(0); // Xóa tất cả các dòng hiện tại
         if (arr == null) arr = congThucBus.getAll();
 
-        if (arr.size() != 0) {
-            for (CongThucDTO ct : arr) {
-                // Lấy thông tin sản phẩm từ idSP
-                SanPhamDTO sp = sanPhamBus.findByIdSP(ct.getIdSP());
-                String tenSP = sp != null ? sp.getTenSP() : "Không xác định";
+        for (CongThucDTO ct : arr) {
+            // Lấy thông tin sản phẩm từ idSP
+            SanPhamDTO sp = sanPhamBus.findByIdSP(ct.getIdSP());
 
-                Object[] row = {
-                    ct.getIdCT(),
-                    tenSP, // Hiển thị tên sản phẩm
-                };
-                tableModel.addRow(row);
-            }
+            Object[] row = {
+                ct.getIdCT(),
+                sp.getTenSP(), // Hiển thị tên sản phẩm
+            };
+            tableModel.addRow(row);
         }
         table.setModel(tableModel);
     }
@@ -161,6 +159,7 @@ public class CongThucPanel extends JPanel {
         // Sau khi đóng dialog, reload table
         loadTable(null);
     }
+
     private void showDetail() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow == -1) {
@@ -178,9 +177,7 @@ public class CongThucPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Bạn chưa nhập từ khóa tìm kiếm!");
         } else {
             List<CongThucDTO> result = congThucBus.search(keyWord.trim());
-            if (result == null || result.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Không tìm thấy công thức nào với từ khóa: " + keyWord);
-            } else loadTable(result);
+            loadTable(result);
             txtSearch.setText("");
         }
     }
@@ -198,7 +195,6 @@ public class CongThucPanel extends JPanel {
                     loadTable(null); // Reload bảng sau khi xóa thành công
                 } else {
                     JOptionPane.showMessageDialog(this, "Không thể xóa công thức này!");
-                    loadTable(null); // Reload bảng nếu có lỗi
                 }
             }
         }
