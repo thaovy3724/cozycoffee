@@ -5,9 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4ba96afb-e570-48cd-aec9-c13fe4e8f4f6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/GUI/AdminFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/AdminFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/DangNhapFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/DangNhapFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/HoaDonPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/HoaDonPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/DTO/Lo_NguyenLieuDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/Lo_NguyenLieuDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/DTO/NguyenLieuDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DTO/NguyenLieuDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DangNhapFrame$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/GUI/DangNhapFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GUI/DangNhapFrame.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BUS/PhieuNhapBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/PhieuNhapBUS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DAO/PhieuNhapDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/PhieuNhapDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DTO/Lo_NguyenLieuDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DTO/Lo_NguyenLieuDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DTO/NguyenLieuDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DTO/NguyenLieuDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/ThongKePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/ThongKePanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/invoice-pdf/hoadon-1.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/src/invoice-pdf/hoadon-1.pdf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
