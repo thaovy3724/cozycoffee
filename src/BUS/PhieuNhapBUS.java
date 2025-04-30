@@ -2,7 +2,6 @@ package BUS;
 
 import DAO.Lo_NguyenLieuDAO;
 import DAO.PhieuNhapDAO;
-import DTO.HoaDonDTO;
 import DTO.Lo_NguyenLieuDTO;
 import DTO.PhieuNhapDTO;
 
@@ -17,7 +16,7 @@ public class PhieuNhapBUS {
         return phieuNhapDAO.getAll();
     }
 
-    public List<Lo_NguyenLieuDTO> getAllLo_nguyenLieuByID(int idPN) {
+    public List<Lo_NguyenLieuDTO> getAllLo_NLByIDPN(int idPN) {
         return lo_nguyenLieuDAO.getAllByIDPN(idPN);
     }
 
@@ -32,6 +31,10 @@ public class PhieuNhapBUS {
         }
 
         return tongtien;
+    }
+
+    public PhieuNhapDTO findPNByID(int idPN) {
+        return phieuNhapDAO.findByID(idPN);
     }
 
     public List<PhieuNhapDTO> searchPhieuNhapByDate(Date start, Date end) {

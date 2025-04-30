@@ -1,5 +1,6 @@
 package DTO;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 public class Lo_NguyenLieuDTO {
@@ -63,7 +64,7 @@ public class Lo_NguyenLieuDTO {
     }
 
     public LocalDate getHsd() {
-        return hsd;
+        return this.hsd;
     }
 
     public void setHsd(LocalDate hsd) {

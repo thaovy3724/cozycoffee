@@ -2,6 +2,7 @@ package DAO;
 
 import DTO.HoaDonDTO;
 import DTO.PhieuNhapDTO;
+import DTO.TaiKhoanDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -31,6 +32,26 @@ public class PhieuNhapDAO extends BaseDAO{
                 rs.getInt("idNCC"),
                 rs.getInt("idTT")
         );
+    }
+
+    public PhieuNhapDTO findByID(int idPN) {
+        Connection link = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        PhieuNhapDTO result = null;
+        try {
+            String sql = "SELECT * FROM " + table + " WHERE idPN = ?";
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            pstmt.setInt(1, idPN);
+            rs = pstmt.executeQuery();
+            if (rs.next()) result = mapResultSetToDTO(rs);
+        }catch(ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }finally {
+            db.close(link);
+        }
+        return result;
     }
 
     public long getTongTienByIDPN(int idPN) {
