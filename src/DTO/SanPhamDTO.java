@@ -7,6 +7,9 @@ public class SanPhamDTO {
     private String hinhanh;
     private int trangthai;
     private int idDM;
+    
+    public SanPhamDTO() {
+    }
 
     public SanPhamDTO(int idSP, String tenSP, int giaban, String hinhanh, int trangthai, int idDM) {
         this.idSP = idSP;
@@ -73,7 +76,7 @@ public class SanPhamDTO {
         this.idDM = idDM;
     }
 
-    @Override 
+    @Override
     public String toString(){
         return tenSP;
     }

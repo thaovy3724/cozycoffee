@@ -1,10 +1,11 @@
 package BUS;
 
-import DTO.CongThucDTO;
-import DTO.CT_CongThucDTO;
+import java.util.List;
+
 import DAO.CongThucDAO;
 import DAO.SanPhamDAO;
-import java.util.List;
+import DTO.CT_CongThucDTO;
+import DTO.CongThucDTO;
 
 public class CongThucBUS {
     private final CongThucDAO congThucDao = new CongThucDAO();
@@ -32,9 +33,9 @@ public class CongThucBUS {
             return "Mô tả không được để trống";
         }
 
-        // if (!sanPhamDao.exists(ct.getIdSP())) {
-        //     return "Sản phẩm không tồn tại";
-        // }
+        if (!sanPhamDao.exists(ct.getIdSP())) {
+            return "Sản phẩm không tồn tại";
+        }
 
         List<CongThucDTO> congThucList = congThucDao.findByIdSP(ct.getIdSP());
         if (congThucList != null && !congThucList.isEmpty()) {
@@ -69,9 +70,9 @@ public class CongThucBUS {
             return "Mô tả không được để trống";
         }
 
-        // if (!sanPhamDao.exists(ct.getIdSP())) {
-        //     return "Sản phẩm không tồn tại";
-        // }
+        if (!sanPhamDao.exists(ct.getIdSP())) {
+            return "Sản phẩm không tồn tại";
+        }
 
         boolean success = congThucDao.update(ct);
         if (success) {
@@ -94,9 +95,9 @@ public class CongThucBUS {
         }
         int idSP = ct.getIdSP();
         // Kiểm tra idSP có tồn tại trong bảng sanpham
-        // if (!sanPhamDao.exists(idSP)) {
-        //     return false; // Sản phẩm không tồn tại
-        // }
+        if (!sanPhamDao.exists(idSP)) {
+            return false; // Sản phẩm không tồn tại
+        }
         // Kiểm tra xem idSP có công thức nào khác ngoài idCT hiện tại
         List<CongThucDTO> congThucList = congThucDao.findByIdSP(idSP);
         if (congThucList != null && congThucList.size() > 1) {

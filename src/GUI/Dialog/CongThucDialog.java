@@ -1,40 +1,66 @@
 package GUI.Dialog;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
-
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.swing.AbstractCellEditor;
+import javax.swing.DefaultCellEditor;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+
 import BUS.CT_CongThucBUS;
 import BUS.CongThucBUS;
-import BUS.SanPhamBUS;
 import BUS.NguyenLieuBUS;
-import DTO.CongThucDTO;
+import BUS.SanPhamBUS;
 import DTO.CT_CongThucDTO;
+import DTO.CongThucDTO;
 import DTO.NguyenLieuDTO;
 import DTO.SanPhamDTO;
 
 public class CongThucDialog extends JDialog {
     private CongThucBUS congThucBus = new CongThucBUS();
+    private CT_CongThucBUS ctCongThucBus = new CT_CongThucBUS();
     private SanPhamBUS sanPhamBus = new SanPhamBUS();
     private NguyenLieuBUS nguyenLieuBus = new NguyenLieuBUS();
-    private CT_CongThucBUS ctCongThucBus = new CT_CongThucBUS();
-
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
-
     private JLabel errTenSP, errMoTa;
     private JButton btnSubmit, btnAdd, btnCancel;
-    private JComboBox<SanPhamDTO> cboSP = new JComboBox<>();
+    private JComboBox<SanPhamDTO> cboSP;
     private JTextArea txtMoTa;
     private JTable tableNguyenLieu;
     private DefaultTableModel tableModel;
     private JScrollPane scrollPane;
-    private java.util.List<NguyenLieuDTO> nguyenLieuList;
+    private List<NguyenLieuDTO> nguyenLieuList;
 
     public CongThucDialog() {
         setTitle("Thêm công thức");
@@ -69,12 +95,12 @@ public class CongThucDialog extends JDialog {
         actionInit();
 
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setModal(true);
     }
 
     private void textFieldInit() {
-        JLabel lblTenSP = new JLabel("Sản phẩm:");
+        JLabel lblTenSP = new JLabel("Tên sản phẩm:");
         lblTenSP.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblTenSP.setForeground(new Color(66, 66, 66));
         GridBagConstraints gbc_lblTenSP = new GridBagConstraints();
@@ -84,6 +110,7 @@ public class CongThucDialog extends JDialog {
         gbc_lblTenSP.gridy = 1;
         contentPanel.add(lblTenSP, gbc_lblTenSP);
 
+        cboSP = new JComboBox<>();
         cboSP.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         cboSP.setBackground(Color.WHITE);
         cboSP.setBorder(new LineBorder(new Color(189, 189, 189), 1));
@@ -176,8 +203,16 @@ public class CongThucDialog extends JDialog {
     }
 
     private void initTable() {
-        tableModel = new DefaultTableModel(new Object[] { "Nguyên liệu", "Số lượng", "Thao tác" }, 0);
-        
+        tableModel = new DefaultTableModel(
+        		new Object[] { "Nguyên liệu", "Số lượng", "Thao tác" }, 
+        		0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return true;
+            }
+        };
+
         tableNguyenLieu = new JTable(tableModel);
         tableNguyenLieu.setRowHeight(35);
         tableNguyenLieu.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -190,7 +225,7 @@ public class CongThucDialog extends JDialog {
 
         nguyenLieuList = nguyenLieuBus.getAllActive();
 
-        tableNguyenLieu.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<NguyenLieuDTO>()) {
+        tableNguyenLieu.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<>()) {
             private JComboBox<NguyenLieuDTO> comboBox;
 
             @Override
@@ -391,9 +426,20 @@ public class CongThucDialog extends JDialog {
     }
 
     private void loadComboBoxSP(List<SanPhamDTO> arr) {
+        if (cboSP == null) {
+            throw new IllegalStateException("cboSP is not initialized");
+        }
         cboSP.removeAllItems();
-		for(SanPhamDTO item : arr) 
-			cboSP.addItem(item);
+        SanPhamDTO sanPhamDefault = new SanPhamDTO();
+        sanPhamDefault.setTenSP("---Chọn sản phẩm---");
+        cboSP.addItem(sanPhamDefault);
+        if (arr != null) {
+            for (SanPhamDTO item : arr) {
+                cboSP.addItem(item);
+            }
+        } else {
+            System.out.println("Không có sản phẩm nào được tải vào cboSP");
+        }
     }
 
     public void showAdd() {
@@ -420,7 +466,7 @@ public class CongThucDialog extends JDialog {
         }
         txtMoTa.setText(ct.getMota());
 
-        java.util.List<SanPhamDTO> listSP = sanPhamBus.getAll();
+       List<SanPhamDTO> listSP = sanPhamBus.getAll();
         loadComboBoxSP(listSP);
 
         if (ct.getIdSP() != 0) {
@@ -437,7 +483,7 @@ public class CongThucDialog extends JDialog {
 
         tableModel.setColumnIdentifiers(new Object[] { "Nguyên liệu", "Số lượng", "Thao tác" });
         tableModel.setRowCount(0);
-        java.util.List<CT_CongThucDTO> chiTietList = ctCongThucBus.getChiTietCongThuc(idCT);
+            List<CT_CongThucDTO> chiTietList = ctCongThucBus.getChiTietCongThuc(idCT);
         if (chiTietList != null && !chiTietList.isEmpty()) {
             for (CT_CongThucDTO ctDetail : chiTietList) {
                 NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(ctDetail.getIdNL());
@@ -484,7 +530,7 @@ public class CongThucDialog extends JDialog {
         });
 
         txtMoTa.setText(ct.getMota());
-        java.util.List<SanPhamDTO> listSP = sanPhamBus.getAll();
+        List<SanPhamDTO> listSP = sanPhamBus.getAll();
         loadComboBoxSP(listSP);
 
         if (ct.getIdSP() != 0) {
@@ -501,7 +547,7 @@ public class CongThucDialog extends JDialog {
 
         tableModel.setColumnIdentifiers(new Object[] { "Nguyên liệu", "Số lượng" });
         tableModel.setRowCount(0);
-        java.util.List<CT_CongThucDTO> chiTietList = ctCongThucBus.getChiTietCongThuc(idCT);
+        List<CT_CongThucDTO> chiTietList = ctCongThucBus.getChiTietCongThuc(idCT);
         System.out.println("Số nguyên liệu tìm thấy: " + (chiTietList != null ? chiTietList.size() : 0));
         if (chiTietList != null && !chiTietList.isEmpty()) {
             for (CT_CongThucDTO ctDetail : chiTietList) {
@@ -550,9 +596,9 @@ public class CongThucDialog extends JDialog {
 
             if (tableNguyenLieu.isEditing()) {
                 tableNguyenLieu.getCellEditor().stopCellEditing();
-            }
+            } // kiem tra table co dang trong trang thai chinh sua khong
 
-            java.util.List<CT_CongThucDTO> chiTietList = new java.util.ArrayList<>();
+           List<CT_CongThucDTO> chiTietList = new ArrayList<>();
             HashSet<Integer> usedIdNL = new HashSet<>();
             System.out.println("Số hàng trong tableModel: " + tableModel.getRowCount());
 

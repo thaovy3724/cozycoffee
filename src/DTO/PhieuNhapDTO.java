@@ -19,6 +19,15 @@ public class PhieuNhapDTO {
         this.idNCC = idNCC;
         this.idTT = idTT;
     }
+    
+    // HUONGNGUYEN 30/4
+    public PhieuNhapDTO(String ngaytao, String ngaycapnhat, int idTK, int idNCC, int idTT) {
+        this.ngaytao = ngaytao;
+        this.ngaycapnhat = ngaycapnhat;
+        this.idTK = idTK;
+        this.idNCC = idNCC;
+        this.idTT = idTT;
+    }
 
     public int getIdPN() {
         return idPN;

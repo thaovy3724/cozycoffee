@@ -5,7 +5,7 @@ public class NguyenLieuDTO {
     private String donvi;
     private String tenNL;
     private int trangthai;
-    
+
     public NguyenLieuDTO(int idNL, String tenNL) {
         this.idNL = idNL;
         this.tenNL = tenNL;
@@ -58,16 +58,21 @@ public class NguyenLieuDTO {
     }
     @Override
     public String toString() {
-        
+
         return tenNL; // Hiển thị tên nguyên liệu trong JComboBox
     }
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        NguyenLieuDTO that = (NguyenLieuDTO) obj;
-        return idNL == that.idNL;
-    }
+    
+//    @Override
+//    public boolean equ {
+//			ls(Object ob
+//		}j) {
+//        if (this == obj) return true;
+//        if (o {
+//			j == null ||
+//		}getClass() != obj.getClass()) return false;
+//        NguyenLieuDTO that = (NguyenLieuDTO) obj;
+//        return idNL == that.idNL;
+//    }
 
     @Override
     public int hashCode() {

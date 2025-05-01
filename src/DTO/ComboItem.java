@@ -21,11 +21,15 @@ public class ComboItem {
     public String toString() {
         return value; // This is what will be shown in the JComboBox
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj) {
+			return true;
+		}
+        if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
         ComboItem other = (ComboItem) obj;
         return key == other.key;
     }

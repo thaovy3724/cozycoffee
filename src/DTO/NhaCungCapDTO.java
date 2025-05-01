@@ -75,4 +75,9 @@ public class NhaCungCapDTO {
     public void setTrangthai(int trangthai) {
         this.trangthai = trangthai;
     }
+
+    // HUONGNGUYEN 29/4
+    public String toString() {
+        return tenNCC;
+    }
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 23, 2025 at 06:05 AM
+-- Generation Time: Apr 15, 2025 at 08:09 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `coffeeshop`
 --
+CREATE DATABASE IF NOT EXISTS `coffeeshop` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `coffeeshop`;
 
 -- --------------------------------------------------------
 
@@ -29,10 +31,10 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `congthuc` (
   `idCT` int NOT NULL,
-  `mota` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `mota` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `trangthai` tinyint(1) NOT NULL,
   `idSP` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -44,7 +46,7 @@ CREATE TABLE `ct_congthuc` (
   `idCT` int NOT NULL,
   `idNL` int NOT NULL,
   `soluong` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -57,7 +59,7 @@ CREATE TABLE `ct_hoadon` (
   `idHD` int NOT NULL,
   `soluong` int NOT NULL,
   `gialucdat` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -67,10 +69,10 @@ CREATE TABLE `ct_hoadon` (
 
 CREATE TABLE `danhmuc` (
   `idDM` int NOT NULL,
-  `tenDM` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `tenDM` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `trangthai` tinyint(1) NOT NULL,
   `idDMCha` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `danhmuc`
@@ -78,11 +80,11 @@ CREATE TABLE `danhmuc` (
 
 INSERT INTO `danhmuc` (`idDM`, `tenDM`, `trangthai`, `idDMCha`) VALUES
 (13, 'nước uống', 0, NULL),
-(15, 'chè', 1, NULL),
-(16, 'sodaaaa2', 1, 13),
-(17, 'cà phê', 1, 16),
+(15, 'chè', 1, 13),
+(16, 'sodaaaa', 1, 13),
+(17, 'cà phê', 1, 13),
 (18, 'thức ăn', 1, NULL),
-(21, 'sữa', 1, 15);
+(19, 'nuoc', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -94,7 +96,7 @@ CREATE TABLE `hoadon` (
   `idHD` int NOT NULL,
   `ngaytao` date NOT NULL,
   `idTK` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -109,7 +111,7 @@ CREATE TABLE `lo_nguyenlieu` (
   `tonkho` float NOT NULL,
   `dongia` int NOT NULL,
   `hsd` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -119,10 +121,10 @@ CREATE TABLE `lo_nguyenlieu` (
 
 CREATE TABLE `nguyenlieu` (
   `idNL` int NOT NULL,
-  `donvi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `tenNL` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `donvi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tenNL` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `trangthai` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -132,12 +134,12 @@ CREATE TABLE `nguyenlieu` (
 
 CREATE TABLE `nhacungcap` (
   `idNCC` int NOT NULL,
-  `tenNCC` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `diachi` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `sdt` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `tenNCC` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `diachi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sdt` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `trangthai` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -147,8 +149,8 @@ CREATE TABLE `nhacungcap` (
 
 CREATE TABLE `nhomquyen` (
   `idNQ` int NOT NULL,
-  `tenNQ` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `tenNQ` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `nhomquyen`
@@ -171,7 +173,7 @@ CREATE TABLE `phieunhap` (
   `idTK` int NOT NULL,
   `idNCC` int NOT NULL,
   `idTT` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -181,12 +183,12 @@ CREATE TABLE `phieunhap` (
 
 CREATE TABLE `sanpham` (
   `idSP` int NOT NULL,
-  `tenSP` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `tenSP` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `giaban` int NOT NULL,
-  `hinhanh` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `hinhanh` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `trangthai` tinyint(1) NOT NULL,
   `idDM` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -196,20 +198,12 @@ CREATE TABLE `sanpham` (
 
 CREATE TABLE `taikhoan` (
   `idTK` int NOT NULL,
-  `tenTK` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `matkhau` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `tenTK` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `matkhau` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `trangthai` tinyint(1) NOT NULL,
   `idNQ` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `taikhoan`
---
-
-INSERT INTO `taikhoan` (`idTK`, `tenTK`, `matkhau`, `email`, `trangthai`, `idNQ`) VALUES
-(1, 'Thảo Vy', '0794988554Vyle.', 'thaovy@gmail.com', 1, 2),
-(2, 'Như Ý', '0778052785Vyle.', 'nhuy3011@gmail.com', 1, 1);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -219,8 +213,8 @@ INSERT INTO `taikhoan` (`idTK`, `tenTK`, `matkhau`, `email`, `trangthai`, `idNQ`
 
 CREATE TABLE `trangthai_pn` (
   `idTT` int NOT NULL,
-  `tenTT` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `tenTT` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `trangthai_pn`
@@ -337,7 +331,7 @@ ALTER TABLE `congthuc`
 -- AUTO_INCREMENT for table `danhmuc`
 --
 ALTER TABLE `danhmuc`
-  MODIFY `idDM` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `idDM` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `hoadon`
@@ -355,7 +349,7 @@ ALTER TABLE `nguyenlieu`
 -- AUTO_INCREMENT for table `nhacungcap`
 --
 ALTER TABLE `nhacungcap`
-  MODIFY `idNCC` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idNCC` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `nhomquyen`
@@ -379,7 +373,7 @@ ALTER TABLE `sanpham`
 -- AUTO_INCREMENT for table `taikhoan`
 --
 ALTER TABLE `taikhoan`
-  MODIFY `idTK` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idTK` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `trangthai_pn`

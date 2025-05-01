@@ -1,13 +1,13 @@
 package DAO;
 
-import DTO.TaiKhoanDTO;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import DTO.TaiKhoanDTO;
 
 public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
     public TaiKhoanDAO() {
@@ -23,7 +23,7 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
     	)
         );
     }
-    
+
     protected TaiKhoanDTO mapResultSetToDTO(ResultSet rs) throws SQLException {
     	return new TaiKhoanDTO(
                 rs.getInt("idTK"),
@@ -45,7 +45,7 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
 		params.add(taiKhoan.getIdNQ());
 		return super.add(params);
 	}
-	
+
 	public boolean update(TaiKhoanDTO taiKhoan) {
 		List<Object> params = new ArrayList<>();
 		params.add(taiKhoan.getIdTK());
@@ -67,16 +67,18 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
 			StringBuilder sql = new StringBuilder("SELECT * FROM ");
 			sql.append(table);
 			sql.append(" WHERE email = ?");
-			if(taiKhoan.getIdTK() != 0) 
+			if(taiKhoan.getIdTK() != 0) {
 				sql.append(" AND idTK != ?");
-           
+			}
+
             // noi param
             link = db.connectDB();
             pstmt = link.prepareStatement(sql.toString());
             pstmt.setString(1, taiKhoan.getEmail());
-			if(taiKhoan.getIdTK() != 0) 
-	            pstmt.setInt(2, taiKhoan.getIdTK());
-			
+			if(taiKhoan.getIdTK() != 0) {
+				pstmt.setInt(2, taiKhoan.getIdTK());
+			}
+
 			// thuc thi
             rs = pstmt.executeQuery();
             isExist = rs.next();
@@ -125,7 +127,9 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
             pstmt.setString(1, "%" + keyWord + "%");
             pstmt.setString(2, "%" + keyWord + "%");
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {
@@ -145,7 +149,9 @@ public class TaiKhoanDAO extends BaseDAO<TaiKhoanDTO> {
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1,idTK);
             rs = pstmt.executeQuery();
-            if (rs.next()) result = mapResultSetToDTO(rs);
+            if (rs.next()) {
+				result = mapResultSetToDTO(rs);
+			}
         }catch(ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {

@@ -40,7 +40,9 @@ public class HoaDonDTO {
             this.ngaytao = ((java.util.Date) ngaytao).toInstant()
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate();
-        } else this.ngaytao = null; 
+        } else {
+			this.ngaytao = null;
+		}
     }
 
     public int getIdTK() {

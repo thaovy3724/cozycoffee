@@ -1,28 +1,25 @@
 package GUI.Dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import BUS.NhaCungCapBUS;
 import DTO.NhaCungCapDTO;
-import DTO.NhomQuyenDTO;
-import DTO.TaiKhoanDTO;
-
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.Font;
-import javax.swing.JTextField;
-import java.awt.Color;
-import javax.swing.JComboBox;
 
 public class NhaCungCapDialog extends JDialog {
 	private NhaCungCapBUS nhaCungCapBus = new NhaCungCapBUS();
@@ -66,10 +63,10 @@ public class NhaCungCapDialog extends JDialog {
 		actionInit();
 
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setModal(true);
 
-		
+
 	}
 
 	private void textFieldInit(){
@@ -260,7 +257,7 @@ public class NhaCungCapDialog extends JDialog {
 		}
 	}
 
-	public void showAdd() {		
+	public void showAdd() {
 		// reset action button
 		cboTrangThai.setEnabled(false);
 
@@ -276,7 +273,7 @@ public class NhaCungCapDialog extends JDialog {
 		txtDienThoai.setText(nhaCungCap.getSdt());
 		txtEmail.setText(nhaCungCap.getEmail());
 		cboTrangThai.setSelectedItem(nhaCungCap.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
-		
+
 		// reset action button
 		btnSubmit.setText("Cập nhật");
 		btnSubmit.setActionCommand("edit_"+idNCC);
@@ -302,7 +299,7 @@ public class NhaCungCapDialog extends JDialog {
 			errDiaChi.setText("Địa chỉ không được để trống");
 			isError = true;
 		}
-		
+
 		// dienthoai
 		String dienThoaiRegex = "^0\\d{9}$";
 		String dienThoai = txtDienThoai.getText();
@@ -313,7 +310,7 @@ public class NhaCungCapDialog extends JDialog {
 			errDienThoai.setText("Điện thoại không đúng định dạng");
 			isError = true;
 		}
-		
+
 		// email
 		/* Email có định dạng:
 		* 		+ Tên người dùng (có thể bao gồm ._%+-): [a-zA-Z0-9._%+-]
@@ -355,7 +352,7 @@ public class NhaCungCapDialog extends JDialog {
 				int idNCC = Integer.parseInt(actionCommand.substring(beginIndex));
 				error = nhaCungCapBus.update(new NhaCungCapDTO(idNCC, tenNCC, diaChi, dienThoai, email, trangthai));
 			}
-			
+
 			// show message
 			if(error != "") {
 				// fail
@@ -363,10 +360,11 @@ public class NhaCungCapDialog extends JDialog {
 			}
 			else {
 				// success
-				if(beginIndex == 0) 
+				if(beginIndex == 0) {
 					JOptionPane.showMessageDialog(this, "Thêm thành công ");
-				else 
+				} else {
 					JOptionPane.showMessageDialog(this, "Cập nhật thành công ");
+				}
 			}
 		}
 	}

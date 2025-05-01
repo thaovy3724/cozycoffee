@@ -1,31 +1,32 @@
 package GUI.Dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
-import BUS.TaiKhoanBUS;
-import BUS.NhomQuyenBUS;
-import DTO.NhomQuyenDTO;
-import DTO.TaiKhoanDTO;
-import GUI.AdminFrametest;
-
-import java.awt.GridBagLayout;
-
+import java.awt.Font;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.List;
-import java.awt.Font;
-import java.awt.Color;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
+
+import BUS.NhomQuyenBUS;
+import BUS.TaiKhoanBUS;
+import DTO.NhomQuyenDTO;
+import DTO.TaiKhoanDTO;
 
 public class TaiKhoanDialog extends JDialog {
 	private TaiKhoanBUS taiKhoanBus = new TaiKhoanBUS();
 	private NhomQuyenBUS nhomQuyenBus = new NhomQuyenBUS();
-
-	//TrongHiuuu 23/4
-	private AdminFrametest adminFrame;
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
@@ -38,10 +39,7 @@ public class TaiKhoanDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public TaiKhoanDialog(AdminFrametest adminFrame) {
-		//TrongHiuuu 23/4
-		this.adminFrame = adminFrame;
-
+	public TaiKhoanDialog() {
 		setTitle("Thêm tài khoản");
 		setSize(418, 457);
 		getContentPane().setLayout(new BorderLayout());
@@ -70,9 +68,9 @@ public class TaiKhoanDialog extends JDialog {
 		actionInit();
 
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setModal(true);
-		
+
 	}
 
 	private void textFieldInit(){
@@ -119,7 +117,7 @@ public class TaiKhoanDialog extends JDialog {
 			contentPanel.add(lblMatKhau, gbc_lblMatKhau);
 		}
 		{
-			txtMatKhau = new JPasswordField();
+			txtMatKhau = new JTextField();
 			txtMatKhau.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 			txtMatKhau.setColumns(10);
 			GridBagConstraints gbc_txtMatKhau = new GridBagConstraints();
@@ -151,7 +149,7 @@ public class TaiKhoanDialog extends JDialog {
 			contentPanel.add(lblMatKhauConfirm, gbc_lblMatKhauConfirm);
 		}
 		{
-			txtMatKhauConfirm = new JPasswordField();
+			txtMatKhauConfirm = new JTextField();
 			txtMatKhauConfirm.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 			txtMatKhauConfirm.setColumns(10);
 			GridBagConstraints gbc_txtMatKhauConfirm = new GridBagConstraints();
@@ -284,11 +282,12 @@ public class TaiKhoanDialog extends JDialog {
 
 	private void loadCboNhomQuyen() {
 		List<NhomQuyenDTO> arr = nhomQuyenBus.getAll();
-		for(NhomQuyenDTO item : arr) 
+		for(NhomQuyenDTO item : arr) {
 			cboQuyen.addItem(item);
+		}
 	}
 
-	public void showAdd() {		
+	public void showAdd() {
 		// reset action button
 		cboTrangThai.setEnabled(false);
 
@@ -307,7 +306,7 @@ public class TaiKhoanDialog extends JDialog {
 		NhomQuyenDTO quyen = nhomQuyenBus.findByIdNQ(taiKhoan.getIdNQ());
 		cboQuyen.setSelectedItem(quyen);
 		cboTrangThai.setSelectedItem(taiKhoan.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
-		
+
 		// reset action button
 		btnSubmit.setText("Cập nhật");
 		btnSubmit.setActionCommand("edit_"+idTK);
@@ -389,18 +388,15 @@ public class TaiKhoanDialog extends JDialog {
 			String error = "";
 			String actionCommand = btnSubmit.getActionCommand();
 			int beginIndex = actionCommand.indexOf('_')+1;
-			//TrongHiuuu 23/4
-			TaiKhoanDTO taiKhoan = new TaiKhoanDTO(tenTK, matKhau, email, trangthai, idNQ);
 			if(beginIndex == 0) {
 				// add
-				error = taiKhoanBus.add(taiKhoan);
+				error = taiKhoanBus.add(new TaiKhoanDTO(tenTK, matKhau, email, trangthai, idNQ));
 			}else {
 				// update
 				int idTK = Integer.parseInt(actionCommand.substring(beginIndex));
-				taiKhoan.setIdTK(idTK);
-				error = taiKhoanBus.update(taiKhoan);
+				error = taiKhoanBus.update(new TaiKhoanDTO(idTK, tenTK, matKhau, email, trangthai, idNQ));
 			}
-			
+
 			// show message
 			if(error != "") {
 				// fail
@@ -408,15 +404,10 @@ public class TaiKhoanDialog extends JDialog {
 			}
 			else {
 				// success
-				if(beginIndex == 0) 
+				if(beginIndex == 0) {
 					JOptionPane.showMessageDialog(this, "Thêm thành công ");
-				else {
-					//TrongHiuuu 23/4
+				} else {
 					JOptionPane.showMessageDialog(this, "Cập nhật thành công ");
-					if (taiKhoan.getIdTK() == adminFrame.getCurrentUser().getIdTK()) {
-						// Cập nhật currentUser với thông tin mới
-						adminFrame.setCurrentUser(taiKhoan);
-					}
 				}
 			}
 		}

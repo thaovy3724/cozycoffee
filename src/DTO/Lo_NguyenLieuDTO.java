@@ -20,6 +20,7 @@ public class Lo_NguyenLieuDTO {
         this.hsd = hsd;
     }
 
+
     public int getIdNL() {
         return idNL;
     }

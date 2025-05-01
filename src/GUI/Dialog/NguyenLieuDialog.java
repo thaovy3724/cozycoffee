@@ -1,28 +1,25 @@
 package GUI.Dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import BUS.NguyenLieuBUS;
 import DTO.NguyenLieuDTO;
-
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.GridBagConstraints;
-import java.awt.Font;
-import java.awt.Insets;
-import java.util.List;
-
-import javax.swing.JTextField;
-import java.awt.Color;
-import javax.swing.JComboBox;
 
 public class NguyenLieuDialog extends JDialog {
     private NguyenLieuBUS nguyenLieuBus = new NguyenLieuBUS();
@@ -68,10 +65,10 @@ public class NguyenLieuDialog extends JDialog {
         actionInit();
 
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setModal(true);
     }
-    
+
     private void textFieldInit() {
         {
             JLabel lblTenNL = new JLabel("Tên nguyên liệu");
@@ -211,9 +208,9 @@ public class NguyenLieuDialog extends JDialog {
     }
 
     public void showAdd() {
-        
+
         cboTrangThai.setEnabled(false);
-        
+
         // reset action button
         btnSubmit.setText("Thêm");
         btnSubmit.setActionCommand("add");
@@ -225,7 +222,7 @@ public class NguyenLieuDialog extends JDialog {
         txtTenNL.setText(nl.getTenNL());
         txtDonVi.setText(nl.getDonvi());
         cboTrangThai.setSelectedItem(nl.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
-        
+
         // reset action button
         btnSubmit.setText("Cập nhật");
         btnSubmit.setActionCommand("edit_"+idNL);
@@ -238,7 +235,7 @@ public class NguyenLieuDialog extends JDialog {
         errDonVi.setText("");
 
         boolean isError = false;
-        
+
         // tenNL
         if(txtTenNL.getText().trim().equals("")) {
             errTenNL.setText("Tên không được để trống");
@@ -248,7 +245,7 @@ public class NguyenLieuDialog extends JDialog {
             errDonVi.setText("Đơn vị không được để trống");
             isError = true;
         }
-        
+
         return isError;
     }
 
@@ -272,7 +269,7 @@ public class NguyenLieuDialog extends JDialog {
                 int idNL = Integer.parseInt(actionCommand.substring(beginIndex));
                 error = nguyenLieuBus.update(new NguyenLieuDTO(idNL, tenNL, donvi, trangthai));
             }
-            
+
             // show message
             if(error != "") {
                 // fail
@@ -280,10 +277,11 @@ public class NguyenLieuDialog extends JDialog {
             }
             else {
                 // success
-                if(beginIndex == 0) 
-                    JOptionPane.showMessageDialog(this, "Thêm thành công ");
-                else 
-                    JOptionPane.showMessageDialog(this, "Cập nhật thành công ");
+                if(beginIndex == 0) {
+					JOptionPane.showMessageDialog(this, "Thêm thành công ");
+				} else {
+					JOptionPane.showMessageDialog(this, "Cập nhật thành công ");
+				}
                 dispose();
             }
         }
@@ -293,3 +291,5 @@ public class NguyenLieuDialog extends JDialog {
         dispose();
     }
 }
+
+

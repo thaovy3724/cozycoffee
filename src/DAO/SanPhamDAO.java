@@ -1,48 +1,70 @@
 package DAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import DTO.SanPhamDTO;
-import java.util.List;
-import java.sql.*;
 
-public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
-	public SanPhamDAO() {
-		super(
-		"sanpham", 
-		List.of(
-		 "idSP",
-		 "tenSP",
-         "giaban",
-         "hinhanh",
-         "trangthai",
-		 "idDM"
-		));
-	}
+public class SanPhamDAO extends BaseDAO<SanPhamDTO> {
+    public SanPhamDAO() {
+        super("sanpham", List.of("idSP", "tenSP", "giaban", "hinhanh", "idDM", "trangthai"));
+    }
 
-	@Override
-	protected SanPhamDTO mapResultSetToDTO(ResultSet rs) throws SQLException {
+    @Override
+    protected SanPhamDTO mapResultSetToDTO(ResultSet rs) throws SQLException {
         return new SanPhamDTO(
-                rs.getInt("idSP"),
-                rs.getString("tenSP"),
-                rs.getInt("giaban"),
-                rs.getString("hinhanh"),
-                rs.getInt("trangthai"),
-                rs.getInt("idDM")
+            rs.getInt("idSP"),
+            rs.getString("tenSP"),
+            rs.getInt("giaban"),
+            rs.getString("hinhanh"),
+            rs.getInt("trangthai"),
+            rs.getInt("idDM")
         );
     }
 
-    public List<SanPhamDTO> getAllActive() {
+    public boolean add(SanPhamDTO sp) {
+        List<Object> params = new ArrayList<>();
+        params.add(sp.getTenSP());
+        params.add(sp.getGiaban());
+        params.add(sp.getHinhanh());
+        params.add(sp.getIdDM());
+        params.add(sp.getTrangthai());
+        return super.add(params);
+    }
+
+    public boolean update(SanPhamDTO sp) {
+        List<Object> params = new ArrayList<>();
+        params.add(sp.getTenSP());
+        params.add(sp.getGiaban());
+        params.add(sp.getHinhanh());
+        params.add(sp.getIdDM());
+        params.add(sp.getTrangthai());
+        String condition = "idSP = " + sp.getIdSP();
+        return super.update(params, condition);
+    }
+
+    public boolean delete(int idSP) {
+        return super.delete("idSP", idSP);
+    }
+
+    public SanPhamDTO findByIdSP(int idSP) {
         Connection link = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        List<SanPhamDTO> result = new ArrayList<>();
+        SanPhamDTO result = null;
         try {
-            String sql = "SELECT * FROM "+table+" WHERE trangthai = 1";
+            String sql = "SELECT * FROM " + table + " WHERE idSP = ?";
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
+            pstmt.setInt(1, idSP);
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            if (rs.next()) {
+				result = mapResultSetToDTO(rs);
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
@@ -51,244 +73,87 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
         return result;
     }
 
-	
-	public boolean add(SanPhamDTO sp) {
-		List<Object> params = new ArrayList<>();
-		params.add(sp.getIdSP());
-		params.add(sp.getTenSP());
-		params.add(sp.getGiaban());
-		params.add(sp.getHinhanh());
-		params.add(sp.getTrangthai());
-		params.add(sp.getIdDM());
-		return super.add(params);
-	}
-	
-	public boolean update(SanPhamDTO sp) {
-		List<Object> params = new ArrayList<>();
-		params.add(sp.getIdSP());
-		params.add(sp.getTenSP());
-		params.add(sp.getGiaban());
-		params.add(sp.getHinhanh());
-		params.add(sp.getTrangthai());
-		params.add(sp.getIdDM());
-		String condition = "idSP = "+sp.getIdSP();
-		return super.update(params, condition);
-	}
-
-    public boolean updateNotImage(SanPhamDTO sp){
+    public List<SanPhamDTO> getAll() {
         Connection link = null;
-		PreparedStatement pstmt = null;
-		boolean success = false;
-		try {
-			// tao sql
-            StringBuilder sql = new StringBuilder("UPDATE ");
-            
-            //Tên table
-            sql.append(table);
-            sql.append(" SET");
-            sql.append(" tenSP = ?");
-            sql.append(" giaban = ?");
-            sql.append(" trangthai = ?");
-            sql.append(" idDM = ?");		        
-            sql.append(" WHERE idSP = ?");
-            
-            // noi param
-            link = db.connectDB();
-            pstmt = link.prepareStatement(sql.toString());
-            
-            pstmt.setString(1, sp.getTenSP());
-            pstmt.setInt(2, sp.getGiaban());
-            pstmt.setInt(3, sp.getTrangthai());
-            pstmt.setInt(4, sp.getIdDM());
-            pstmt.setInt(5, sp.getIdSP());
-            
-            // thuc thi
-            success = pstmt.executeUpdate() > 0 ? true : false;
-
-		}catch(ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}finally {
-			db.close(link);
-		}
-		return success;
-    }
-	
-    public boolean isExist(SanPhamDTO sp) {
-		Connection link = null;
-		PreparedStatement pstmt = null;
+        PreparedStatement pstmt = null;
         ResultSet rs = null;
-        boolean isExist = false;
+        List<SanPhamDTO> result = new ArrayList<>();
         try {
-			StringBuilder sql = new StringBuilder("SELECT * FROM ");
-			sql.append(table);
-			sql.append(" WHERE tenSP LIKE ?");
-			if(sp.getIdSP() != 0) 
-				sql.append(" AND idSP != ?");
-           
-            // noi param
+            String sql = "SELECT * FROM " + table;
             link = db.connectDB();
-            pstmt = link.prepareStatement(sql.toString());
-            pstmt.setString(1, sp.getTenSP());
-			if(sp.getIdSP() != 0) 
-	            pstmt.setInt(2, sp.getIdSP());
-			
-			// thuc thi
+            pstmt = link.prepareStatement(sql);
             rs = pstmt.executeQuery();
-            isExist = rs.next();
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             db.close(link);
         }
-        return isExist;
-	}
+        return result;
+    }
 
-    public boolean isProductInRecipe(int idSP){
+    public List<SanPhamDTO> getAllActive() {
         Connection link = null;
-		PreparedStatement pstmt = null;
+        PreparedStatement pstmt = null;
         ResultSet rs = null;
-        boolean inRecipe = false;
+        List<SanPhamDTO> result = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM congthuc WHERE idSP = ?";
+            String sql = "SELECT * FROM sanpham WHERE trangthai = 1";
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
-            pstmt.setInt(1, idSP);
             rs = pstmt.executeQuery();
-            inRecipe = rs.next();
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             db.close(link);
         }
-        return inRecipe;
+        return result;
     }
 
-    public boolean isProductInReceipt(int idSP){
+    public List<SanPhamDTO> search(String keyword) {
         Connection link = null;
-		PreparedStatement pstmt = null;
+        PreparedStatement pstmt = null;
         ResultSet rs = null;
-        boolean inRecipe = false;
+        List<SanPhamDTO> result = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM ct_hoadon WHERE idSP = ?";
+            String sql = "SELECT * FROM " + table + " WHERE tenSP LIKE ?";
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
-            pstmt.setInt(1, idSP);
+            pstmt.setString(1, "%" + keyword + "%");
             rs = pstmt.executeQuery();
-            inRecipe = rs.next();
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             db.close(link);
         }
-        return inRecipe;
+        return result;
     }
-	
-	public boolean delete(int idSP) {
-		String col = "idSP";
-		return super.delete(col, idSP);
-    }
-	
-	public List<SanPhamDTO> search(String keyWord){
-		Connection link = null;
-		PreparedStatement pstmt = null;
-        ResultSet rs = null;
-		List<SanPhamDTO> result = new ArrayList<>();
-        try {
-            String sql = "SELECT * FROM " + table + " WHERE idSP LIKE ? OR tenSP LIKE ?";
-            link = db.connectDB();
-            pstmt = link.prepareStatement(sql);
-            pstmt.setString(1, "%" + keyWord + "%");
-            pstmt.setString(2, "%" + keyWord + "%");
-            rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }finally {
-            db.close(link);
-        }
-        return result;
-	}
 
-    public List<SanPhamDTO> searchByKeyWord(String keyWord){
-		Connection link = null;
-		PreparedStatement pstmt = null;
+    public boolean exists(int idSP) {
+        Connection link = null;
+        PreparedStatement pstmt = null;
         ResultSet rs = null;
-		List<SanPhamDTO> result = new ArrayList<>();
-        try {
-            String sql = "SELECT * FROM " + table + " WHERE (idSP LIKE ? OR tenSP LIKE ?) AND trangthai = 1";
-            link = db.connectDB();
-            pstmt = link.prepareStatement(sql);
-            pstmt.setString(1, "%" + keyWord + "%");
-            pstmt.setString(2, "%" + keyWord + "%");
-            rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }finally {
-            db.close(link);
-        }
-        return result;
-	}
-
-    public List<SanPhamDTO> searchByCategory(int idDM){
-		Connection link = null;
-		PreparedStatement pstmt = null;
-        ResultSet rs = null;
-		List<SanPhamDTO> result = new ArrayList<>();
-        try {
-            String sql = "SELECT * FROM " + table + " WHERE idDM = ? AND trangthai = 1";
-            link = db.connectDB();
-            pstmt = link.prepareStatement(sql);
-            pstmt.setInt(1, idDM);
-            rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }finally {
-            db.close(link);
-        }
-        return result;
-	}
-
-    public List<SanPhamDTO> search(String keyWord, int idDM){
-		Connection link = null;
-		PreparedStatement pstmt = null;
-        ResultSet rs = null;
-		List<SanPhamDTO> result = new ArrayList<>();
-        try {
-            String sql = "SELECT * FROM " + table + " WHERE (idSP LIKE ? OR tenSP LIKE ?) AND idDM = ? AND trangthai = 1";
-            link = db.connectDB();
-            pstmt = link.prepareStatement(sql);
-            pstmt.setString(1, "%" + keyWord + "%");
-            pstmt.setString(2, "%" + keyWord + "%");
-            pstmt.setInt(3, idDM);
-            rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }finally {
-            db.close(link);
-        }
-        return result;
-	}
-	
-	public SanPhamDTO findByIdSP(int idSP) {
-		Connection link = null;
-		PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        SanPhamDTO result = null;
+        boolean exists = false;
         try {
             String sql = "SELECT * FROM " + table + " WHERE idSP = ?";
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
-            pstmt.setInt(1,idSP);
+            pstmt.setInt(1, idSP);
             rs = pstmt.executeQuery();
-            if (rs.next()) result = mapResultSetToDTO(rs);
-        }catch(ClassNotFoundException | SQLException e) {
+            exists = rs.next();
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             db.close(link);
         }
-        return result;
-	}
+        return exists;
+    }
 }

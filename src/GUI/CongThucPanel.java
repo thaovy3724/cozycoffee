@@ -1,36 +1,38 @@
 package GUI;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.util.List;
+
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+
 import BUS.CongThucBUS;
 import BUS.SanPhamBUS;
 import DTO.CongThucDTO;
 import DTO.SanPhamDTO;
 import GUI.Dialog.CongThucDialog;
 
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import javax.swing.BoxLayout;
-import java.awt.FlowLayout;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.ImageIcon;
-import java.awt.Font;
-import java.util.List;
-import java.awt.Dimension;
-
 public class CongThucPanel extends JPanel {
     private CongThucBUS congThucBus = new CongThucBUS();
     private SanPhamBUS sanPhamBus = new SanPhamBUS(); // Vẫn giữ để lấy tên sản phẩm
 
     private static final long serialVersionUID = 1L;
-    private JButton btnAdd, btnEdit, btnDel, btnSearch, btnReset, btnDetail;
+    private JButton btnAdd, btnEdit, btnDel, btnSearch, btnReset;
     private JTable table;
     private JPanel container = new JPanel();
     private JTextField txtSearch;
     private DefaultTableModel tableModel;
+    private JButton btnDetail;
 
     public CongThucPanel() {
         setLayout(new BorderLayout(0, 0));
@@ -40,7 +42,7 @@ public class CongThucPanel extends JPanel {
 
         // Xóa cột "Trạng thái" khỏi tableModel
         tableModel = new DefaultTableModel(
-            new String[] {"IdCT", "Tên sản phẩm"}, 0) { // Chỉ giữ 3 cột
+            new String[] {"ID", "Tên sản phẩm", "Mô tả"}, 0) { // Chỉ giữ 3 cột
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Không cho phép sửa ô nào cả
@@ -76,13 +78,13 @@ public class CongThucPanel extends JPanel {
         btnDel.setIcon(new ImageIcon(CongThucPanel.class.getResource("/ASSET/Images/icons8_cancel_30px_1.png")));
         btnDel.addActionListener(e -> delete());
         actionPanel.add(btnDel);
-        
+
         btnDetail = new JButton("Chi tiết");
         btnDetail.setPreferredSize(new Dimension(100, 39));
         btnDetail.setIcon(new ImageIcon("C:\\Users\\Administrator\\Desktop\\cozycoffee\\src\\ASSET\\Images\\icons8_more_20px.png"));
         btnDetail.addActionListener(e -> showDetail());
         actionPanel.add(btnDetail);
-        
+
     }
 
     private void searchBoxInit() {
@@ -124,9 +126,11 @@ public class CongThucPanel extends JPanel {
 
     private void loadTable(List<CongThucDTO> arr) {
         tableModel.setRowCount(0); // Xóa tất cả các dòng hiện tại
-        if (arr == null) arr = congThucBus.getAll();
+        if (arr == null) {
+			arr = congThucBus.getAll();
+		}
 
-        if (arr.size() != 0) {
+        if (arr != null && !arr.isEmpty()) {
             for (CongThucDTO ct : arr) {
                 // Lấy thông tin sản phẩm từ idSP
                 SanPhamDTO sp = sanPhamBus.findByIdSP(ct.getIdSP());
@@ -135,9 +139,12 @@ public class CongThucPanel extends JPanel {
                 Object[] row = {
                     ct.getIdCT(),
                     tenSP, // Hiển thị tên sản phẩm
+                    ct.getMota()
                 };
                 tableModel.addRow(row);
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "Không có công thức nào để hiển thị.");
         }
         table.setModel(tableModel);
     }
@@ -180,7 +187,8 @@ public class CongThucPanel extends JPanel {
             List<CongThucDTO> result = congThucBus.search(keyWord.trim());
             if (result == null || result.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Không tìm thấy công thức nào với từ khóa: " + keyWord);
-            } else loadTable(result);
+            }
+            loadTable(result);
             txtSearch.setText("");
         }
     }

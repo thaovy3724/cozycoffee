@@ -1,14 +1,18 @@
 package DAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import DTO.DanhMucDTO;
 import java.util.List;
-import java.sql.*;
+
+import DTO.DanhMucDTO;
 
 public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
 	public DanhMucDAO() {
 		super(
-		"danhmuc", 
+		"danhmuc",
 		List.of(
 		 "idDM",
 		 "tenDM",
@@ -26,7 +30,7 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
                 rs.getInt("idDMCha")
         );
     }
-	
+
 	public boolean add(DanhMucDTO danhMuc) {
 		List<Object> params = new ArrayList<>();
 		params.add(danhMuc.getIdDM());
@@ -35,7 +39,7 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
 		params.add(danhMuc.getIdDMCha() == 0 ? null : danhMuc.getIdDMCha());
 		return super.add(params);
 	}
-	
+
 	public boolean update(DanhMucDTO danhMuc) {
 		List<Object> params = new ArrayList<>();
 		params.add(danhMuc.getIdDM());
@@ -45,7 +49,7 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
 		String condition = "idDM = "+danhMuc.getIdDM();
 		return super.update(params, condition);
 	}
-	
+
 	public boolean isParentCategory(int idDM) {
     	Connection link = null;
 		PreparedStatement pstmt = null;
@@ -65,7 +69,7 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
         }
         return isParent;
 	}
-	
+
 	public boolean hasProductInCategory(int idDM) {
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -85,12 +89,12 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
         }
         return hasProduct;
 	}
-	
+
 	public boolean delete(int idDM) {
 		String col = "idDM";
 		return super.delete(col, idDM);
     }
-	
+
 	public List<DanhMucDTO> search(String keyWord){
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -103,7 +107,9 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
             pstmt.setString(1, "%" + keyWord + "%");
             pstmt.setString(2, "%" + keyWord + "%");
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {
@@ -111,7 +117,7 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
         }
         return result;
 	}
-	
+
 	public DanhMucDTO findByIdDM(int idDM) {
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -123,7 +129,9 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1,idDM);
             rs = pstmt.executeQuery();
-            if (rs.next()) result = mapResultSetToDTO(rs);
+            if (rs.next()) {
+				result = mapResultSetToDTO(rs);
+			}
         }catch(ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {
@@ -131,7 +139,7 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
         }
         return result;
 	}
-	
+
 	public boolean isExist(DanhMucDTO danhMuc) {
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -141,16 +149,18 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
 			StringBuilder sql = new StringBuilder("SELECT * FROM ");
 			sql.append(table);
 			sql.append(" WHERE tenDM LIKE ?");
-			if(danhMuc.getIdDM() != 0) 
+			if(danhMuc.getIdDM() != 0) {
 				sql.append(" AND idDM != ?");
-           
+			}
+
             // noi param
             link = db.connectDB();
             pstmt = link.prepareStatement(sql.toString());
             pstmt.setString(1, danhMuc.getTenDM());
-			if(danhMuc.getIdDM() != 0) 
-	            pstmt.setInt(2, danhMuc.getIdDM());
-			
+			if(danhMuc.getIdDM() != 0) {
+				pstmt.setInt(2, danhMuc.getIdDM());
+			}
+
 			// thuc thi
             rs = pstmt.executeQuery();
             isExist = rs.next();
@@ -161,7 +171,7 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
         }
         return isExist;
 	}
-	
+
 	public List<DanhMucDTO> getAllActiveEdit(int idDMCon, int idDMCha){
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -176,7 +186,9 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
             pstmt.setInt(1, idDMCha);
             pstmt.setInt(2, idDMCon);
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {
@@ -184,7 +196,7 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
         }
         return result;
 	}
-	
+
 	public List<DanhMucDTO> getAllActive(){
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -195,7 +207,9 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {
@@ -211,12 +225,14 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
 		List<DanhMucDTO> result = new ArrayList<>();
         try {
             String sql = "SELECT * FROM " + table
-            		+ " WHERE idDM = ? OR trangthai = 1";
+            		+ " WHERE idDM != ? AND trangthai = 1)";
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1, idDM);
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {
