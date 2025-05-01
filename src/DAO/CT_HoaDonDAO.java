@@ -46,4 +46,47 @@ public class CT_HoaDonDAO extends BaseDAO<CT_HoaDonDTO>{
         }
         return result;
 	}
+
+    public int quantityAvailable(CT_HoaDonDTO ct){
+        int quantityAvailable = 0;
+        Connection link = null;
+		PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            // Tính tổng tồn kho khả dụng cho từng idNL
+            // Tính số sản phẩm tối đa cho từng nguyên liệu
+            String sql = 
+            "WITH TonKhoTheoHSD AS (" +
+            "SELECT lo.idNL, SUM(lo.tonkho) AS tonkho_kha_dung" +
+            "FROM lo_nguyenlieu lo" +
+            "GROUP BY lo.idNL" +
+            "HAVING SUM(lo.tonkho) > 0)," +
+            "SoLuongSanPhamToiDa AS ("+
+            "SELECT c.idCT, c.idSP, ct.idNL, ct.soluong AS so_luong_can," +
+                "FLOOR(COALESCE(tkh.tonkho_kha_dung, 0) / (ct.soluong * ?)) AS so_san_pham_toi_da" +
+            "FROM congthuc c" +
+                "JOIN ct_congthuc ct ON c.idct = ct.idct" +
+                "LEFT JOIN TonKhoTheoHSD tkh ON ct.idNL = tkh.idNL" +
+            "WHERE c.idSP = ?)" +
+            "SELECT idCT, idSP," +
+                "CASE" +
+                    "WHEN MIN(so_san_pham_toi_da) IS NULL THEN 0" +
+                    "ELSE MIN(so_san_pham_toi_da)" +
+                "END AS so_luong_san_pham_available" +
+            "FROM SoLuongSanPhamToiDa" +
+            "GROUP BY idCT, idSP";
+
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            pstmt.setInt(1,ct.getSoluong());
+            pstmt.setInt(2,ct.getIdSP());
+            rs = pstmt.executeQuery();
+            while (rs.next()) return rs.getInt("so_luong_san_pham_available");
+        }catch(ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }finally {
+            db.close(link);
+        }
+        return quantityAvailable;
+    }
 }

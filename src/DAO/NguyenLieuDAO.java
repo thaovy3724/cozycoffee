@@ -2,7 +2,6 @@ package DAO;
 
 import java.util.ArrayList;
 
-import DTO.DanhMucDTO;
 import DTO.NguyenLieuDTO;
 import java.util.List;
 import java.sql.*;

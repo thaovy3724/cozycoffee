@@ -10,8 +10,6 @@ import javax.swing.border.EmptyBorder;
 
 import BUS.NhaCungCapBUS;
 import DTO.NhaCungCapDTO;
-import DTO.NhomQuyenDTO;
-import DTO.TaiKhoanDTO;
 
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;

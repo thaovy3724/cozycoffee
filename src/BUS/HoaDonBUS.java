@@ -34,11 +34,28 @@ public class HoaDonBUS {
     private final SanPhamDAO sanPhamDao = new SanPhamDAO();
     
     public List<HoaDonDTO> getAll(){
-		return hoaDonDao.getAll();
-	}
+	return hoaDonDao.getAll();
+}
 
-    public int add(HoaDonDTO hoaDon, List<CT_HoaDonDTO> chitiet){
-        return hoaDonDao.add(hoaDon, chitiet);
+    public String add(HoaDonDTO hoaDon, List<CT_HoaDonDTO> dsChiTiet){
+        // kiểm tra từng sản phẩm có available ko (đủ nguyên liệu để chế biến theo số lượng đặt không)
+        String error = "";
+        int quantityAvailable = 0;
+        for(CT_HoaDonDTO ct : dsChiTiet){
+            quantityAvailable = ct_HoaDonDao.quantityAvailable(ct);
+            if(quantityAvailable != ct.getSoluong()){
+                error += "Mã sản phẩm " + ct.getIdSP() + " chỉ còn đủ " + quantityAvailable + "sản phẩm" + "\n";
+            }
+        }
+
+        // nếu tất cả sản phẩm đều available thì tiến hàng tạo hóa đơn
+        if(error.isEmpty()){
+            int newIdHD = hoaDonDao.add(hoaDon, dsChiTiet);
+            if(newIdHD == -1)
+                error = "Đã xảy ra lỗi trong quá trình thêm hóa đơn";
+            else error = String.valueOf(newIdHD);
+        }
+        return error;
     }
 
     public int getTotalAmount(int idHD){

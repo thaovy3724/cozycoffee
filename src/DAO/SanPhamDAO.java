@@ -50,7 +50,6 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
         }
         return result;
     }
-
 	
 	public boolean add(SanPhamDTO sp) {
 		List<Object> params = new ArrayList<>();

@@ -1,12 +1,12 @@
 package GUI;
 
 import BUS.TaiKhoanBUS;
+import DTO.TaiKhoanDTO;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Color;
+import javax.swing.SwingConstants;
 
 /*
  * Do ở frame đăng nhập tạm thời có một tính năng nên tui để actionListener trong cái khởi tạo luôn nha
@@ -37,9 +38,12 @@ public class DangNhapFrame extends JFrame {
 
 		// Icon (JLabel)
 		JLabel lblIcon = new JLabel("");
+		lblIcon.setHorizontalAlignment(SwingConstants.CENTER);
+		lblIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
 		lblIcon.setBounds(50, 75, 350, 350);
 		// Thêm hình ảnh (thay đường dẫn bằng file ảnh của bạn)
-		lblIcon.setIcon(new ImageIcon("src/img/LogoDangNhap.jpg"));
+		ImageHelper img = new ImageHelper(400, 400, DangNhapFrame.class.getResource("/ASSET/Images/logoBg.png"));
+		lblIcon.setIcon(img.getScaledImage());
 		getContentPane().add(lblIcon);
 
 		// Form đăng nhập (JPanel)
@@ -91,14 +95,21 @@ public class DangNhapFrame extends JFrame {
 				StringBuilder message = new StringBuilder();
 				if (!tenTK.isEmpty() && !matkhau.isEmpty()) {
 					TaiKhoanBUS.LoginResult loginResult = taiKhoanBUS.checkLogin(tenTK, matkhau);
-					if(loginResult.getTaiKhoan() != null) {
-						JOptionPane.showMessageDialog(null, loginResult.getMessage());
+					TaiKhoanDTO tk = loginResult.getTaiKhoan();
+					String msg = loginResult.getMessage();
+					if(tk != null) {
 						// Đóng frame đăng nhập và mở AdminFrame
 						dispose();
-						//Lưu tài khoản vào phiên làm việc hiện tại của AdminFrame
-						new AdminFrame(loginResult.getTaiKhoan()).setVisible(true);
+						
+						if(tk.getIdNQ() == 1){
+							//Lưu tài khoản vào phiên làm việc hiện tại của AdminFrame
+							new AdminFrame(tk).setVisible(true);
+						}else if(tk.getIdNQ() == 2){
+							//Lưu tài khoản vào phiên làm việc hiện tại của AdminFrame
+							new StaffFrame(tk).setVisible(true);
+						}
 					} else {
-						JOptionPane.showMessageDialog(null, loginResult.getMessage());
+						JOptionPane.showMessageDialog(null, msg);
 					}
 				} else {
 					if (tenTK.isEmpty()) {

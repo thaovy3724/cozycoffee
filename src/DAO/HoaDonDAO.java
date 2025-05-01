@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import DTO.CT_HoaDonDTO;
-import DTO.DanhMucDTO;
 import DTO.HoaDonDTO;
 
 public class HoaDonDAO extends BaseDAO<HoaDonDTO>{

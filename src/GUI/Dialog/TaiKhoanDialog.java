@@ -11,7 +11,6 @@ import BUS.NhomQuyenBUS;
 import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
 import GUI.AdminFrame;
-import GUI.TaiKhoanPanel;
 
 import java.awt.GridBagLayout;
 

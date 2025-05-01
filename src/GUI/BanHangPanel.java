@@ -344,6 +344,21 @@ public class BanHangPanel extends JPanel {
 	}
 
 	private void addDetail(SanPhamDTO sp){
+		// kiểm tra nếu idSP đã tồn tại trong tableModel thì cộng thêm số lượng vào
+		int rowCount = tableModel.getRowCount();
+
+		int quantityTmp = 0;
+		for(int i = 0; i < rowCount; i++){
+			if(sp.getIdSP() == (int) tableModel.getValueAt(i, 0)){
+				// kiểm tra nếu ô só lượng bị rỗng, gán số lượng bằng 0 và cộng thêm 1
+				try{
+					quantityTmp = (int) tableModel.getValueAt(i, 2);
+					tableModel.setValueAt(quantityTmp++, i, 2);
+				}catch(NumberFormatException e){
+					tableModel.setValueAt(1, i, 2);
+				}
+			}
+		}
 		// thêm 1 dòng mới trong table
 		Object[] row = {
 			sp.getIdSP(),
@@ -371,16 +386,20 @@ public class BanHangPanel extends JPanel {
 			LocalDate currentDate = LocalDate.now();
 			HoaDonDTO hoadon = new HoaDonDTO(currentDate, currentUser.getIdTK());
 			// trả về idHD mới nhất (nếu thành công), thất bại trả về -1 
-			int newIdHD = hoaDonBus.add(hoadon, orderDetail); 
-			if(newIdHD != -1){
-				// Nếu thanh toán thành công, in hóa đơn ra file PDF
+			String result = hoaDonBus.add(hoadon, orderDetail); 
+			
+			try{
+				// nếu lấy newIdHD thành công, in ra file pdf, ngược lại xuất thông báo lỗi
+				int newIdHD = Integer.parseInt(result);
 				try{
 					hoaDonBus.printHoaDon(newIdHD);
-				}catch(Exception e){
-					JOptionPane.showMessageDialog(this, "Đã có lỗi khi in hóa đơn", "Lỗi", JOptionPane.ERROR_MESSAGE);
-					e.printStackTrace();
+				}catch(Exception ex){
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(this, "Đã có lỗi xảy ra", "Lỗi", JOptionPane.ERROR_MESSAGE);
 				}
-			}else JOptionPane.showMessageDialog(this, "Đã có lỗi khi tạo hóa đơn", "Lỗi", JOptionPane.ERROR_MESSAGE);
+			}catch(NumberFormatException e){
+				JOptionPane.showMessageDialog(this, result, "Lỗi", JOptionPane.ERROR_MESSAGE);
+			}
 			
 			// Remove all order detail
 			tableModel.setRowCount(0);

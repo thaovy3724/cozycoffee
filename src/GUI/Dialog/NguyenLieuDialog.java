@@ -18,7 +18,6 @@ import javax.swing.JOptionPane;
 import java.awt.GridBagConstraints;
 import java.awt.Font;
 import java.awt.Insets;
-import java.util.List;
 
 import javax.swing.JTextField;
 import java.awt.Color;

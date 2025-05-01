@@ -28,7 +28,7 @@ public class CongThucDialog extends JDialog {
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
 
-    private JLabel errTenSP, errMoTa;
+    private JLabel errTenSP, errMoTa, errChiTiet;
     private JButton btnSubmit, btnAdd, btnCancel;
     private JComboBox<SanPhamDTO> cboSP = new JComboBox<>();
     private JTextArea txtMoTa;
@@ -49,9 +49,9 @@ public class CongThucDialog extends JDialog {
 
         GridBagLayout gbl_contentPanel = new GridBagLayout();
         gbl_contentPanel.columnWidths = new int[] { 0, 0, 0 };
-        gbl_contentPanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        gbl_contentPanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         gbl_contentPanel.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-        gbl_contentPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+        gbl_contentPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
         contentPanel.setLayout(gbl_contentPanel);
 
         JLabel lblTitle = new JLabel("Thêm công thức");
@@ -133,16 +133,6 @@ public class CongThucDialog extends JDialog {
         gbc_txtMoTa.gridy = 3;
         contentPanel.add(txtMoTaScroll, gbc_txtMoTa);
 
-        errMoTa = new JLabel();
-        errMoTa.setForeground(new Color(211, 47, 47));
-        errMoTa.setFont(new Font("Segoe UI", Font.ITALIC, 12));
-        GridBagConstraints gbc_errMoTa = new GridBagConstraints();
-        gbc_errMoTa.anchor = GridBagConstraints.WEST;
-        gbc_errMoTa.insets = new Insets(0, 0, 5, 0);
-        gbc_errMoTa.gridx = 1;
-        gbc_errMoTa.gridy = 6;
-        contentPanel.add(errMoTa, gbc_errMoTa);
-
         btnAdd = new JButton("Thêm nguyên liệu");
         btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnAdd.setBackground(new Color(0, 128, 0));
@@ -152,7 +142,7 @@ public class CongThucDialog extends JDialog {
         btnAdd.setIcon(new ImageIcon(getClass().getResource("/ASSET/Images/icons8_add_30px.png")));
         btnAdd.addActionListener(e -> {
             NguyenLieuDTO defaultNguyenLieu = new NguyenLieuDTO(0, "---Chọn nguyên liệu---");
-            tableModel.addRow(new Object[] { defaultNguyenLieu, "", "Xóa" });
+            tableModel.addRow(new Object[] { defaultNguyenLieu, "", "", "Xóa" });
             tableNguyenLieu.revalidate();
             tableNguyenLieu.repaint();
         });
@@ -167,11 +157,21 @@ public class CongThucDialog extends JDialog {
                 btnAdd.setBackground(new Color(76, 175, 80));
             }
         });
+        
+                errMoTa = new JLabel();
+                errMoTa.setForeground(new Color(211, 47, 47));
+                errMoTa.setFont(new Font("Segoe UI", Font.ITALIC, 12));
+                GridBagConstraints gbc_errMoTa = new GridBagConstraints();
+                gbc_errMoTa.anchor = GridBagConstraints.WEST;
+                gbc_errMoTa.insets = new Insets(0, 0, 5, 0);
+                gbc_errMoTa.gridx = 1;
+                gbc_errMoTa.gridy = 5;
+                contentPanel.add(errMoTa, gbc_errMoTa);
         GridBagConstraints gbc_btnAdd = new GridBagConstraints();
         gbc_btnAdd.anchor = GridBagConstraints.WEST;
         gbc_btnAdd.insets = new Insets(0, 0, 5, 0);
         gbc_btnAdd.gridx = 1;
-        gbc_btnAdd.gridy = 5;
+        gbc_btnAdd.gridy = 6;
         contentPanel.add(btnAdd, gbc_btnAdd);
     }
 
@@ -210,6 +210,21 @@ public class CongThucDialog extends JDialog {
                     cboNguyenLieu.addItem(nl);
                 }
                 cboNguyenLieu.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+
+                // Thêm ItemListener để bắt sự kiện chọn mục
+                cboNguyenLieu.addItemListener(new ItemListener() {
+                    @Override
+                    public void itemStateChanged(ItemEvent e) {
+                        if (e.getStateChange() == ItemEvent.SELECTED) {
+                            NguyenLieuDTO selectedNL = (NguyenLieuDTO) cboNguyenLieu.getSelectedItem();
+                            if (selectedNL != null && selectedNL.getIdNL() != 0) {
+                                // Cập nhật cột "Đơn vị" (cột 2) dựa trên nguyên liệu được chọn
+                                tableModel.setValueAt(selectedNL.getDonvi(), row, 2);
+                            }
+                        }
+                    }
+                });
+
                 return cboNguyenLieu;
             }
 
@@ -237,11 +252,11 @@ public class CongThucDialog extends JDialog {
                 for (NguyenLieuDTO nl : nguyenLieuList) {
                     comboBox.addItem(nl);
                 }
-                // if (value instanceof NguyenLieuDTO) {
-                //     comboBox.setSelectedItem(value);
-                // } else {
-                //     comboBox.setSelectedIndex(0);
-                // }
+                if (value instanceof NguyenLieuDTO) {
+                    comboBox.setSelectedItem(value);
+                } else {
+                    comboBox.setSelectedIndex(0);
+                }
                 comboBox.setFont(new Font("Segoe UI", Font.PLAIN, 13));
                 if (isSelected) {
                     comboBox.setBackground(table.getSelectionBackground());
@@ -264,6 +279,16 @@ public class CongThucDialog extends JDialog {
         tableNguyenLieu.getColumnModel().getColumn(1).setPreferredWidth(100);
         tableNguyenLieu.getColumnModel().getColumn(2).setPreferredWidth(80);
         tableNguyenLieu.getColumnModel().getColumn(3).setPreferredWidth(80);
+        
+        errChiTiet = new JLabel();
+        errChiTiet.setForeground(new Color(211, 47, 47));
+        errChiTiet.setFont(new Font("Segoe UI", Font.ITALIC, 12));
+        GridBagConstraints gbc_errChiTiet = new GridBagConstraints();
+        gbc_errChiTiet.anchor = GridBagConstraints.WEST;
+        gbc_errChiTiet.insets = new Insets(0, 0, 5, 0);
+        gbc_errChiTiet.gridx = 1;
+        gbc_errChiTiet.gridy = 7;
+        contentPanel.add(errChiTiet, gbc_errChiTiet);
 
         scrollPane = new JScrollPane();
         scrollPane.setPreferredSize(new Dimension(500, 120));
@@ -274,7 +299,7 @@ public class CongThucDialog extends JDialog {
         gbc_scrollPane.insets = new Insets(2, 0, 5, 0);
         gbc_scrollPane.fill = GridBagConstraints.BOTH;
         gbc_scrollPane.gridx = 1;
-        gbc_scrollPane.gridy = 7;
+        gbc_scrollPane.gridy = 8;
         contentPanel.add(scrollPane, gbc_scrollPane);
     }
 
@@ -282,11 +307,10 @@ public class CongThucDialog extends JDialog {
         JPanel actionPanel = new JPanel();
         actionPanel.setBackground(new Color(255, 255, 255));
         GridBagConstraints gbc_actionPanel = new GridBagConstraints();
-        gbc_actionPanel.insets = new Insets(0, 0, 5, 0);
         gbc_actionPanel.gridwidth = 2;
         gbc_actionPanel.fill = GridBagConstraints.HORIZONTAL;
         gbc_actionPanel.gridx = 0;
-        gbc_actionPanel.gridy = 11;
+        gbc_actionPanel.gridy = 12;
         contentPanel.add(actionPanel, gbc_actionPanel);
         actionPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
 
@@ -537,7 +561,43 @@ public class CongThucDialog extends JDialog {
         }
 
         // chi tiết công thức
+        if (tableModel.getRowCount() == 0) {
+            errChiTiet.setText("Danh sách nguyên liệu không được để trống");
+            isError = true;
+        }
 
+        HashSet<Integer> usedIdNL = new HashSet<>();
+        int rowCount = tableModel.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            NguyenLieuDTO nl = (NguyenLieuDTO) tableModel.getValueAt(i, 0);
+            String soLuongStr = tableModel.getValueAt(i, 1).toString().trim();
+
+            if (nl == null || nl.getIdNL() == 0) {
+                errChiTiet.setText("Vui lòng chọn nguyên liệu hợp lệ tại hàng " + (i + 1) + "!");
+                isError = true;
+            }
+            if (soLuongStr.isEmpty()) {
+                errChiTiet.setText("Số lượng không được để trống tại hàng " + (i + 1) + "!");
+                isError = true;
+            }
+
+            if (usedIdNL.contains(nl.getIdNL())) {
+                errChiTiet.setText("Nguyên liệu '" + nl.getTenNL() + "' bị trùng!");
+                isError = true;
+            }
+            usedIdNL.add(nl.getIdNL());
+
+            try {
+                float soLuong = Float.parseFloat(soLuongStr);
+                if (soLuong <= 0) {
+                    errChiTiet.setText("Số lượng phải lớn hơn 0 tại hàng " + (i + 1) + "!");
+                    isError = true;
+                }
+            } catch (NumberFormatException e) {
+                errChiTiet.setText("Số lượng phải là số hợp lệ tại hàng " + (i + 1) + "!");
+                isError = true;
+            }
+        }
 
         return isError;
     }
@@ -551,63 +611,26 @@ public class CongThucDialog extends JDialog {
         // validate
         if (!isError()) {
             // collect data
-            String mota = txtMoTa.getText();
             SanPhamDTO sanPhamSelected = (SanPhamDTO) cboSP.getSelectedItem();
             int idSP = sanPhamSelected.getIdSP();
-
-            
-
+            String mota = txtMoTa.getText();
             List<CT_CongThucDTO> chiTietList = new ArrayList<>();
-            HashSet<Integer> usedIdNL = new HashSet<>();
-            System.out.println("Số hàng trong tableModel: " + tableModel.getRowCount());
-
-            if (tableModel.getRowCount() == 0) {
-                JOptionPane.showMessageDialog(this, "Vui lòng thêm ít nhất một nguyên liệu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            for (int i = 0; i < tableModel.getRowCount(); i++) {
+            int rowCount = tableModel.getRowCount();
+            
+            for(int i =0; i < rowCount; i++){
                 NguyenLieuDTO nl = (NguyenLieuDTO) tableModel.getValueAt(i, 0);
-                Object soLuongObj = tableModel.getValueAt(i, 1);
-                String soLuongStr = soLuongObj != null ? soLuongObj.toString().trim() : "";
-                System.out.println("Hàng " + i + ": Nguyên liệu = " + (nl != null ? nl.getTenNL() : "null") + ", Số lượng = " + soLuongStr);
+                float soLuong = Float.parseFloat(tableModel.getValueAt(i, 1).toString().trim());
 
-                if (nl == null || nl.getIdNL() == 0) {
-                    JOptionPane.showMessageDialog(this, "Vui lòng chọn nguyên liệu hợp lệ tại hàng " + (i + 1) + "!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (soLuongStr.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Số lượng không được để trống tại hàng " + (i + 1) + "!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (usedIdNL.contains(nl.getIdNL())) {
-                    JOptionPane.showMessageDialog(this, "Nguyên liệu '" + nl.getTenNL() + "' đã được chọn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                usedIdNL.add(nl.getIdNL());
-
-                try {
-                    float soLuong = Float.parseFloat(soLuongStr);
-                    if (soLuong <= 0) {
-                        JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0 tại hàng " + (i + 1) + "!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    chiTietList.add(new CT_CongThucDTO(0, nl.getIdNL(), soLuong));
-                    System.out.println("submitForm: Nguyên liệu gửi: " + nl.getTenNL() + ", Số lượng: " + soLuong);
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Số lượng phải là số hợp lệ tại hàng " + (i + 1) + "!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+                chiTietList.add(new CT_CongThucDTO(nl.getIdNL(), soLuong));
             }
 
             String error = "";
             String actionCommand = btnSubmit.getActionCommand();
             int beginIndex = actionCommand.indexOf('_') + 1;
             try {
-                if (beginIndex == 0) {
-                    CongThucDTO ct = new CongThucDTO(idSP, mota);
-                    error = congThucBus.add(ct, chiTietList);
+                if (beginIndex == 0) { // thêm mới
+                    CongThucDTO congThuc = new CongThucDTO(idSP, mota);
+                    error = congThucBus.add(congThuc, chiTietList);
                 } else {
                     int idCT = Integer.parseInt(actionCommand.substring(beginIndex));
                     CongThucDTO ct = new CongThucDTO(idCT, idSP, mota);

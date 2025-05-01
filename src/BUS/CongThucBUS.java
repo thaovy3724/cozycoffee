@@ -3,7 +3,6 @@ package BUS;
 import DTO.CongThucDTO;
 import DTO.CT_CongThucDTO;
 import DAO.CongThucDAO;
-import DAO.SanPhamDAO;
 import java.util.List;
 
 public class CongThucBUS {
@@ -27,28 +26,14 @@ public class CongThucBUS {
     }
 
     public String add(CongThucDTO ct, List<CT_CongThucDTO> chiTietList) {
+        String error = "";
         List<CongThucDTO> congThucList = congThucDao.findByIdSP(ct.getIdSP());
         if (congThucList != null && !congThucList.isEmpty()) {
-            return "Sản phẩm đã có công thức, không thể thêm công thức mới";
+            error = "Sản phẩm đã có công thức, không thể thêm công thức mới";
+        }else if(congThucDao.add(ct, chiTietList) == -1){
+            error = "Xảy ra lỗi trong quá trình thêm mới";
         }
-
-        // Gọi CongThucDAO.add và lấy idCT được sinh tự động
-        int newIdCT = congThucDao.add(ct);
-        if (newIdCT == -1) {
-            return "Không thể thêm công thức";
-        }
-
-        // Cập nhật idCT cho chi tiết công thức và thêm vào ct_congthuc
-        for (CT_CongThucDTO chiTiet : chiTietList) {
-            chiTiet.setIdCT(newIdCT);
-            String error = ctCongThucBus.add(chiTiet);
-            if (!error.isEmpty()) {
-                // Xóa công thức đã thêm để đảm bảo tính toàn vẹn
-                congThucDao.delete(newIdCT);
-                return error;
-            }
-        }
-        return "";
+        return error;
     }
 
     public String update(CongThucDTO ct, List<CT_CongThucDTO> chiTietList) {
