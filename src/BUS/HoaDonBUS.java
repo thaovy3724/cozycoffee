@@ -37,8 +37,12 @@ public class HoaDonBUS {
         return hoaDonDAO.getAll();
     }
 
-    public List<CTHoaDonDTO> getAllCTHoaDonByID(int idHD) {
+    public List<CTHoaDonDTO> getAllCTHoaDonByIDHD(int idHD) {
         return ctHoaDonDAO.getAllByIDHD(idHD);
+    }
+
+    public List<CTHoaDonDTO> getAllCTHoaDonByIDSP(int idHD) {
+        return ctHoaDonDAO.getAllByIDSP(idHD);
     }
 
     // Tìm hóa đơn theo ID

@@ -6,7 +6,6 @@ import GUI.Dialog.DoiMatKhauDialog;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 
 import javax.swing.JFrame;

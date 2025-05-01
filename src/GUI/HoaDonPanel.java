@@ -232,7 +232,7 @@ public class HoaDonPanel extends JPanel {
 	private void loadCTHoaDon(int idHD) {
 		// Load thông tin hóa đơn
 		HoaDonDTO selectedHD = hoaDonBUS.findHoaDonById(idHD);
-		List<CTHoaDonDTO> ctHoaDonList = hoaDonBUS.getAllCTHoaDonByID(idHD);
+		List<CTHoaDonDTO> ctHoaDonList = hoaDonBUS.getAllCTHoaDonByIDHD(idHD);
 
 		int tongTien = ctHoaDonList.stream() //Biến đổi list thành luồng dữ liệu => luồng dữ liệu sẽ gồm danh sách CTHoaDon chứa danh sách thông tin của nó
 				.mapToInt(ctHoaDon -> ctHoaDon.getSoluong() * ctHoaDon.getGialucdat()) //Map luồng dữ liệu thành luồng tổng tiền của từng ctHoaDon
@@ -346,7 +346,7 @@ public class HoaDonPanel extends JPanel {
 		model.setRowCount(0);
 
 		for (HoaDonDTO hd : hoaDonList) {
-			List<CTHoaDonDTO> ctList = hoaDonBUS.getAllCTHoaDonByID(hd.getIdHD());
+			List<CTHoaDonDTO> ctList = hoaDonBUS.getAllCTHoaDonByIDHD(hd.getIdHD());
 			int tongTien = ctList.stream()
 					.mapToInt(ct -> ct.getSoluong() * ct.getGialucdat())
 					.sum();
