@@ -1,6 +1,10 @@
 package GUI;
 
 import DTO.TaiKhoanDTO;
+import GUI.Dialog.DoiMatKhauDialogCopy;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
@@ -125,7 +129,6 @@ public class StaffFrame extends JFrame {
         ImageHelper iconHoaDon = new ImageHelper(28, 28, StaffFrame.class.getResource("/ASSET/Images/2.png"));
         btnHoaDon.setIcon(iconHoaDon.getScaledImage());
         btnHoaDon.setIconTextGap(12);
-
         toggleBtnInit(btnHoaDon);
         menuPanel.add(btnHoaDon, gbc);
 
@@ -187,27 +190,35 @@ public class StaffFrame extends JFrame {
         navbarPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 15, 10));
         navbarPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
 
-        JButton changeBtn = new JButton("Đổi mật khẩu");
-        changeBtn.setPreferredSize(new Dimension(130, 35));
-        changeBtn.setFont(LABEL_FONT);
-        changeBtn.setBackground(Color.WHITE);
-        changeBtn.setOpaque(true);
-        changeBtn.setBorder(new EmptyBorder(5, 10, 5, 10));
-        changeBtn.setFocusPainted(false);
-        changeBtn.addMouseListener(new MouseAdapter() {
+        JButton changePasswordBtn = new JButton("Đổi mật khẩu");
+        changePasswordBtn.setPreferredSize(new Dimension(130, 35));
+        changePasswordBtn.setFont(LABEL_FONT);
+        changePasswordBtn.setBackground(Color.WHITE);
+        changePasswordBtn.setOpaque(true);
+        changePasswordBtn.setBorder(new EmptyBorder(5, 10, 5, 10));
+        changePasswordBtn.setFocusPainted(false);
+        changePasswordBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                changeBtn.setBackground(new Color(230, 230, 230));
+                changePasswordBtn.setBackground(new Color(230, 230, 230));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                changeBtn.setBackground(Color.WHITE);
+                changePasswordBtn.setBackground(Color.WHITE);
             }
         });
-        navbarPanel.add(changeBtn);
+        changePasswordBtn.addActionListener(new ActionListener() {
+			@Override
+            public void actionPerformed(ActionEvent e) {
+				// Mở dialog đổi mật khẩu
+				new DoiMatKhauDialogCopy(StaffFrame.this);
+                // nếu chỉ dùng "this" sẽ trỏ đến lớp ActionListener
+			}
+		});
+        navbarPanel.add(changePasswordBtn);
 
-        JLabel tenTkLB = new JLabel("Tên người dùng");
+        JLabel tenTkLB = new JLabel(currentUser.getTenTK());
         tenTkLB.setFont(LABEL_FONT);
         tenTkLB.setBackground(Color.WHITE);
         tenTkLB.setOpaque(true);

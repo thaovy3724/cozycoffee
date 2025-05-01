@@ -38,16 +38,6 @@ public class CongThucPanel extends JPanel {
         add(container, BorderLayout.CENTER);
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
-        // Xóa cột "Trạng thái" khỏi tableModel
-        tableModel = new DefaultTableModel(
-            new String[] {"Mã công thức", "Tên sản phẩm"}, 0) { // Chỉ giữ 3 cột
-            
-                @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Không cho phép sửa ô nào cả
-            }
-        };
-
         // actionBox init
         actionBoxInit();
 
@@ -80,10 +70,9 @@ public class CongThucPanel extends JPanel {
         
         btnDetail = new JButton("Chi tiết");
         btnDetail.setPreferredSize(new Dimension(100, 39));
-        btnDetail.setIcon(new ImageIcon("C:\\Users\\Administrator\\Desktop\\cozycoffee\\src\\ASSET\\Images\\icons8_more_20px.png"));
+        btnDetail.setIcon(new ImageIcon(CongThucPanel.class.getResource("/ASSET/Images/icons8_more_20px.png")));
         btnDetail.addActionListener(e -> showDetail());
         actionPanel.add(btnDetail);
-        
     }
 
     private void searchBoxInit() {
@@ -107,12 +96,21 @@ public class CongThucPanel extends JPanel {
         btnReset.setIcon(imgReset.getScaledImage());
         btnReset.addActionListener(e -> {
             txtSearch.setText("");
-            loadTable(null);
+            loadTable(congThucBus.getAll());
         });
         searchPanel.add(btnReset);
     }
 
     private void tableInit() {
+        tableModel = new DefaultTableModel(
+            new String[] {"Mã công thức", "Tên sản phẩm"}, 0) { // Chỉ giữ 3 cột
+            
+                @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Không cho phép sửa ô nào cả
+            }
+        };
+
         JScrollPane tablePane = new JScrollPane();
         container.add(tablePane);
 
@@ -120,23 +118,22 @@ public class CongThucPanel extends JPanel {
         tablePane.setViewportView(table);
 
         // load list
-        loadTable(null);
+        loadTable(congThucBus.getAll());
     }
 
     private void loadTable(List<CongThucDTO> arr) {
         tableModel.setRowCount(0); // Xóa tất cả các dòng hiện tại
-        if (arr == null) arr = congThucBus.getAll();
+        if (arr != null)
+            for (CongThucDTO ct : arr) {
+                // Lấy thông tin sản phẩm từ idSP
+                SanPhamDTO sp = sanPhamBus.findByIdSP(ct.getIdSP());
 
-        for (CongThucDTO ct : arr) {
-            // Lấy thông tin sản phẩm từ idSP
-            SanPhamDTO sp = sanPhamBus.findByIdSP(ct.getIdSP());
-
-            Object[] row = {
-                ct.getIdCT(),
-                sp.getTenSP(), // Hiển thị tên sản phẩm
-            };
-            tableModel.addRow(row);
-        }
+                Object[] row = {
+                    ct.getIdCT(),
+                    sp.getTenSP(), // Hiển thị tên sản phẩm
+                };
+                tableModel.addRow(row);
+            }
         table.setModel(tableModel);
     }
 
@@ -149,7 +146,7 @@ public class CongThucPanel extends JPanel {
             CongThucDialog congThucDialog = new CongThucDialog();
             congThucDialog.showEdit(idCT);
             // Sau khi đóng dialog, reload table
-            loadTable(null);
+            loadTable(congThucBus.getAll());
         }
     }
 
@@ -157,7 +154,7 @@ public class CongThucPanel extends JPanel {
         CongThucDialog congThucDialog = new CongThucDialog();
         congThucDialog.showAdd();
         // Sau khi đóng dialog, reload table
-        loadTable(null);
+        loadTable(congThucBus.getAll());
     }
 
     private void showDetail() {
@@ -187,12 +184,12 @@ public class CongThucPanel extends JPanel {
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Bạn chưa chọn công thức!");
         } else {
-            int idCT = (int) table.getValueAt(selectedRow, 0);
             int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa công thức này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
+                int idCT = (int) table.getValueAt(selectedRow, 0);
                 if (congThucBus.delete(idCT)) {
                     JOptionPane.showMessageDialog(this, "Xóa thành công!");
-                    loadTable(null); // Reload bảng sau khi xóa thành công
+                    loadTable(congThucBus.getAll()); // Reload bảng sau khi xóa thành công
                 } else {
                     JOptionPane.showMessageDialog(this, "Không thể xóa công thức này!");
                 }

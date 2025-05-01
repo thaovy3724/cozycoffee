@@ -38,15 +38,6 @@ public class NhaCungCapPanel extends JPanel {
 		add(container, BorderLayout.CENTER);
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 		
-		tableModel = new DefaultTableModel(
-		   new String[] {"ID", "Tên nhà cung cấp", "Email", "Điện thoại", "Trạng thái"}, 0)
-		{                                                // (2) Mở đầu khai báo lớp vô danh (anonymous class)
-	        @Override
-	        public boolean isCellEditable(int row, int column) {
-	            return false; // Không cho phép sửa ô nào cả
-	        }                                                   // (3) Đóng method isCellEditable
-	    };   
-	    	    
 		// actionBox init
 		actionBoxInit();
 		
@@ -99,12 +90,21 @@ public class NhaCungCapPanel extends JPanel {
 		btnReset.setIcon(imgReset.getScaledImage());
 		btnReset.addActionListener(e->{
 			txtSearch.setText("");
-			loadTable(null);
+			loadTable(nhaCungCapBus.getAll());
 		});
 		searchPanel.add(btnReset);
 	}
 	
 	private void tableInit() {
+		tableModel = new DefaultTableModel(
+			new String[] {"ID", "Tên nhà cung cấp", "Email", "Điện thoại", "Trạng thái"}, 0)
+		 {                                                // (2) Mở đầu khai báo lớp vô danh (anonymous class)
+			 @Override
+			 public boolean isCellEditable(int row, int column) {
+				 return false; // Không cho phép sửa ô nào cả
+			 }                                                   // (3) Đóng method isCellEditable
+		 };   
+
 		tablePane = new JScrollPane();
 		container.add(tablePane);
 		
@@ -112,14 +112,13 @@ public class NhaCungCapPanel extends JPanel {
 		tablePane.setViewportView(table);
 		
 		// load list
-		loadTable(null);
+		loadTable(nhaCungCapBus.getAll());
 	}
 	
 	private void loadTable(List<NhaCungCapDTO> arr) {
 		tableModel.setRowCount(0); //This removes all the rows but keeps the column structure.
-		if(arr == null) arr = nhaCungCapBus.getAll();
 		// kiem tra mang co null ko
-		if(arr.size() != 0) 
+		if(arr != null) 
 			for (NhaCungCapDTO nhaCungCap : arr) {
 		        Object[] row = {
 		            nhaCungCap.getIdNCC(),
@@ -143,7 +142,7 @@ public class NhaCungCapPanel extends JPanel {
 			NhaCungCapDialog nhaCungCapDialog = new NhaCungCapDialog();
 			nhaCungCapDialog.showEdit(idNCC);
 			// sau khi đóng dialog, reload table 
-			loadTable(null);
+			loadTable(nhaCungCapBus.getAll());
 		}
 	}
 	
@@ -151,7 +150,7 @@ public class NhaCungCapPanel extends JPanel {
 		NhaCungCapDialog nhaCungCapDialog = new NhaCungCapDialog();
 		nhaCungCapDialog.showAdd();
 		// sau khi đóng dialog, reload table 
-		loadTable(null);
+		loadTable(nhaCungCapBus.getAll());
 	}
 
 	private void search() {
@@ -176,17 +175,20 @@ public class NhaCungCapPanel extends JPanel {
 			JOptionPane.showMessageDialog(this, "Bạn chưa chọn nhà cung cấp");
 		}
 		else {
-			// tiến hành xóa
-			int idNCC = (int) table.getValueAt(selectedRow, 0);
-			// cập nhật lại CSDL
-			// kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
-			if(nhaCungCapBus.delete(idNCC)) {
-				JOptionPane.showMessageDialog(this, "Xóa thành công");
-				// reload table
-				loadTable(null);
-			}
-			else {
-				JOptionPane.showMessageDialog(this, "Bạn không thể xóa nhà cung cấp này");
+			int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa nhà cung cấp này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+				// tiến hành xóa
+				int idNCC = (int) table.getValueAt(selectedRow, 0);
+				// cập nhật lại CSDL
+				// kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
+				if(nhaCungCapBus.delete(idNCC)) {
+					JOptionPane.showMessageDialog(this, "Xóa thành công");
+					// reload table
+					loadTable(nhaCungCapBus.getAll());
+				}
+				else {
+					JOptionPane.showMessageDialog(this, "Bạn không thể xóa nhà cung cấp này");
+				}
 			}
 		}
 	}

@@ -100,7 +100,7 @@ public class TaiKhoanPanel extends JPanel {
 		btnReset.setIcon(imgReset.getScaledImage());
 		btnReset.addActionListener(e->{
 			txtSearch.setText("");
-			loadTable(null);
+			loadTable(taiKhoanBus.getAll());
 		});
 		searchPanel.add(btnReset);
 	}
@@ -113,14 +113,13 @@ public class TaiKhoanPanel extends JPanel {
 		tablePane.setViewportView(table);
 		
 		// load list
-		loadTable(null);
+		loadTable(taiKhoanBus.getAll());
 	}
 	
 	private void loadTable(List<TaiKhoanDTO> arr) {
 		tableModel.setRowCount(0); //This removes all the rows but keeps the column structure.
-		if(arr == null) arr = taiKhoanBus.getAll();
 		// kiem tra mang co null ko
-		if(arr.size() != 0) 
+		if(arr != null) 
 			for (TaiKhoanDTO taiKhoan : arr) {
 		        Object[] row = {
 		            taiKhoan.getIdTK(),
@@ -143,7 +142,7 @@ public class TaiKhoanPanel extends JPanel {
 			TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog(adminFrame);
 			taiKhoanDialog.showEdit(idTK);
 			// sau khi đóng dialog, reload table 
-			loadTable(null);
+			loadTable(taiKhoanBus.getAll());
 		}
 	}
 	
@@ -151,7 +150,7 @@ public class TaiKhoanPanel extends JPanel {
 		TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog(adminFrame);
 		taiKhoanDialog.showAdd();
 		// sau khi đóng dialog, reload table 
-		loadTable(null);
+		loadTable(taiKhoanBus.getAll());
 	}
 
 	private void search() {
@@ -176,17 +175,20 @@ public class TaiKhoanPanel extends JPanel {
 			JOptionPane.showMessageDialog(this, "Bạn chưa chọn tài khoản");
 		}
 		else {
-			// tiến hành xóa
-			int idTK = (int) table.getValueAt(selectedRow, 0);
-			// cập nhật lại CSDL
-			// kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
-			if (taiKhoanBus.delete(idTK)) {
-				JOptionPane.showMessageDialog(this, "Xóa thành công");
-			}
-			else {
-				JOptionPane.showMessageDialog(this, "Bạn không thể xóa tài khoản này");
-				// reload table
-				loadTable(null);
+			int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa tài khoản này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+				// tiến hành xóa
+				int idTK = (int) table.getValueAt(selectedRow, 0);
+				// cập nhật lại CSDL
+				// kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
+				if (taiKhoanBus.delete(idTK)) {
+					JOptionPane.showMessageDialog(this, "Xóa thành công");
+					// reload table
+					loadTable(taiKhoanBus.getAll());
+				}
+				else {
+					JOptionPane.showMessageDialog(this, "Bạn không thể xóa tài khoản này");
+				}
 			}
 		}
 	}

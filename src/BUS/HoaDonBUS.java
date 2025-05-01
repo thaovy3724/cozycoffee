@@ -43,7 +43,7 @@ public class HoaDonBUS {
         int quantityAvailable = 0;
         for(CT_HoaDonDTO ct : dsChiTiet){
             quantityAvailable = ct_HoaDonDao.quantityAvailable(ct);
-            if(quantityAvailable != ct.getSoluong()){
+            if(quantityAvailable < ct.getSoluong()){
                 error += "Mã sản phẩm " + ct.getIdSP() + " chỉ còn đủ " + quantityAvailable + "sản phẩm" + "\n";
             }
         }
@@ -53,7 +53,11 @@ public class HoaDonBUS {
             int newIdHD = hoaDonDao.add(hoaDon, dsChiTiet);
             if(newIdHD == -1)
                 error = "Đã xảy ra lỗi trong quá trình thêm hóa đơn";
-            else error = String.valueOf(newIdHD);
+            else{
+                // cập nhật tồn kho
+                hoaDonDao.updateInventory(newIdHD);
+                error = String.valueOf(newIdHD);
+            }
         }
         return error;
     }
@@ -214,5 +218,24 @@ public class HoaDonBUS {
         } else {
             throw new Exception("Không thể mở file PDF. Vui lòng kiểm tra file hoặc hỗ trợ Desktop.");
         }
+    }
+
+    public long getAllHDTongTien(List<HoaDonDTO> hoaDonDTOList) {
+        long tongtien = 0;
+        for(HoaDonDTO hd: hoaDonDTOList) {
+            tongtien += hoaDonDao.getTongTienByIdHD(hd.getIdHD());
+        }
+
+        return tongtien;
+    }
+
+    // Tìm kiếm hóa đơn theo khoảng tổng tiền
+    public List<HoaDonDTO> searchHoaDonByTongTien(int giaBD, int giaKT) {
+        return hoaDonDao.searchByTongTien(giaBD, giaKT);
+    }
+
+    // Tìm kiếm hóa đơn theo khoảng ngày tạo
+    public List<HoaDonDTO> searchHoaDonByDate(Date start, Date end) {
+        return hoaDonDao.searchByDate(start, end);
     }
 }

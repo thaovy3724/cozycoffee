@@ -53,24 +53,6 @@ public class HoaDonPanel extends JPanel {
 		add(container, BorderLayout.CENTER);
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 		
-		hoaDonTableModel = new DefaultTableModel(
-		   new String[] {"Mã hóa đơn", "Ngày tạo", "idNV", "Tổng tiền"}, 0)
-		{                                                // (2) Mở đầu khai báo lớp vô danh (anonymous class)
-	        @Override
-	        public boolean isCellEditable(int row, int column) {
-	            return false; // Không cho phép sửa ô nào cả
-	        }                                                   // (3) Đóng method isCellEditable
-	    };   
-
-		ctHoaDonTableModel = new DefaultTableModel(
-		   new String[] {"Mã sản phẩm", "Tên sản phẩm", "Số lượng", "Đơn giá", "Thành tiền"}, 0)
-		{                                                // (2) Mở đầu khai báo lớp vô danh (anonymous class)
-	        @Override
-	        public boolean isCellEditable(int row, int column) {
-	            return false; // Không cho phép sửa ô nào cả
-	        }                                                   // (3) Đóng method isCellEditable
-	    }; 
-		
 		// searchBox init
 		searchBoxInit();
 		
@@ -82,7 +64,7 @@ public class HoaDonPanel extends JPanel {
 	private void searchBoxInit() {
 		JPanel searchPanel = new JPanel();
 		container.add(searchPanel);
-		searchPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		searchPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
 		btnSearch = new JButton("Tìm");
 		ImageHelper imgSrch = new ImageHelper(20, 20, HoaDonPanel.class.getResource("/ASSET/Images/searchIcon.png"));
@@ -95,7 +77,7 @@ public class HoaDonPanel extends JPanel {
 		
 		JPanel searchContentPanel1 = new JPanel();
 		searchContentPanel.add(searchContentPanel1);
-		searchContentPanel1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		searchContentPanel1.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
 		JLabel lblDateStart = new JLabel("Từ ngày");
 		searchContentPanel1.add(lblDateStart);
@@ -108,14 +90,14 @@ public class HoaDonPanel extends JPanel {
 		JLabel lblDateEnd = new JLabel("đến ngày");
 		searchContentPanel1.add(lblDateEnd);
 		
-		dateChooserStart = new JDateChooser();
+		dateChooserEnd = new JDateChooser();
 		searchContentPanel1.add(dateChooserEnd);
 		dateChooserStart.setDateFormatString("yyyy-MM-dd");
 		((JTextField) dateChooserStart.getDateEditor().getUiComponent()).setEditable(false); // Tắt editor
 
 		JPanel searchContentPanel2 = new JPanel();
 		searchContentPanel.add(searchContentPanel2);
-		searchContentPanel2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		searchContentPanel2.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
 		JLabel lblAmountStart = new JLabel("Khoảng tiền");
 		searchContentPanel2.add(lblAmountStart);
@@ -136,12 +118,22 @@ public class HoaDonPanel extends JPanel {
 		ImageHelper imgReset = new ImageHelper(20, 20, HoaDonPanel.class.getResource("/ASSET/Images/icons8_replay_30px.png"));
 		btnReset.setIcon(imgReset.getScaledImage());
 		btnReset.addActionListener(e->{
-			loadHoaDon(null);
+			loadHoaDon(hoaDonBus.getAll());
+			ctHoaDonTableModel.setRowCount(0);
 		});
 		searchPanel.add(btnReset);
 	}
 	
 	private void hoaDonTableInit() {
+		hoaDonTableModel = new DefaultTableModel(
+			new String[] {"Mã hóa đơn", "Ngày tạo", "idNV", "Tổng tiền"}, 0)
+		{                                                // (2) Mở đầu khai báo lớp vô danh (anonymous class)
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false; // Không cho phép sửa ô nào cả
+			}                                                   // (3) Đóng method isCellEditable
+		};   
+
 		JScrollPane hoaDonScrollPane = new JScrollPane();
 		container.add(hoaDonScrollPane);
 		
@@ -163,10 +155,19 @@ public class HoaDonPanel extends JPanel {
 		hoaDonScrollPane.setViewportView(hoaDonTable);
 
 		// load list
-		loadHoaDon(null);
+		loadHoaDon(hoaDonBus.getAll());
 	}
 
 	private void ctHoaDonTableInit(){
+		ctHoaDonTableModel = new DefaultTableModel(
+		   new String[] {"Mã sản phẩm", "Tên sản phẩm", "Số lượng", "Đơn giá", "Thành tiền"}, 0)
+		{                                                // (2) Mở đầu khai báo lớp vô danh (anonymous class)
+	        @Override
+	        public boolean isCellEditable(int row, int column) {
+	            return false; // Không cho phép sửa ô nào cả
+	        }                                                   // (3) Đóng method isCellEditable
+	    }; 
+
 		JPanel ctHoaDonPanel = new JPanel();
 		container.add(ctHoaDonPanel);
 		ctHoaDonPanel.setLayout(new BoxLayout(ctHoaDonPanel, BoxLayout.Y_AXIS));
@@ -179,7 +180,7 @@ public class HoaDonPanel extends JPanel {
 		ctHoaDonPanel.add(ctHoaDonScrollPane);
 		
 		ctHoaDonTable = new JTable();
-		ctHoaDonScrollPane.setViewportView(hoaDonTable);
+		ctHoaDonScrollPane.setViewportView(ctHoaDonTable);
 	}
 	
 	private void loadHoaDon(List<HoaDonDTO> arr) {
@@ -200,10 +201,9 @@ public class HoaDonPanel extends JPanel {
 	}
 
 	private void loadCtHoaDon(int idHD) {
-		hoaDonTableModel.setRowCount(0); //This removes all the rows but keeps the column structure.
+		ctHoaDonTableModel.setRowCount(0); //This removes all the rows but keeps the column structure.
 		
 		List<CT_HoaDonDTO> arr = ct_HoaDonBus.getAllByIdHD(idHD);
-
 		SanPhamDTO sp;
 
 		for (CT_HoaDonDTO ctHoaDon : arr) {

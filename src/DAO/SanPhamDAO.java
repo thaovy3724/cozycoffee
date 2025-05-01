@@ -85,9 +85,9 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
             //Tên table
             sql.append(table);
             sql.append(" SET");
-            sql.append(" tenSP = ?");
-            sql.append(" giaban = ?");
-            sql.append(" trangthai = ?");
+            sql.append(" tenSP = ?,");
+            sql.append(" giaban = ?,");
+            sql.append(" trangthai = ?,");
             sql.append(" idDM = ?");		        
             sql.append(" WHERE idSP = ?");
             

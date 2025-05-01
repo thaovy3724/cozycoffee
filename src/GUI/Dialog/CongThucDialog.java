@@ -29,6 +29,7 @@ public class CongThucDialog extends JDialog {
     private final JPanel contentPanel = new JPanel();
 
     private JLabel errTenSP, errMoTa, errChiTiet;
+    private JLabel lblTitle;
     private JButton btnSubmit, btnAdd, btnCancel;
     private JComboBox<SanPhamDTO> cboSP = new JComboBox<>();
     private JTextArea txtMoTa;
@@ -38,7 +39,6 @@ public class CongThucDialog extends JDialog {
     private List<NguyenLieuDTO> nguyenLieuList;
 
     public CongThucDialog() {
-        setTitle("Thêm công thức");
         setSize(750, 550);
         setMinimumSize(new Dimension(750, 550));
         getContentPane().setLayout(new BorderLayout());
@@ -54,7 +54,7 @@ public class CongThucDialog extends JDialog {
         gbl_contentPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
         contentPanel.setLayout(gbl_contentPanel);
 
-        JLabel lblTitle = new JLabel("Thêm công thức");
+        lblTitle = new JLabel();
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
         lblTitle.setForeground(new Color(33, 150, 243));
         GridBagConstraints gbc_lblTitle = new GridBagConstraints();
@@ -430,7 +430,7 @@ public class CongThucDialog extends JDialog {
     }
 
     public void showAdd() {
-        List<SanPhamDTO> listSP = sanPhamBus.getAllActive();
+        List<SanPhamDTO> listSP = sanPhamBus.getAll();
         loadComboBoxSP(listSP);
 
         tableModel.setRowCount(0);
@@ -440,6 +440,8 @@ public class CongThucDialog extends JDialog {
         //     tableModel.addRow(new Object[] { new NguyenLieuDTO(0, "---Chọn nguyên liệu---"), "", "Xóa" });
         // }
 
+        setTitle("Thêm công thức");
+        lblTitle.setText("Thêm công thức");
         btnSubmit.setText("Thêm");
         btnSubmit.setActionCommand("add");
         setVisible(true);
@@ -480,13 +482,14 @@ public class CongThucDialog extends JDialog {
         //     tableModel.addRow(new Object[] { new NguyenLieuDTO(0, "---Chọn nguyên liệu---"), "", "Xóa" });
         // }
 
+        setTitle("Sửa công thức");
+        lblTitle.setText("Sửa công thức");
         btnSubmit.setText("Cập nhật");
         btnSubmit.setActionCommand("edit_" + idCT);
         setVisible(true);
     }
 
     public void showDetail(int idCT) {
-        setTitle("Chi tiết công thức");
         CongThucDTO ct = congThucBus.findByIdCT(idCT);
         if (ct == null) {
             JOptionPane.showMessageDialog(this, "Công thức không tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -526,11 +529,9 @@ public class CongThucDialog extends JDialog {
         // tableModel.setColumnIdentifiers(new Object[] { "Nguyên liệu", "Số lượng", "Đơn vị"});
         // tableModel.setRowCount(0);
         List<CT_CongThucDTO> chiTietList = ctCongThucBus.getChiTietCongThuc(idCT);
-        System.out.println("Số nguyên liệu tìm thấy: " + (chiTietList != null ? chiTietList.size() : 0));
         for (CT_CongThucDTO ctDetail : chiTietList) {
             NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(ctDetail.getIdNL());
             tableModel.addRow(new Object[] { nl, ctDetail.getSoluong(), nl.getDonvi()});
-            System.out.println("Thêm nguyên liệu: " + nl.getTenNL() + ", Số lượng: " + ctDetail.getSoluong());
         }
         
         tableNguyenLieu.setEnabled(false);
@@ -539,12 +540,15 @@ public class CongThucDialog extends JDialog {
         tableNguyenLieu.getColumnModel().getColumn(2).setPreferredWidth(80);
 
         setVisible(true);
+        setTitle("Chi tiết công thức");
+        lblTitle.setText("Chi tiết công thức");
     }
 
     private boolean isError() {
         // remove errors
         errTenSP.setText("");
         errMoTa.setText("");
+        errChiTiet.setText("");
 
         boolean isError = false;
 

@@ -38,6 +38,8 @@ import DTO.TaiKhoanDTO;
 
 import javax.swing.JComboBox;
 import java.awt.Component;
+
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import java.awt.FlowLayout;
@@ -80,6 +82,7 @@ public class BanHangPanel extends JPanel {
 		
 		// === Action Panel ===
 		JPanel actionPanel = new JPanel();
+		actionPanel.setBackground(new Color(255, 240, 220));
 		leftPanel.add(actionPanel, BorderLayout.NORTH);
 		
 		txtSearch = new JTextField();
@@ -93,12 +96,13 @@ public class BanHangPanel extends JPanel {
 		actionPanel.add(cboDM);
 		
 		btnSearch = new JButton("Tìm");
-		btnSearch.setBackground(Color.YELLOW);
+		btnSearch.setBackground(new Color(191, 146, 100));
 		btnSearch.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		btnSearch.setContentAreaFilled(false);
 		btnSearch.setOpaque(true);
 		btnSearch.addActionListener(e->search());
 		actionPanel.add(btnSearch);
+		productListPanel.setBackground(new Color(255, 240, 220));
 		// === Action Panel ===
 
 		// === Product Panel ===
@@ -141,6 +145,7 @@ public class BanHangPanel extends JPanel {
 	private void paymentTotalInit(){
 		// ==== Payment total ====
 		JPanel paymentPanel = new JPanel();
+		paymentPanel.setBackground(new Color(255, 240, 220));
 		rightPanel.add(paymentPanel);
 		GridBagLayout gbl_paymentPanel = new GridBagLayout();
 		gbl_paymentPanel.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -170,7 +175,7 @@ public class BanHangPanel extends JPanel {
 		
 		JButton btnPay = new JButton("Thanh toán");
 		btnPay.setForeground(Color.WHITE);
-		btnPay.setBackground(Color.RED);
+		btnPay.setBackground(new Color(244, 67, 54));
 		btnPay.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnPay.setContentAreaFilled(false);
 		btnPay.setOpaque(true);
@@ -209,10 +214,12 @@ public class BanHangPanel extends JPanel {
 
 	private void orderDetailInit(){
 		JPanel deletePanel = new JPanel();
+		deletePanel.setBackground(new Color(255, 240, 220));
 		rightPanel.add(deletePanel);
 		deletePanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
 		btnDel = new JButton("Xóa");
+		btnDel.setBackground(new Color(184, 0, 0));
 		btnDel.setIcon(new ImageIcon(BanHangPanel.class.getResource("/ASSET/Images/icons8_cancel_30px_1.png")));
 		btnDel.addActionListener(e->delete());
 		deletePanel.add(btnDel);
@@ -277,20 +284,21 @@ public class BanHangPanel extends JPanel {
 		table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(numericField));
 		
 		JScrollPane orderDetailPanel = new JScrollPane();
+		orderDetailPanel.setBackground(new Color (255, 245, 228));
 		orderDetailPanel.setViewportView(table);
 		rightPanel.add(orderDetailPanel);
 		// ==== Order detail ====
 	}
 
 	private void loadProduct(List<SanPhamDTO> arr){
-		// remove all items inside productListPanel
+//		// remove all items inside productListPanel
 		productListPanel.removeAll();
 		productListPanel.revalidate();
 		productListPanel.repaint();
 
 		// load san pham
 		if(arr == null) arr = sanPhamBus.getAllActive();
-		// kiem tra mang co null ko
+		//kiem tra mang co null ko
 		if(arr.size() != 0){
 			ImageHelper addIcon = new ImageHelper(20, 20, BanHangPanel.class.getResource("/ASSET/Images/icons8_add_30px.png"));
 			for(SanPhamDTO sp : arr){
@@ -299,6 +307,7 @@ public class BanHangPanel extends JPanel {
 				JPanel productCard = new JPanel();
 				productListPanel.add(productCard);
 				productCard.setLayout(new BoxLayout(productCard, BoxLayout.Y_AXIS));
+				productCard.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 				
 				JLabel lblProductImage = new JLabel("");
 				lblProductImage.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -323,13 +332,14 @@ public class BanHangPanel extends JPanel {
 				productCard.add(lblGiaban);
 				
 				JButton btnAdd = new JButton("Thêm");
+				btnAdd.setBackground(new Color(0,128,0));
 				btnAdd.setAlignmentX(Component.CENTER_ALIGNMENT);
 				btnAdd.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 				btnAdd.setIcon(addIcon.getScaledImage());
 				btnAdd.addActionListener(e->addDetail(sp));
 				productCard.add(btnAdd);
 				//==== Card ====
-			}
+		}
 		}
 	}
 
@@ -347,27 +357,31 @@ public class BanHangPanel extends JPanel {
 		// kiểm tra nếu idSP đã tồn tại trong tableModel thì cộng thêm số lượng vào
 		int rowCount = tableModel.getRowCount();
 
+		boolean isExist = false;
 		int quantityTmp = 0;
 		for(int i = 0; i < rowCount; i++){
 			if(sp.getIdSP() == (int) tableModel.getValueAt(i, 0)){
+				isExist = true;
 				// kiểm tra nếu ô só lượng bị rỗng, gán số lượng bằng 0 và cộng thêm 1
 				try{
 					quantityTmp = (int) tableModel.getValueAt(i, 2);
-					tableModel.setValueAt(quantityTmp++, i, 2);
+					tableModel.setValueAt(quantityTmp+1, i, 2);
 				}catch(NumberFormatException e){
 					tableModel.setValueAt(1, i, 2);
 				}
 			}
 		}
-		// thêm 1 dòng mới trong table
-		Object[] row = {
-			sp.getIdSP(),
-			sp.getTenSP(),
-			1,
-			formatCurrency(sp.getGiaban()),
-			formatCurrency(sp.getGiaban()),
-		};
-		tableModel.addRow(row);
+		// thêm 1 dòng mới trong table nếu sản phẩm chưa tồn tại
+		if(!isExist){
+			Object[] row = {
+				sp.getIdSP(),
+				sp.getTenSP(),
+				1,
+				formatCurrency(sp.getGiaban()),
+				formatCurrency(sp.getGiaban()),
+			};
+			tableModel.addRow(row);
+		}
 	}
 
 	private void pay(){
@@ -392,6 +406,8 @@ public class BanHangPanel extends JPanel {
 				// nếu lấy newIdHD thành công, in ra file pdf, ngược lại xuất thông báo lỗi
 				int newIdHD = Integer.parseInt(result);
 				try{
+					// Remove all order detail
+					tableModel.setRowCount(0);
 					hoaDonBus.printHoaDon(newIdHD);
 				}catch(Exception ex){
 					ex.printStackTrace();
@@ -400,17 +416,14 @@ public class BanHangPanel extends JPanel {
 			}catch(NumberFormatException e){
 				JOptionPane.showMessageDialog(this, result, "Lỗi", JOptionPane.ERROR_MESSAGE);
 			}
-			
-			// Remove all order detail
-			tableModel.setRowCount(0);
-		} else JOptionPane.showMessageDialog(this, "Bạn chưa thêm chi tiết", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		} else JOptionPane.showMessageDialog(this, "Bạn chưa thêm sản phẩm", "Lỗi", JOptionPane.ERROR_MESSAGE);
 
 	}
 
 	private void delete() {
 		int selectedRow = table.getSelectedRow();
 		if (selectedRow == -1) 
-			JOptionPane.showMessageDialog(this, "Bạn chưa chọn danh mục");
+			JOptionPane.showMessageDialog(this, "Bạn chưa chọn sản phẩm");
 		else 
 			tableModel.removeRow(selectedRow);
 	}

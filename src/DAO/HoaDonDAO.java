@@ -79,6 +79,22 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
 		return newIdHD;
 	}
 
+	public void updateInventory(int idHD){
+		Connection link = null;
+		PreparedStatement pstmt = null;
+        try {
+            String sql = "{CALL xuLyDonHang(?)}";
+            link = db.connectDB();
+            pstmt = link.prepareCall(sql);
+            pstmt.setInt(1,idHD);
+            pstmt.executeUpdate();
+        }catch(ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }finally {
+            db.close(link);
+        }
+	}
+
 	public int getTotalAmount(int idHD){
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -184,4 +200,116 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
         }
         return result;
 	}
+
+	public List<HoaDonDTO> searchByDate(Date start, Date end) {
+        Connection link = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<HoaDonDTO> result = new ArrayList<>();
+        List<Date> params = new ArrayList<>();
+
+        try {
+            StringBuilder sql = new StringBuilder("SELECT * FROM hoadon WHERE 1=1 ");
+            if (start != null) {
+                sql.append("AND (ngaytao >= ?) ");
+                params.add(start);
+            }
+            if (end != null) {
+                sql.append("AND (ngaytao <= ?) ");
+                params.add(end);
+            }
+
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql.toString());
+            for (int i=0; i<params.size(); i++) {
+                pstmt.setDate(i+1, params.get(i));
+            }
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                result.add(mapResultSetToDTO(rs));
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.close(link);
+        }
+
+        return result;
+    }
+
+	public List<HoaDonDTO> searchByTongTien(int giaBD, int giaKT) {
+        Connection link = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<HoaDonDTO> result = new ArrayList<>();
+
+        try {
+            StringBuilder sql = new StringBuilder(
+                    "SELECT h.* FROM hoadon h " +
+                            "INNER JOIN CT_hoadon ct ON h.idHD = ct.idHD " +
+                            "GROUP BY h.idHD, h.ngaytao, h.idTK"
+            );
+            List<Integer> params = new ArrayList<>();
+
+            boolean hasGiaBD = giaBD != 0;
+            boolean hasGiaKT = giaKT != 0;
+
+            if (hasGiaBD || hasGiaKT) {
+                sql.append(" HAVING ");
+                if (hasGiaBD) {
+                    sql.append("SUM(ct.soluong * ct.gialucdat) >= ?");
+                    params.add(giaBD);
+                }
+                if (hasGiaKT) {
+                    if (hasGiaBD) {
+                        sql.append(" AND ");
+                    }
+                    sql.append("SUM(ct.soluong * ct.gialucdat) <= ?");
+                    params.add(giaKT);
+                }
+            }
+
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql.toString());
+
+            for (int i=0; i<params.size(); i++) {
+                pstmt.setInt(i+1, params.get(i));
+            }
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                result.add(mapResultSetToDTO(rs));
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.close(link);
+        }
+
+        return result;
+    }
+
+	public long getTongTienByIdHD(int idHD) {
+        Connection link = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        long tongtien = 0;
+
+        try {
+            String sql = "SELECT sum(ct.gialucdat * ct.soluong) AS tongtien " +
+                    "FROM hoadon hd " +
+                    "INNER JOIN ct_hoadon ct on hd.idHD = ct.idHD " +
+                    "WHERE hd.idHD = ?";
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            pstmt.setInt(1, idHD);
+            rs = pstmt.executeQuery();
+            if (rs.next()) tongtien = rs.getLong("tongtien");
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            db.close(link);
+        }
+
+        return tongtien;
+    }
 }

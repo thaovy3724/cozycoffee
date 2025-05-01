@@ -1,7 +1,7 @@
 package GUI;
 
 import DTO.TaiKhoanDTO;
-import GUI.Dialog.DoiMatKhauDialog;
+import GUI.Dialog.DoiMatKhauDialogCopy;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -296,13 +296,13 @@ public class AdminFrame extends JFrame {
 			@Override
             public void actionPerformed(ActionEvent e) {
 				// Mở dialog đổi mật khẩu
-				new DoiMatKhauDialog(AdminFrame.this);
+				new DoiMatKhauDialogCopy(AdminFrame.this);
                 // nếu chỉ dùng "this" sẽ trỏ đến lớp ActionListener
 			}
 		});
         navbarPanel.add(changePasswordBtn);
 
-        tenTkLB = new JLabel("Tên người dùng");
+        tenTkLB = new JLabel(currentUser.getTenTK());
         tenTkLB.setFont(LABEL_FONT);
         tenTkLB.setBackground(Color.WHITE);
         tenTkLB.setOpaque(true);

@@ -52,4 +52,9 @@ public class NhaCungCapBUS {
 	public List<NhaCungCapDTO> search(String keyWord){
 		return nhaCungCapDao.search(keyWord);
 	}
+
+	// HUONGNGUYEN: 29/04
+	public List<NhaCungCapDTO> getAllActive(){
+		return nhaCungCapDao.getAllActive();
+	}
 }

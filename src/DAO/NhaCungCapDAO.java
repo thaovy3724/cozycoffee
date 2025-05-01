@@ -154,4 +154,27 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
         }
         return result;
 	}
+
+    // HUONGNGUYEN 29/4
+	public List<NhaCungCapDTO> getAllActive() {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<NhaCungCapDTO> result = new ArrayList<>();
+		
+		try {
+			String sql = "SELECT * FROM nhacungcap WHERE trangthai = 1";
+			link = db.connectDB();
+			pstmt = link.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
+		} catch(ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.close(link);
+		}
+		return result;
+	}
 }

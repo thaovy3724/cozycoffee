@@ -33,13 +33,13 @@ public class DanhMucDialog extends JDialog {
 	private JComboBox<DanhMucDTO> cboDMCha = new JComboBox<>();
 	private JComboBox<String> cboTrangThai = new JComboBox<>();
 	private JLabel errTenDM, errDMCha, errTrangThai;
+	private JLabel lblTitle;
 	private JButton btnSubmit, btnCancel;
 
 	/**
 	 * Create the dialog.
 	 */
 	public DanhMucDialog() {
-		setTitle("Thêm danh mục");
 		setSize(445, 234);
 		getContentPane().setLayout(new BorderLayout());
 
@@ -54,7 +54,7 @@ public class DanhMucDialog extends JDialog {
 		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		contentPanel.setLayout(gbl_contentPanel);
 		{
-			JLabel lblTitle = new JLabel("Thêm danh mục");
+			lblTitle = new JLabel();
 			lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
 			GridBagConstraints gbc_lblTitle = new GridBagConstraints();
 			gbc_lblTitle.anchor = GridBagConstraints.WEST;
@@ -223,6 +223,8 @@ public class DanhMucDialog extends JDialog {
 		loadComboBoxDMCha(listDMCha);
 		cboTrangThai.setEnabled(false);
 		
+		setTitle("Thêm danh mục");
+		lblTitle.setText("Thêm danh mục");
 		// reset action button
 		btnSubmit.setText("Thêm");
 		btnSubmit.setActionCommand("add");
@@ -234,7 +236,7 @@ public class DanhMucDialog extends JDialog {
 		txtTenDM.setText(danhMuc.getTenDM());
 		cboTrangThai.setSelectedItem(danhMuc.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
 		
-		// load tất cả danh mục đang hoạt động và danh mục cha của danh mục được chọn nếu có và trừ danh mục được chọn
+		// load tất cả danh mục đang hoạt động và danh mục cha của danh mục được chọn (nếu có) và trừ danh mục được chọn
 		List<DanhMucDTO> listDMCha = danhMucBus.getAllActiveEdit(idDM, danhMuc.getIdDMCha());
 		loadComboBoxDMCha(listDMCha);
 		
@@ -244,6 +246,8 @@ public class DanhMucDialog extends JDialog {
 			cboDMCha.setSelectedItem(dmucCha);
 		}
 		
+		setTitle("Sửa danh mục");
+		lblTitle.setText("Sửa danh mục");
 		// reset action button
 		btnSubmit.setText("Cập nhật");
 		btnSubmit.setActionCommand("edit_"+idDM);

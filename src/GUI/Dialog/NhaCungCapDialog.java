@@ -30,13 +30,12 @@ public class NhaCungCapDialog extends JDialog {
 	private JTextField txtTenNCC, txtDiaChi, txtDienThoai, txtEmail;
 	private JComboBox<String> cboTrangThai = new JComboBox<>();
 	private JLabel errTenNCC, errDiaChi, errDienThoai, errEmail;
+	private JLabel lblTitle;
 	private JButton btnSubmit, btnCancel;
 	/**
 	 * Create the dialog.
 	 */
 	public NhaCungCapDialog() {
-		setModal(true);
-		setTitle("Thêm nhà cung cấp");
 		setBounds(100, 100, 569, 322);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(255, 255, 255));
@@ -49,7 +48,7 @@ public class NhaCungCapDialog extends JDialog {
 		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		contentPanel.setLayout(gbl_contentPanel);
 		{
-			JLabel lblTitle = new JLabel("Thêm nhà cung cấp");
+			lblTitle = new JLabel();
 			lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
 			GridBagConstraints gbc_lblTitle = new GridBagConstraints();
 			gbc_lblTitle.insets = new Insets(5, 10, 5, 0);
@@ -66,8 +65,6 @@ public class NhaCungCapDialog extends JDialog {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setModal(true);
-
-		
 	}
 
 	private void textFieldInit(){
@@ -262,6 +259,8 @@ public class NhaCungCapDialog extends JDialog {
 		// reset action button
 		cboTrangThai.setEnabled(false);
 
+		setTitle("Thêm nhà cung cấp");
+		lblTitle.setText("Thêm nhà cung cấp");
 		btnSubmit.setText("Thêm");
 		btnSubmit.setActionCommand("add");
 		setVisible(true);
@@ -275,6 +274,8 @@ public class NhaCungCapDialog extends JDialog {
 		txtEmail.setText(nhaCungCap.getEmail());
 		cboTrangThai.setSelectedItem(nhaCungCap.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
 		
+		setTitle("Sửa nhà cung cấp");
+		lblTitle.setText("Sửa nhà cung cấp");
 		// reset action button
 		btnSubmit.setText("Cập nhật");
 		btnSubmit.setActionCommand("edit_"+idNCC);

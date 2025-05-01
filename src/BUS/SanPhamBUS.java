@@ -36,12 +36,23 @@ public class SanPhamBUS {
 	public String update(SanPhamDTO sp) {
 		// kiểm tra tên sản phẩm đã tồn tại chưa
 		String error = "";
-		if(sanPhamDao.isExist(sp)) 
+		if(sanPhamDao.isExist(sp)){
 			error = "Sản phẩm đã tồn tại";
-		else if(sp.getHinhanh() == null && !sanPhamDao.update(sp)) { 	
-			error = "Xảy ra lỗi trong quá trình cập nhật";
-		}else if(!sanPhamDao.updateNotImage(sp)) {
-			error = "Xảy ra lỗi trong quá trình cập nhật";
+		}else if(!sanPhamDao.isProductInRecipe(sp.getIdSP())){
+			// nếu sản phẩm chưa có công thức, set trạng thái sản phẩm mặc định là 0 ("không hoạt động")
+			sp.setTrangthai(0); // 
+		}
+		
+		if(error.isEmpty()){
+			// tiến hành cập nhậtnhật
+			if(sp.getHinhanh() == null) { 	
+				if(!sanPhamDao.updateNotImage(sp))
+					error = "Xảy ra lỗi trong quá trình cập nhật 1";
+			}else{
+				if(!sanPhamDao.update(sp)) {
+					error = "Xảy ra lỗi trong quá trình cập nhật";
+				}
+			}
 		}
 		return error;
 	}

@@ -36,15 +36,6 @@ public class NguyenLieuPanel extends JPanel {
         
         add(container, BorderLayout.CENTER);
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-        
-        tableModel = new DefaultTableModel(
-           new String[] {"ID", "Tên nguyên liệu","Đơn vị", "Trạng thái"}, 0)
-        {                                                // (2) Mở đầu khai báo lớp vô danh (anonymous class)
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Không cho phép sửa ô nào cả
-            }                                                   // (3) Đóng method isCellEditable
-        };   
                 
         // actionBox init
         actionBoxInit();
@@ -98,12 +89,21 @@ public class NguyenLieuPanel extends JPanel {
         btnReset.setIcon(imgReset.getScaledImage());
         btnReset.addActionListener(e->{
             txtSearch.setText("");
-            loadTable(null);
+            loadTable(nguyenLieuBus.getAll());
         });
         searchPanel.add(btnReset);
     }
     
     private void tableInit() {
+        tableModel = new DefaultTableModel(
+            new String[] {"ID", "Tên nguyên liệu","Đơn vị"}, 0)
+         {                                                // (2) Mở đầu khai báo lớp vô danh (anonymous class)
+             @Override
+             public boolean isCellEditable(int row, int column) {
+                 return false; // Không cho phép sửa ô nào cả
+             }                                                   // (3) Đóng method isCellEditable
+         };   
+
         JScrollPane tablePane = new JScrollPane();
         container.add(tablePane);
         
@@ -111,20 +111,18 @@ public class NguyenLieuPanel extends JPanel {
         tablePane.setViewportView(table);
         
         // load list
-        loadTable(null);
+        loadTable(nguyenLieuBus.getAll());
     }
     
     private void loadTable(List<NguyenLieuDTO> arr) {
         tableModel.setRowCount(0); //This removes all the rows but keeps the column structure.
-        if(arr == null) arr = nguyenLieuBus.getAll();
         // kiem tra mang co null ko
-        if(arr.size() != 0) 
+        if(arr != null) 
             for (NguyenLieuDTO nl : arr) {
                 Object[] row = {
                    nl.getIdNL(),
                     nl.getTenNL(),
-                    nl.getDonvi(),
-                    nl.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa"
+                    nl.getDonvi()
                 };
                 tableModel.addRow(row);
             }
@@ -141,7 +139,7 @@ public class NguyenLieuPanel extends JPanel {
             NguyenLieuDialog nguyenLieuDialog = new NguyenLieuDialog();
             nguyenLieuDialog.showEdit(idNL);
             // sau khi đóng dialog, reload table 
-            loadTable(null);
+            loadTable(nguyenLieuBus.getAll());
         }
     }
     
@@ -149,7 +147,7 @@ public class NguyenLieuPanel extends JPanel {
         NguyenLieuDialog nguyenLieuDialog = new NguyenLieuDialog();
         nguyenLieuDialog.showAdd();
         // sau khi đóng dialog, reload table 
-        loadTable(null);
+        loadTable(nguyenLieuBus.getAll());
     }
 
     private void search() {
@@ -174,16 +172,19 @@ public class NguyenLieuPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Bạn chưa chọn nguyên liệu");
         }
         else {
-            // tiến hành xóa 
-            int idNL = (int) table.getValueAt(selectedRow, 0);
-            // cập nhật lại CSDL
-            // kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
-            if(nguyenLieuBus.delete(idNL)){
-                JOptionPane.showMessageDialog(this, "Xóa thành công");
-                // reload table
-                loadTable(null);
+            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa nguyên liệu này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                // tiến hành xóa 
+                int idNL = (int) table.getValueAt(selectedRow, 0);
+                // cập nhật lại CSDL
+                // kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
+                if(nguyenLieuBus.delete(idNL)){
+                    JOptionPane.showMessageDialog(this, "Xóa thành công");
+                    // reload table
+                    loadTable(nguyenLieuBus.getAll());
+                }
+                else JOptionPane.showMessageDialog(this, "Bạn không thể xóa nguyên liệu này!");
             }
-            else JOptionPane.showMessageDialog(this, "Bạn không thể xóa nguyên liệu này!");
         }
     }
 }

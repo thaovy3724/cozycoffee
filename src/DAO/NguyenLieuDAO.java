@@ -22,8 +22,7 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
         return new NguyenLieuDTO(
                 rs.getInt("idNL"),
                 rs.getString("tenNL"),
-                rs.getString("donvi"),
-                rs.getInt("trangthai")
+                rs.getString("donvi")
         );
     }
     
@@ -31,7 +30,6 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
         List<Object> params = new ArrayList<>();
         params.add(nl.getTenNL());
         params.add(nl.getDonvi());
-        params.add(nl.getTrangthai());
         return super.add(params);
     }
     
@@ -40,7 +38,6 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
 //      params.add(nl.getIdNL());
         params.add(nl.getTenNL());
         params.add(nl.getDonvi());
-        params.add(nl.getTrangthai());
         String condition = "idNL = "+nl.getIdNL();
         return super.update(params, condition);
     }
@@ -159,23 +156,5 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
             db.close(link);
         }
         return isExist;
-    }
-    public List<NguyenLieuDTO> getAllActive(){
-        Connection link = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        List<NguyenLieuDTO> result = new ArrayList<>();
-        try {
-            String sql = "SELECT * FROM nguyenlieu WHERE trangthai = 1";
-            link = db.connectDB();
-            pstmt = link.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }finally {
-            db.close(link);
-        }
-        return result;
     }
 }

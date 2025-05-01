@@ -21,7 +21,6 @@ import java.awt.Insets;
 
 import javax.swing.JTextField;
 import java.awt.Color;
-import javax.swing.JComboBox;
 
 public class NguyenLieuDialog extends JDialog {
     private NguyenLieuBUS nguyenLieuBus = new NguyenLieuBUS();
@@ -29,8 +28,8 @@ public class NguyenLieuDialog extends JDialog {
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
     private JTextField txtTenNL;
-    private JComboBox<String> cboTrangThai = new JComboBox<>();
-    private JLabel errTenNL, errDonVi, errTrangThai;
+    private JLabel errTenNL, errDonVi;
+    private JLabel lblTitle;
     private JButton btnSubmit, btnCancel;
     private JTextField txtDonVi;
 
@@ -38,8 +37,6 @@ public class NguyenLieuDialog extends JDialog {
      * Create the dialog.
      */
     public NguyenLieuDialog() {
-        setModal(true);
-        setTitle("Thêm nguyên liệu");
         setSize(445, 234);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBackground(Color.WHITE);
@@ -52,7 +49,7 @@ public class NguyenLieuDialog extends JDialog {
         gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
         contentPanel.setLayout(gbl_contentPanel);
         {
-            JLabel lblTitle = new JLabel("Thêm nguyên liệu");
+            lblTitle = new JLabel();
             lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
             GridBagConstraints gbc_lblTitle = new GridBagConstraints();
             gbc_lblTitle.anchor = GridBagConstraints.WEST;
@@ -150,30 +147,6 @@ public class NguyenLieuDialog extends JDialog {
             gbc_lblTrangThai.gridy = 5;
             contentPanel.add(lblTrangThai, gbc_lblTrangThai);
         }
-        {
-            cboTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-            GridBagConstraints gbc_cboTrangThai = new GridBagConstraints();
-            gbc_cboTrangThai.gridwidth = 2;
-            gbc_cboTrangThai.insets = new Insets(0, 0, 5, 10);
-            gbc_cboTrangThai.fill = GridBagConstraints.HORIZONTAL;
-            gbc_cboTrangThai.gridx = 1;
-            gbc_cboTrangThai.gridy = 5;
-            cboTrangThai.addItem("Hoạt động");
-            cboTrangThai.addItem("Bị khóa");
-            contentPanel.add(cboTrangThai, gbc_cboTrangThai);
-        }
-        {
-            errTrangThai = new JLabel("");
-            errTrangThai.setForeground(Color.RED);
-            errTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-            GridBagConstraints gbc_errTrangThai = new GridBagConstraints();
-            gbc_errTrangThai.anchor = GridBagConstraints.WEST;
-            gbc_errTrangThai.gridwidth = 2;
-            gbc_errTrangThai.insets = new Insets(0, 0, 5, 10);
-            gbc_errTrangThai.gridx = 1;
-            gbc_errTrangThai.gridy = 6;
-            contentPanel.add(errTrangThai, gbc_errTrangThai);
-        }
     }
 
     private void actionInit() {
@@ -210,9 +183,8 @@ public class NguyenLieuDialog extends JDialog {
     }
 
     public void showAdd() {
-        
-        cboTrangThai.setEnabled(false);
-        
+        setTitle("Thêm nguyên liệu");
+        lblTitle.setText("Thêm nguyên liệu");
         // reset action button
         btnSubmit.setText("Thêm");
         btnSubmit.setActionCommand("add");
@@ -223,8 +195,9 @@ public class NguyenLieuDialog extends JDialog {
         NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(idNL);
         txtTenNL.setText(nl.getTenNL());
         txtDonVi.setText(nl.getDonvi());
-        cboTrangThai.setSelectedItem(nl.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
         
+        setTitle("Sửa nguyên liệu");
+        lblTitle.setText("Sửa nguyên liệu");
         // reset action button
         btnSubmit.setText("Cập nhật");
         btnSubmit.setActionCommand("edit_"+idNL);
@@ -257,7 +230,6 @@ public class NguyenLieuDialog extends JDialog {
             // collect data
             String tenNL = txtTenNL.getText().trim();
             String donvi = txtDonVi.getText().trim();
-            int trangthai = cboTrangThai.getSelectedItem() == "Hoạt động" ? 1 : 0;
 
             // action
             String error = "";
@@ -265,11 +237,11 @@ public class NguyenLieuDialog extends JDialog {
             int beginIndex = actionCommand.indexOf('_')+1;
             if(beginIndex == 0) {
                 // add
-                error = nguyenLieuBus.add(new NguyenLieuDTO(tenNL, donvi, trangthai));
+                error = nguyenLieuBus.add(new NguyenLieuDTO(tenNL, donvi));
             }else {
                 // update
                 int idNL = Integer.parseInt(actionCommand.substring(beginIndex));
-                error = nguyenLieuBus.update(new NguyenLieuDTO(idNL, tenNL, donvi, trangthai));
+                error = nguyenLieuBus.update(new NguyenLieuDTO(idNL, tenNL, donvi));
             }
             
             // show message

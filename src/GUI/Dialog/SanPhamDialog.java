@@ -50,6 +50,7 @@ public class SanPhamDialog extends JDialog {
 	private JComboBox<String> cboTrangThai = new JComboBox<>();
 	private JLabel errTenSP, errGia, errHinh;
 	private JLabel lblImage;
+	private JLabel lblTitle;
 	private JButton btnSubmit, btnCancel;
 	private File uploadFile;
 
@@ -57,7 +58,6 @@ public class SanPhamDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public SanPhamDialog() {
-		setTitle("Thêm sản phẩm");
 		setBounds(100, 100, 576, 403);
 		getContentPane().setLayout(new BorderLayout());
 		{
@@ -66,7 +66,7 @@ public class SanPhamDialog extends JDialog {
 			fl_titlePanel.setAlignment(FlowLayout.LEFT);
 			getContentPane().add(titlePanel, BorderLayout.NORTH);
 			{
-				JLabel lblTitle = new JLabel("Thêm sản phẩm");
+				lblTitle = new JLabel();
 				lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
 				titlePanel.add(lblTitle);
 			}
@@ -228,8 +228,8 @@ public class SanPhamDialog extends JDialog {
 		}
 		{
 			cboTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-			cboTrangThai.addItem("Hoạt động");
 			cboTrangThai.addItem("Bị khóa");
+			cboTrangThai.addItem("Hoạt động");
 			{
 				JLabel lblTrangThai = new JLabel("Trạng thái");
 				lblTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -296,6 +296,8 @@ public class SanPhamDialog extends JDialog {
 		loadComboBoxDM(listDM);
 		cboTrangThai.setEnabled(false);
 		
+		setTitle("Thêm sản phẩm");
+		lblTitle.setText("Thêm sản phẩm");
 		// reset action button
 		btnSubmit.setText("Thêm");
 		btnSubmit.setActionCommand("add");
@@ -318,6 +320,8 @@ public class SanPhamDialog extends JDialog {
 		DanhMucDTO dmuc = danhMucBus.findByIdDM(sanPham.getIdDM());
 		cboDM.setSelectedItem(dmuc);
 		
+		setTitle("Sửa sản phẩm");
+		lblTitle.setText("Sửa sản phẩm");
 		// reset action button
 		btnSubmit.setText("Cập nhật");
 		btnSubmit.setActionCommand("edit_"+idSP);
@@ -368,7 +372,7 @@ public class SanPhamDialog extends JDialog {
 		// validate du lieu
 		String actionCommand = btnSubmit.getActionCommand();
 		int beginIndex = actionCommand.indexOf('_')+1;
-		if(!isError(beginIndex == 0)) {
+		if(!isError(beginIndex != 0)) {
 			// collect data
 			String tenSP = txtTenSP.getText();
 			int giaban = Integer.parseInt(txtGia.getText()); 
