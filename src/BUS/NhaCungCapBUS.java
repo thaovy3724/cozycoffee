@@ -31,7 +31,7 @@ public class NhaCungCapBUS {
 		String error = "";
 		if(nhaCungCapDao.isExist(nhaCungCap)) 
 			error = "Nhà cung cấp đã tồn tại (do trùng tên, email hoặc số điện thoại)";
-		else if(!nhaCungCapDao.add(nhaCungCap)) { 		// thêm mới vào CSDL
+		else if(!nhaCungCapDao.update(nhaCungCap)) { 		// thêm mới vào CSDL
 			error = "Xảy ra lỗi trong quá trình cập nhật";
 		}
 		return error;
@@ -51,5 +51,10 @@ public class NhaCungCapBUS {
 	
 	public List<NhaCungCapDTO> search(String keyWord){
 		return nhaCungCapDao.search(keyWord);
+	}
+
+	// HUONGNGUYEN: 29/04
+	public List<NhaCungCapDTO> getAllActive(){
+		return nhaCungCapDao.getAllActive();
 	}
 }

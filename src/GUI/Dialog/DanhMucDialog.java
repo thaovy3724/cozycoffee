@@ -23,6 +23,7 @@ import java.util.List;
 import javax.swing.JTextField;
 import java.awt.Color;
 import javax.swing.JComboBox;
+import java.awt.Cursor;
 
 public class DanhMucDialog extends JDialog {
 	private DanhMucBUS danhMucBus = new DanhMucBUS();
@@ -33,18 +34,20 @@ public class DanhMucDialog extends JDialog {
 	private JComboBox<DanhMucDTO> cboDMCha = new JComboBox<>();
 	private JComboBox<String> cboTrangThai = new JComboBox<>();
 	private JLabel errTenDM, errDMCha, errTrangThai;
+	private JLabel lblTitle;
 	private JButton btnSubmit, btnCancel;
 
 	/**
 	 * Create the dialog.
 	 */
 	public DanhMucDialog() {
-		setTitle("Thêm danh mục");
 		setSize(445, 234);
 		getContentPane().setLayout(new BorderLayout());
+
 		contentPanel.setBackground(Color.WHITE);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
 		gbl_contentPanel.columnWidths = new int[]{0, 0, 0, 0};
 		gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -52,7 +55,7 @@ public class DanhMucDialog extends JDialog {
 		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		contentPanel.setLayout(gbl_contentPanel);
 		{
-			JLabel lblTitle = new JLabel("Thêm danh mục");
+			lblTitle = new JLabel();
 			lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
 			GridBagConstraints gbc_lblTitle = new GridBagConstraints();
 			gbc_lblTitle.anchor = GridBagConstraints.WEST;
@@ -97,7 +100,7 @@ public class DanhMucDialog extends JDialog {
 		{
 			errTenDM = new JLabel();
 			errTenDM.setForeground(Color.RED);
-			errTenDM.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+			errTenDM.setFont(new Font("Segoe UI", Font.ITALIC, 13));
 			GridBagConstraints gbc_errTenDM = new GridBagConstraints();
 			gbc_errTenDM.gridwidth = 2;
 			gbc_errTenDM.anchor = GridBagConstraints.WEST;
@@ -129,7 +132,7 @@ public class DanhMucDialog extends JDialog {
 		{
 			errDMCha = new JLabel();
 			errDMCha.setForeground(Color.RED);
-			errDMCha.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+			errDMCha.setFont(new Font("Segoe UI", Font.ITALIC, 13));
 			GridBagConstraints gbc_errDMCha = new GridBagConstraints();
 			gbc_errDMCha.gridwidth = 2;
 			gbc_errDMCha.anchor = GridBagConstraints.WEST;
@@ -163,7 +166,7 @@ public class DanhMucDialog extends JDialog {
 		{
 			errTrangThai = new JLabel("");
 			errTrangThai.setForeground(Color.RED);
-			errTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+			errTrangThai.setFont(new Font("Segoe UI", Font.ITALIC, 13));
 			GridBagConstraints gbc_errTrangThai = new GridBagConstraints();
 			gbc_errTrangThai.anchor = GridBagConstraints.WEST;
 			gbc_errTrangThai.gridwidth = 2;
@@ -186,7 +189,8 @@ public class DanhMucDialog extends JDialog {
 		actionPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		{
 			btnSubmit = new JButton("Thêm");
-			btnSubmit.setBackground(new Color(0, 128, 0));
+			btnSubmit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			btnSubmit.setBackground(new Color(30, 144, 255));
 			btnSubmit.setFont(new Font("Segoe UI", Font.BOLD, 14));
 			btnSubmit.setForeground(Color.WHITE);
 			btnSubmit.setContentAreaFilled(false);
@@ -196,7 +200,8 @@ public class DanhMucDialog extends JDialog {
 		}
 		{
 			btnCancel = new JButton("Hủy");
-			btnCancel.setBackground(new Color(255, 51, 102));
+			btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			btnCancel.setBackground(new Color(255, 0, 0));
 			btnCancel.setForeground(new Color(255, 255, 255));
 			btnCancel.setFont(new Font("Segoe UI", Font.BOLD, 14));
 			btnCancel.setContentAreaFilled(false);
@@ -221,6 +226,8 @@ public class DanhMucDialog extends JDialog {
 		loadComboBoxDMCha(listDMCha);
 		cboTrangThai.setEnabled(false);
 		
+		setTitle("Thêm danh mục");
+		lblTitle.setText("Thêm danh mục");
 		// reset action button
 		btnSubmit.setText("Thêm");
 		btnSubmit.setActionCommand("add");
@@ -232,7 +239,7 @@ public class DanhMucDialog extends JDialog {
 		txtTenDM.setText(danhMuc.getTenDM());
 		cboTrangThai.setSelectedItem(danhMuc.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
 		
-		// load tất cả danh mục đang hoạt động và danh mục cha của danh mục được chọn nếu có và trừ danh mục được chọn
+		// load tất cả danh mục đang hoạt động và danh mục cha của danh mục được chọn (nếu có) và trừ danh mục được chọn
 		List<DanhMucDTO> listDMCha = danhMucBus.getAllActiveEdit(idDM, danhMuc.getIdDMCha());
 		loadComboBoxDMCha(listDMCha);
 		
@@ -242,6 +249,8 @@ public class DanhMucDialog extends JDialog {
 			cboDMCha.setSelectedItem(dmucCha);
 		}
 		
+		setTitle("Sửa danh mục");
+		lblTitle.setText("Sửa danh mục");
 		// reset action button
 		btnSubmit.setText("Cập nhật");
 		btnSubmit.setActionCommand("edit_"+idDM);

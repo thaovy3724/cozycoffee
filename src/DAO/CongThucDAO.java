@@ -1,6 +1,8 @@
 package DAO;
 
+import DTO.CT_CongThucDTO;
 import DTO.CongThucDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
@@ -24,39 +26,52 @@ public class CongThucDAO extends BaseDAO<CongThucDTO> {
                 rs.getString("mota")
         );
     }
-    
-    public int add(CongThucDTO ct) {
-        List<Object> params = new ArrayList<>();
-        params.add(ct.getMota());
-        params.add(ct.getIdSP() == 0 ? null : ct.getIdSP());
-        String sql = "INSERT INTO congthuc (mota, idSP) VALUES (?, ?)";
-        Connection link = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            link = db.connectDB();
-            pstmt = link.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            for (int i = 0; i < params.size(); i++) {
-                pstmt.setObject(i + 1, params.get(i));
-            }
-            int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected == 0) {
-                return -1;
-            }
-            rs = pstmt.getGeneratedKeys();
-            if (rs.next()) {
-                return rs.getInt(1); // Trả về idCT được sinh tự động
-            }
-            return -1;
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-            return -1;
-        } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+
+    public int add(CongThucDTO ct, List<CT_CongThucDTO> danhSachChiTiet) {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet generatedKeys = null;
+		int newIdHD = -1;
+		String sql;
+		try{
+			link = db.connectDB();
+			// Bắt đầu transaction
+			link.setAutoCommit(false);
+
+			// Thêm hóa đơn
+			sql = "INSERT INTO congthuc (mota, idSP) VALUES (?, ?)";
+			pstmt = link.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			pstmt.setString(1, ct.getMota());
+			pstmt.setInt(2, ct.getIdSP());
+			pstmt.executeUpdate();
+
+			// Thêm chi tiết hóa đơn
+			generatedKeys = pstmt.getGeneratedKeys();
+			if(generatedKeys.next()) 
+				newIdHD = generatedKeys.getInt(1);
+			sql = "INSERT INTO ct_congthuc (idCT, idNL, soluong) VALUES (?, ?, ?)";
+			pstmt = link.prepareStatement(sql);
+			for(CT_CongThucDTO chitiet : danhSachChiTiet){
+				pstmt.setInt(1, newIdHD);
+				pstmt.setInt(2, chitiet.getIdNL());
+				pstmt.setFloat(3, chitiet.getSoluong());
+				pstmt.executeUpdate();
+			}
+
+			// Thành công
+			link.commit();
+		}catch(ClassNotFoundException | SQLException e){
+			try{
+				link.rollback();
+				newIdHD = -1;
+			}catch(SQLException ex){
+				ex.printStackTrace();
+			}
+        }finally {
             db.close(link);
         }
-    }
+		return newIdHD;
+	}
     
     public boolean update(CongThucDTO ct) {
         List<Object> params = new ArrayList<>();

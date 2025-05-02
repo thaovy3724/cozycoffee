@@ -1,7 +1,7 @@
 package DTO;
 
 public class CT_CongThucDTO {
-    private int idCT;
+	private int idCT;
     private int idNL;
     private float soluong;
 
@@ -10,6 +10,11 @@ public class CT_CongThucDTO {
 
     public CT_CongThucDTO(int idCT, int idNL, float soluong) {
         this.idCT = idCT;
+        this.idNL = idNL;
+        this.soluong = soluong;
+    }
+
+    public CT_CongThucDTO(int idNL, float soluong) {
         this.idNL = idNL;
         this.soluong = soluong;
     }

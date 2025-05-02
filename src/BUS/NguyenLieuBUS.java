@@ -1,7 +1,8 @@
 package BUS;
-import DTO.DanhMucDTO;
+
 import DTO.NguyenLieuDTO;
 import DAO.NguyenLieuDAO;
+
 import java.util.List;
 
 public class NguyenLieuBUS {
@@ -21,9 +22,6 @@ public class NguyenLieuBUS {
             error = "Xảy ra lỗi trong quá trình thêm mới";
         }
         return error;
-    }
-    public List<NguyenLieuDTO> getAllActive(){
-        return nguyenLieuDao.getAllActive();
     }
     
     public NguyenLieuDTO findByIdNL(int idNL) {
@@ -56,4 +54,3 @@ public class NguyenLieuBUS {
         return nguyenLieuDao.search(keyWord);
     }
 }
-

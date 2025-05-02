@@ -6,12 +6,15 @@ public class CT_HoaDonDTO {
     private int soluong;
     private int gialucdat;
 
-    public CT_HoaDonDTO() {
-    }
-
     public CT_HoaDonDTO(int idSP, int idHD, int soluong, int gialucdat) {
         this.idSP = idSP;
         this.idHD = idHD;
+        this.soluong = soluong;
+        this.gialucdat = gialucdat;
+    }
+
+    public CT_HoaDonDTO(int idSP, int soluong, int gialucdat) {
+        this.idSP = idSP;
         this.soluong = soluong;
         this.gialucdat = gialucdat;
     }

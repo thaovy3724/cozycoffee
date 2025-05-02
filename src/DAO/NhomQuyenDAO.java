@@ -1,6 +1,5 @@
 package DAO;
 
-import DTO.DanhMucDTO;
 import DTO.NhomQuyenDTO;
 
 import java.sql.Connection;

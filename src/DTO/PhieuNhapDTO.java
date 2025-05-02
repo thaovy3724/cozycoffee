@@ -1,9 +1,12 @@
 package DTO;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 public class PhieuNhapDTO {
 	private int idPN;
-    private String ngaytao;
-    private String ngaycapnhat;
+    private LocalDate ngaytao;
+    private LocalDate ngaycapnhat;
     private int idTK;
     private int idNCC;
     private int idTT;
@@ -11,10 +14,23 @@ public class PhieuNhapDTO {
     public PhieuNhapDTO() {
     }
 
-    public PhieuNhapDTO(int idPN, String ngaytao, String ngaycapnhat, int idTK, int idNCC, int idTT) {
+    //HUONGNGUYEN 1/5
+    // Đổi String thành LocalDate
+    public PhieuNhapDTO(int idPN, Object ngaytao, Object ngaycapnhat, int idTK,
+                        int idNCC, int idTT) {
         this.idPN = idPN;
-        this.ngaytao = ngaytao;
-        this.ngaycapnhat = ngaycapnhat;
+        setNgaytao(ngaytao);
+        setNgaycapnhat(ngaycapnhat);
+        this.idTK = idTK;
+        this.idNCC = idNCC;
+        this.idTT = idTT;
+    }
+
+    public PhieuNhapDTO(Object ngaytao, Object ngaycapnhat, int idTK,
+                        int idNCC,
+                        int idTT) {
+        setNgaytao(ngaytao);
+        setNgaycapnhat(ngaycapnhat);
         this.idTK = idTK;
         this.idNCC = idNCC;
         this.idTT = idTT;
@@ -28,20 +44,40 @@ public class PhieuNhapDTO {
         this.idPN = idPN;
     }
 
-    public String getNgaytao() {
+    public LocalDate getNgaytao() {
         return ngaytao;
     }
 
-    public void setNgaytao(String ngaytao) {
-        this.ngaytao = ngaytao;
+    public void setNgaytao(Object ngaytao) {
+        if (ngaytao instanceof LocalDate) {
+            this.ngaytao = (LocalDate) ngaytao;
+        } else if (ngaytao instanceof java.sql.Date) {
+            this.ngaytao = ((java.sql.Date) ngaytao).toLocalDate();
+        } else if (ngaytao instanceof java.util.Date) {
+            this.ngaytao = ((java.sql.Date) ngaytao).toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+        } else {
+            this.ngaytao = null;
+        }
     }
 
-    public String getNgaycapnhat() {
+    public LocalDate getNgaycapnhat() {
         return ngaycapnhat;
     }
 
-    public void setNgaycapnhat(String ngaycapnhat) {
-        this.ngaycapnhat = ngaycapnhat;
+    public void setNgaycapnhat(Object ngaycapnhat) {
+        if (ngaycapnhat instanceof LocalDate) {
+            this.ngaycapnhat = (LocalDate) ngaycapnhat;
+        } else if (ngaycapnhat instanceof java.sql.Date) {
+            this.ngaycapnhat = ((java.sql.Date) ngaycapnhat).toLocalDate();
+        } else if (ngaycapnhat instanceof java.util.Date) {
+            this.ngaycapnhat = ((java.sql.Date) ngaycapnhat).toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+        } else {
+            this.ngaycapnhat = null;
+        }
     }
 
     public int getIdTK() {
@@ -67,4 +103,6 @@ public class PhieuNhapDTO {
     public void setIdTT(int idTT) {
         this.idTT = idTT;
     }
+
+    
 }
