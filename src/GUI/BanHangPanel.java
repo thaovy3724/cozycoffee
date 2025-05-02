@@ -91,6 +91,7 @@ public class BanHangPanel extends JPanel {
 		txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		actionPanel.add(txtSearch);
 		txtSearch.setColumns(18);
+		cboDM.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		cboDM.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		List<DanhMucDTO> listDM = danhMucBus.getAllActive();
@@ -101,8 +102,8 @@ public class BanHangPanel extends JPanel {
 		btnSearch.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		ImageHelper searchIcon = new ImageHelper(20, 20, BanHangPanel.class.getResource("/ASSET/Images/searchIcon.png"));
 		btnSearch.setIcon(searchIcon.getScaledImage());
-		btnSearch.setBackground(new Color(245, 255, 250));
-		btnSearch.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		btnSearch.setBackground(new Color(255, 255, 255));
+		btnSearch.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		btnSearch.setContentAreaFilled(false);
 		btnSearch.setOpaque(true);
 		btnSearch.addActionListener(e->search());
@@ -289,7 +290,7 @@ public class BanHangPanel extends JPanel {
 		table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(numericField));
 		
 		JScrollPane orderDetailPanel = new JScrollPane();
-		orderDetailPanel.setBackground(new Color (255, 245, 228));
+		orderDetailPanel.getViewport().setBackground(new Color(255, 240, 220));
 		orderDetailPanel.setViewportView(table);
 		rightPanel.add(orderDetailPanel);
 		// ==== Order detail ====

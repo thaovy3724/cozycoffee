@@ -51,4 +51,9 @@ public class Lo_NguyenLieuDAO extends BaseDAO<Lo_NguyenLieuDTO>{
         }
         return result;
 	}
+
+    public boolean delete(int idPN) {
+        String col = "idPN";
+        return super.delete(col, idPN);
+    }
 }

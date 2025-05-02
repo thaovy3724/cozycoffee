@@ -76,7 +76,7 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
             pstmt.setString(2, ncc.getEmail());
             pstmt.setString(3, ncc.getSdt());
 			if(ncc.getIdNCC() != 0) 
-	            pstmt.setInt(2, ncc.getIdNCC());
+	            pstmt.setInt(4, ncc.getIdNCC());
 			
 			// thuc thi
             rs = pstmt.executeQuery();
@@ -155,26 +155,71 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
         return result;
 	}
 
+    public boolean exists(int idNCC) {
+        Connection link = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        boolean exists = false;
+        try {
+            String sql = "SELECT * FROM " + table + " WHERE idNCC = ?";
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            pstmt.setInt(1, idNCC);
+            rs = pstmt.executeQuery();
+            exists = rs.next();
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.close(link);
+        }
+        return exists;
+    }
+
     // HUONGNGUYEN 29/4
-	public List<NhaCungCapDTO> getAllActive() {
-		Connection link = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		List<NhaCungCapDTO> result = new ArrayList<>();
-		
-		try {
-			String sql = "SELECT * FROM nhacungcap WHERE trangthai = 1";
-			link = db.connectDB();
-			pstmt = link.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			while(rs.next()) {
-				result.add(mapResultSetToDTO(rs));
-			}
-		} catch(ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		} finally {
-			db.close(link);
-		}
-		return result;
-	}
+    public List<NhaCungCapDTO> getAllActive() {
+        Connection link = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<NhaCungCapDTO> result = new ArrayList<>();
+
+        try {
+            String sql = "SELECT * FROM " + table + " WHERE trangthai = 1";
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            while(rs.next()) {
+                result.add(mapResultSetToDTO(rs));
+            }
+        } catch(ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.close(link);
+        }
+        return result;
+    }
+
+//    HUONGNGUYEN 2/5
+    public List<NhaCungCapDTO> getAllActiveExcept(int idNCC) {
+        Connection link = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<NhaCungCapDTO> result = new ArrayList<>();
+
+        try {
+            link = db.connectDB();
+            String sql = "SELECT * FROM " + table + " WHERE idNCC = ? OR " +
+                    "trangthai = 1";
+            pstmt = link.prepareStatement(sql);
+            pstmt.setInt(1, idNCC);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                result.add(mapResultSetToDTO(rs));
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.close(link);
+        }
+        return result;
+    }
 }

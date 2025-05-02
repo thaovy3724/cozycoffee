@@ -17,6 +17,9 @@ import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.util.List;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Cursor;
 
 public class SanPhamPanel extends JPanel {
 	private SanPhamBUS sanPhamBus = new SanPhamBUS();
@@ -53,16 +56,25 @@ public class SanPhamPanel extends JPanel {
 		actionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
 		btnAdd = new JButton("Thêm");
+		btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnAdd.setBackground(new Color(173, 255, 47));
 		btnAdd.setIcon(new ImageIcon(SanPhamPanel.class.getResource("/ASSET/Images/icons8_add_30px.png")));
 		btnAdd.addActionListener(e->showAdd());
 		actionPanel.add(btnAdd);
 		
 		btnEdit = new JButton("Sửa");
+		btnEdit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnEdit.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnEdit.setBackground(new Color(135, 206, 235));
 		btnEdit.setIcon(new ImageIcon(SanPhamPanel.class.getResource("/ASSET/Images/icons8_wrench_30px.png")));
 		btnEdit.addActionListener(e->showEdit());
 		actionPanel.add(btnEdit);
 		
 		btnDel = new JButton("Xóa");
+		btnDel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnDel.setBackground(new Color(255, 215, 0));
+		btnDel.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		btnDel.setIcon(new ImageIcon(SanPhamPanel.class.getResource("/ASSET/Images/icons8_cancel_30px_1.png")));
 		btnDel.addActionListener(e->delete());
 		actionPanel.add(btnDel);
@@ -74,17 +86,24 @@ public class SanPhamPanel extends JPanel {
 		searchPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		txtSearch = new JTextField();
-		txtSearch.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtSearch.setMinimumSize(new Dimension(7, 30));
+		txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		searchPanel.add(txtSearch);
 		txtSearch.setColumns(20);
 		
 		btnSearch = new JButton("Tìm");
+		btnSearch.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnSearch.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnSearch.setBackground(new Color(255, 255, 255));
 		ImageHelper imgSrch = new ImageHelper(20, 20, SanPhamPanel.class.getResource("/ASSET/Images/searchIcon.png"));
 		btnSearch.setIcon(imgSrch.getScaledImage());
 		btnSearch.addActionListener(e->search());
 		searchPanel.add(btnSearch);
 		
 		btnReset = new JButton("Làm mới");
+		btnReset.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnReset.setBackground(new Color(255, 255, 255));
+		btnReset.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		ImageHelper imgReset = new ImageHelper(20, 20, SanPhamPanel.class.getResource("/ASSET/Images/icons8_replay_30px.png"));
 		btnReset.setIcon(imgReset.getScaledImage());
 		btnReset.addActionListener(e->{
@@ -109,6 +128,7 @@ public class SanPhamPanel extends JPanel {
 		
 		table = new JTable();
 		tablePane.setViewportView(table);
+		tablePane.getViewport().setBackground(new Color(255, 240, 220));
 		
 		// load list
 		loadTable(sanPhamBus.getAll());

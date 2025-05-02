@@ -23,6 +23,7 @@ import java.util.List;
 import javax.swing.JTextField;
 import java.awt.Color;
 import javax.swing.JComboBox;
+import java.awt.Cursor;
 
 public class DanhMucDialog extends JDialog {
 	private DanhMucBUS danhMucBus = new DanhMucBUS();
@@ -55,7 +56,8 @@ public class DanhMucDialog extends JDialog {
 		contentPanel.setLayout(gbl_contentPanel);
 		{
 			lblTitle = new JLabel();
-			lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
+			lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+	        lblTitle.setForeground(new Color(33, 150, 243));
 			GridBagConstraints gbc_lblTitle = new GridBagConstraints();
 			gbc_lblTitle.anchor = GridBagConstraints.WEST;
 			gbc_lblTitle.gridwidth = 4;
@@ -99,7 +101,7 @@ public class DanhMucDialog extends JDialog {
 		{
 			errTenDM = new JLabel();
 			errTenDM.setForeground(Color.RED);
-			errTenDM.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+			errTenDM.setFont(new Font("Segoe UI", Font.ITALIC, 13));
 			GridBagConstraints gbc_errTenDM = new GridBagConstraints();
 			gbc_errTenDM.gridwidth = 2;
 			gbc_errTenDM.anchor = GridBagConstraints.WEST;
@@ -131,7 +133,7 @@ public class DanhMucDialog extends JDialog {
 		{
 			errDMCha = new JLabel();
 			errDMCha.setForeground(Color.RED);
-			errDMCha.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+			errDMCha.setFont(new Font("Segoe UI", Font.ITALIC, 13));
 			GridBagConstraints gbc_errDMCha = new GridBagConstraints();
 			gbc_errDMCha.gridwidth = 2;
 			gbc_errDMCha.anchor = GridBagConstraints.WEST;
@@ -165,7 +167,7 @@ public class DanhMucDialog extends JDialog {
 		{
 			errTrangThai = new JLabel("");
 			errTrangThai.setForeground(Color.RED);
-			errTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+			errTrangThai.setFont(new Font("Segoe UI", Font.ITALIC, 13));
 			GridBagConstraints gbc_errTrangThai = new GridBagConstraints();
 			gbc_errTrangThai.anchor = GridBagConstraints.WEST;
 			gbc_errTrangThai.gridwidth = 2;
@@ -188,7 +190,8 @@ public class DanhMucDialog extends JDialog {
 		actionPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		{
 			btnSubmit = new JButton("Thêm");
-			btnSubmit.setBackground(new Color(0, 128, 0));
+			btnSubmit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			btnSubmit.setBackground(new Color(30, 144, 255));
 			btnSubmit.setFont(new Font("Segoe UI", Font.BOLD, 14));
 			btnSubmit.setForeground(Color.WHITE);
 			btnSubmit.setContentAreaFilled(false);
@@ -198,7 +201,8 @@ public class DanhMucDialog extends JDialog {
 		}
 		{
 			btnCancel = new JButton("Hủy");
-			btnCancel.setBackground(new Color(255, 51, 102));
+			btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			btnCancel.setBackground(new Color(255, 0, 0));
 			btnCancel.setForeground(new Color(255, 255, 255));
 			btnCancel.setFont(new Font("Segoe UI", Font.BOLD, 14));
 			btnCancel.setContentAreaFilled(false);

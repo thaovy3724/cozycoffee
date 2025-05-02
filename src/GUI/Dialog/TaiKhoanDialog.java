@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Cursor;
 
 public class TaiKhoanDialog extends JDialog {
 	private TaiKhoanBUS taiKhoanBus = new TaiKhoanBUS();
@@ -44,6 +45,7 @@ public class TaiKhoanDialog extends JDialog {
 		//TrongHiuuu 23/4
 		this.adminFrame = adminFrame;
 
+		setTitle("Thêm tài khoản");
 		setSize(418, 457);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(255, 255, 255));
@@ -51,14 +53,15 @@ public class TaiKhoanDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
 		gbl_contentPanel.columnWidths = new int[]{0, 0, 0, 0};
-		gbl_contentPanel.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_contentPanel.columnWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		contentPanel.setLayout(gbl_contentPanel);
 		{
-			lblTitle = new JLabel();
-			lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
-			GridBagConstraints gbc_lblTitle = new GridBagConstraints();
+			lblTitle = new JLabel("Thêm tài khoản");
+			lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+	        lblTitle.setForeground(new Color(33, 150, 243));
+	        GridBagConstraints gbc_lblTitle = new GridBagConstraints();
 			gbc_lblTitle.insets = new Insets(5, 10, 5, 10);
 			gbc_lblTitle.gridwidth = 4;
 			gbc_lblTitle.anchor = GridBagConstraints.WEST;
@@ -69,6 +72,7 @@ public class TaiKhoanDialog extends JDialog {
 
 		actionInit();
 		textFieldInit();
+
 
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -86,7 +90,7 @@ public class TaiKhoanDialog extends JDialog {
 			lblTenTK.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 			GridBagConstraints gbc_lblTenTK = new GridBagConstraints();
 			gbc_lblTenTK.anchor = GridBagConstraints.WEST;
-			gbc_lblTenTK.insets = new Insets(0, 10, 5, 5);
+			gbc_lblTenTK.insets = new Insets(0, 10, 0, 0);
 			gbc_lblTenTK.gridx = 0;
 			gbc_lblTenTK.gridy = 1;
 			contentPanel.add(lblTenTK, gbc_lblTenTK);
@@ -105,7 +109,7 @@ public class TaiKhoanDialog extends JDialog {
 		{
 			errTenTK = new JLabel();
 			errTenTK.setForeground(Color.RED);
-			errTenTK.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+			errTenTK.setFont(new Font("Segoe UI", Font.ITALIC, 12));
 			GridBagConstraints gbc_errTenTK = new GridBagConstraints();
 			gbc_errTenTK.anchor = GridBagConstraints.WEST;
 			gbc_errTenTK.insets = new Insets(0, 10, 5, 10);
@@ -118,7 +122,7 @@ public class TaiKhoanDialog extends JDialog {
 			lblEmail.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 			GridBagConstraints gbc_lblEmail = new GridBagConstraints();
 			gbc_lblEmail.anchor = GridBagConstraints.WEST;
-			gbc_lblEmail.insets = new Insets(0, 10, 5, 5);
+			gbc_lblEmail.insets = new Insets(0, 10, 0, 5);
 			gbc_lblEmail.gridx = 0;
 			gbc_lblEmail.gridy = 7;
 			contentPanel.add(lblEmail, gbc_lblEmail);
@@ -138,7 +142,7 @@ public class TaiKhoanDialog extends JDialog {
 		{
 			errEmail = new JLabel();
 			errEmail.setForeground(Color.RED);
-			errEmail.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+			errEmail.setFont(new Font("Segoe UI", Font.ITALIC, 12));
 			GridBagConstraints gbc_errEmail = new GridBagConstraints();
 			gbc_errEmail.anchor = GridBagConstraints.WEST;
 			gbc_errEmail.insets = new Insets(0, 10, 5, 10);
@@ -151,7 +155,7 @@ public class TaiKhoanDialog extends JDialog {
 			lblQuyen.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 			GridBagConstraints gbc_lblQuyen = new GridBagConstraints();
 			gbc_lblQuyen.anchor = GridBagConstraints.WEST;
-			gbc_lblQuyen.insets = new Insets(0, 10, 5, 5);
+			gbc_lblQuyen.insets = new Insets(0, 10, 0, 5);
 			gbc_lblQuyen.gridx = 0;
 			gbc_lblQuyen.gridy = 9;
 			contentPanel.add(lblQuyen, gbc_lblQuyen);
@@ -171,7 +175,7 @@ public class TaiKhoanDialog extends JDialog {
 			lblTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 			GridBagConstraints gbc_lblTrangThai = new GridBagConstraints();
 			gbc_lblTrangThai.anchor = GridBagConstraints.WEST;
-			gbc_lblTrangThai.insets = new Insets(0, 10, 5, 5);
+			gbc_lblTrangThai.insets = new Insets(0, 10, 0, 5);
 			gbc_lblTrangThai.gridx = 0;
 			gbc_lblTrangThai.gridy = 11;
 			contentPanel.add(lblTrangThai, gbc_lblTrangThai);
@@ -187,21 +191,24 @@ public class TaiKhoanDialog extends JDialog {
 			cboTrangThai.addItem("Bị khóa");
 			contentPanel.add(cboTrangThai, gbc_cboTrangThai);
 		}
+	}
+
+	private void actionInit(){
 		{
 			JPanel panel = new JPanel();
 			panel.setBackground(Color.WHITE);
 			GridBagConstraints gbc_panel = new GridBagConstraints();
-			gbc_panel.insets = new Insets(0, 0, 5, 5);
 			gbc_panel.fill = GridBagConstraints.BOTH;
 			gbc_panel.gridx = 2;
-			gbc_panel.gridy = 13;
+			gbc_panel.gridy = 14;
 			contentPanel.add(panel, gbc_panel);
 			FlowLayout fl_panel = new FlowLayout(FlowLayout.RIGHT, 5, 5);
 			fl_panel.setAlignOnBaseline(true);
 			panel.setLayout(fl_panel);
 			{
 				btnSubmit = new JButton("Thêm");
-				btnSubmit.setBackground(new Color(0, 128, 0));
+				btnSubmit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				btnSubmit.setBackground(new Color(30, 144, 255));
 				btnSubmit.setForeground(new Color(255, 255, 255));
 				btnSubmit.setFont(new Font("Segoe UI", Font.BOLD, 14));
 				btnSubmit.setContentAreaFilled(false);
@@ -211,7 +218,8 @@ public class TaiKhoanDialog extends JDialog {
 			}
 			{
 				btnCancel = new JButton("Hủy");
-				btnCancel.setBackground(new Color(255, 51, 102));
+				btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				btnCancel.setBackground(new Color(255, 0, 0));
 				btnCancel.setFont(new Font("Segoe UI", Font.BOLD, 14));
 				btnCancel.setForeground(new Color(255, 255, 255));
 				btnCancel.setContentAreaFilled(false);
@@ -220,9 +228,6 @@ public class TaiKhoanDialog extends JDialog {
 				panel.add(btnCancel);
 			}
 		}
-	}
-
-	private void actionInit(){
 	}
 
 	// TrongHiuuu 27/04/2025: thêm hàm thêm và loại bỏ các trường mật khẩu
@@ -251,7 +256,7 @@ public class TaiKhoanDialog extends JDialog {
 		{
 			errMatKhau = new JLabel();
 			errMatKhau.setForeground(Color.RED);
-			errMatKhau.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+			errMatKhau.setFont(new Font("Segoe UI", Font.ITALIC, 12));
 			GridBagConstraints gbc_errMatKhau = new GridBagConstraints();
 			gbc_errMatKhau.anchor = GridBagConstraints.WEST;
 			gbc_errMatKhau.insets = new Insets(0, 10, 5, 10);
@@ -283,7 +288,7 @@ public class TaiKhoanDialog extends JDialog {
 		{
 			errMatKhauConfirm = new JLabel();
 			errMatKhauConfirm.setForeground(Color.RED);
-			errMatKhauConfirm.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+			errMatKhauConfirm.setFont(new Font("Segoe UI", Font.ITALIC, 12));
 			GridBagConstraints gbc_errMatKhauConfirm = new GridBagConstraints();
 			gbc_errMatKhauConfirm.anchor = GridBagConstraints.WEST;
 			gbc_errMatKhauConfirm.insets = new Insets(0, 10, 5, 10);
@@ -316,14 +321,18 @@ public class TaiKhoanDialog extends JDialog {
 
 		// TrongHiuuu 27/04/2025: Thêm các trường mật khẩu nếu là form thêm tài khoản
 		addPasswordFields();
-		setTitle("Thêm tài khoản");
-		lblTitle.setText("Thêm tài khoản");
 		btnSubmit.setText("Thêm");
 		btnSubmit.setActionCommand("add");
+
+		setModal(true);
 		setVisible(true);
 	}
 
-	public void showEdit(int idTK) {		
+	public void showEdit(int idTK) {
+//		textFieldInit(false);
+		setTitle("Cập nhật thông tin tài khoản");
+		lblTitle.setText("Cập nhật thông tin tài khoản");
+
 		// TrongHiuuu 27/04/2025: Xóa các trường mật khẩu nếu là form cập nhật tài khoản
 		removePasswordFields();
 		TaiKhoanDTO taiKhoan = taiKhoanBus.findByIdTK(idTK);
@@ -336,8 +345,6 @@ public class TaiKhoanDialog extends JDialog {
 		cboTrangThai.setSelectedItem(taiKhoan.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
 		
 		// reset action button
-		setTitle("Sửa thông tin tài khoản");
-		lblTitle.setText("Sửa thông tin tài khoản");
 		btnSubmit.setText("Cập nhật");
 		btnSubmit.setActionCommand("edit_"+idTK);
 

@@ -10,6 +10,15 @@ public class NhaCungCapBUS {
 	public List<NhaCungCapDTO> getAll(){
 		return nhaCungCapDao.getAll();
 	}
+
+	// HUONGNGUYEN: 29/04
+	public List<NhaCungCapDTO> getAllActive(){
+		return nhaCungCapDao.getAllActive();
+	}
+
+	public List<NhaCungCapDTO> getAllActiveExcept(int idNCC) {
+		return nhaCungCapDao.getAllActiveExcept(idNCC);
+	}
 	
 	public String add(NhaCungCapDTO nhaCungCap) {
 		// kiểm tra tên nhà cung cấp hoặc email hoặc số điện thoại đã tồn tại chưa
@@ -51,10 +60,5 @@ public class NhaCungCapBUS {
 	
 	public List<NhaCungCapDTO> search(String keyWord){
 		return nhaCungCapDao.search(keyWord);
-	}
-
-	// HUONGNGUYEN: 29/04
-	public List<NhaCungCapDTO> getAllActive(){
-		return nhaCungCapDao.getAllActive();
 	}
 }

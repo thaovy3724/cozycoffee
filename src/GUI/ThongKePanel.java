@@ -102,21 +102,27 @@ public class ThongKePanel extends JPanel {
 
 		// Filter options in FilterPanel
 		JLabel lblFilterOption = new JLabel("Lọc theo:");
+		lblFilterOption.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		filterPanel.add(lblFilterOption);
 		comboFilterOption = new JComboBox<>();
-		comboFilterOption.setPreferredSize(new Dimension(100, 25));
+		comboFilterOption.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		comboFilterOption.setPreferredSize(new Dimension(130, 25));
 		filterPanel.add(comboFilterOption);
 
 		JLabel lblYear = new JLabel("Năm:");
+		lblYear.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		filterPanel.add(lblYear);
 		comboYear = new JComboBox<>();
-		comboYear.setPreferredSize(new Dimension(100, 25));
+		comboYear.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		comboYear.setPreferredSize(new Dimension(130, 25));
 		filterPanel.add(comboYear);
 
 		lblMonth = new JLabel("Tháng:");
+		lblMonth.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		filterPanel.add(lblMonth);
 		comboMonth = new JComboBox<>();
-		comboMonth.setPreferredSize(new Dimension(100, 25));
+		comboMonth.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		comboMonth.setPreferredSize(new Dimension(130, 25));
 		filterPanel.add(comboMonth);
 
 		// optionButtonsPanel with FlowLayout
@@ -126,17 +132,26 @@ public class ThongKePanel extends JPanel {
 
 		// Buttons in optionButtonsPanel
 		btnXemLoiNhuan = new JButton("Xem lợi nhuận");
+		btnXemLoiNhuan.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnXemLoiNhuan.setBackground(new Color(173, 255, 47));
+		btnXemLoiNhuan.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		btnXemLoiNhuan.setMinimumSize(new Dimension(125, 21));
 		btnXemLoiNhuan.setMaximumSize(new Dimension(125, 21));
-		btnXemLoiNhuan.setPreferredSize(new Dimension(125, 27));
+		btnXemLoiNhuan.setPreferredSize(new Dimension(150, 27));
 		optionButtonsPanel.add(btnXemLoiNhuan);
 
 		btnXemNhapKho = new JButton("Xem nhập kho");
-		btnXemNhapKho.setPreferredSize(new Dimension(125, 27));
+		btnXemNhapKho.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnXemNhapKho.setBackground(new Color(255, 192, 203));
+		btnXemNhapKho.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnXemNhapKho.setPreferredSize(new Dimension(150, 27));
 		optionButtonsPanel.add(btnXemNhapKho);
 
 		btnXemSanPham = new JButton("Xem sản phẩm");
-		btnXemSanPham.setPreferredSize(new Dimension(125, 27));
+		btnXemSanPham.setBackground(new Color(255, 215, 0));
+		btnXemSanPham.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnXemSanPham.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnXemSanPham.setPreferredSize(new Dimension(150, 27));
 		optionButtonsPanel.add(btnXemSanPham);
 
 		// TablePanel for the table
@@ -299,6 +314,7 @@ public class ThongKePanel extends JPanel {
 
 	private void setupTableScrollPane() {
 		tableThongKeScrollPane.setViewportView(tableThongKe);
+		tableThongKeScrollPane.getViewport().setBackground(new Color(255, 240, 220));
 		thongKeJTableModel.setRowCount(0);
 	}
 

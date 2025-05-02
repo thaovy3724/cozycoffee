@@ -38,6 +38,7 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.imageio.ImageIO;
 import javax.swing.Box;
+import java.awt.Cursor;
 
 public class SanPhamDialog extends JDialog {
 	private SanPhamBUS sanPhamBus = new SanPhamBUS();
@@ -58,17 +59,21 @@ public class SanPhamDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public SanPhamDialog() {
+		setBackground(new Color(255, 255, 255));
+		getContentPane().setBackground(new Color(255, 255, 255));
 		setBounds(100, 100, 576, 403);
 		getContentPane().setLayout(new BorderLayout());
 		{
 			JPanel titlePanel = new JPanel();
+			titlePanel.setBackground(new Color(255, 255, 255));
 			FlowLayout fl_titlePanel = (FlowLayout) titlePanel.getLayout();
 			fl_titlePanel.setAlignment(FlowLayout.LEFT);
 			getContentPane().add(titlePanel, BorderLayout.NORTH);
 			{
 				lblTitle = new JLabel();
-				lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
-				titlePanel.add(lblTitle);
+				lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+		        lblTitle.setForeground(new Color(33, 150, 243));
+		        titlePanel.add(lblTitle);
 			}
 		}
 		imageInit();
@@ -82,6 +87,7 @@ public class SanPhamDialog extends JDialog {
 
 	private void imageInit(){
 		JPanel imagePanel = new JPanel();
+		imagePanel.setBackground(new Color(255, 255, 255));
 		getContentPane().add(imagePanel, BorderLayout.WEST);
 		imagePanel.setLayout(new BoxLayout(imagePanel, BoxLayout.Y_AXIS));
 		{
@@ -103,7 +109,7 @@ public class SanPhamDialog extends JDialog {
 			errHinh = new JLabel("");
 			errHinh.setAlignmentX(Component.CENTER_ALIGNMENT);
 			errHinh.setForeground(Color.RED);
-			errHinh.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+			errHinh.setFont(new Font("Segoe UI", Font.ITALIC, 13));
 			imagePanel.add(errHinh);
 		}
 		{
@@ -124,6 +130,7 @@ public class SanPhamDialog extends JDialog {
 	}
 
 	private void textFieldInit(){
+		txtPanel.setBackground(new Color(255, 255, 255));
 		getContentPane().add(txtPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_txtPanel = new GridBagLayout();
 		gbl_txtPanel.columnWidths = new int[]{0, 0};
@@ -157,7 +164,7 @@ public class SanPhamDialog extends JDialog {
 		}
 		{
 			errTenSP = new JLabel();
-			errTenSP.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+			errTenSP.setFont(new Font("Segoe UI", Font.ITALIC, 13));
 			errTenSP.setForeground(Color.RED);
 			GridBagConstraints gbc_errTenSP = new GridBagConstraints();
 			gbc_errTenSP.anchor = GridBagConstraints.WEST;
@@ -179,6 +186,7 @@ public class SanPhamDialog extends JDialog {
 			txtPanel.add(lblDM, gbc_lblDM);
 		}
 		{
+			cboDM.setBackground(new Color(192, 192, 192));
 			cboDM.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 			GridBagConstraints gbc_cboDM = new GridBagConstraints();
 			gbc_cboDM.fill = GridBagConstraints.HORIZONTAL;
@@ -217,7 +225,7 @@ public class SanPhamDialog extends JDialog {
 			errGia = new JLabel();
 			errGia.setIcon(null);
 			errGia.setForeground(Color.RED);
-			errGia.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+			errGia.setFont(new Font("Segoe UI", Font.ITALIC, 13));
 			GridBagConstraints gbc_errGia = new GridBagConstraints();
 			gbc_errGia.gridwidth = 4;
 			gbc_errGia.anchor = GridBagConstraints.WEST;
@@ -227,6 +235,7 @@ public class SanPhamDialog extends JDialog {
 			txtPanel.add(errGia, gbc_errGia);
 		}
 		{
+			cboTrangThai.setBackground(new Color(192, 192, 192));
 			cboTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 			cboTrangThai.addItem("Bị khóa");
 			cboTrangThai.addItem("Hoạt động");
@@ -254,6 +263,7 @@ public class SanPhamDialog extends JDialog {
 		gbc_cboTrangThai.gridy = 9;
 		txtPanel.add(cboTrangThai, gbc_cboTrangThai);
 		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(new Color(255, 255, 255));
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
 		gbc_panel_1.gridwidth = 4;
 		gbc_panel_1.anchor = GridBagConstraints.EAST;
@@ -264,7 +274,8 @@ public class SanPhamDialog extends JDialog {
 		txtPanel.add(panel_1, gbc_panel_1);
 		{
 			btnSubmit = new JButton("Thêm");
-			btnSubmit.setBackground(new Color(0, 128, 0));
+			btnSubmit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			btnSubmit.setBackground(new Color(30, 144, 255));
 			btnSubmit.setForeground(Color.WHITE);
 			btnSubmit.setFont(new Font("Segoe UI", Font.BOLD, 14));
 			btnSubmit.setContentAreaFilled(false);
@@ -274,9 +285,10 @@ public class SanPhamDialog extends JDialog {
 		}
 		{
 			btnCancel = new JButton("Hủy");
+			btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			btnCancel.setForeground(Color.WHITE);
 			btnCancel.setFont(new Font("Segoe UI", Font.BOLD, 14));
-			btnCancel.setBackground(new Color(255, 51, 102));
+			btnCancel.setBackground(new Color(255, 0, 0));
 			btnCancel.setContentAreaFilled(false);
 			btnCancel.setOpaque(true);
 			btnCancel.addActionListener(e->cancel());

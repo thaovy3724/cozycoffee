@@ -28,6 +28,7 @@ public class ThongKeNhapKhoDialog extends JDialog {
 	 */
 
 	public ThongKeNhapKhoDialog(Date start, Date end, int idNL, List<Lo_NguyenLieuDTO> lo_NLList) {
+		getContentPane().setBackground(new Color(255, 255, 255));
 		DecimalFormat df = new DecimalFormat("#,### VNĐ");
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -53,12 +54,13 @@ public class ThongKeNhapKhoDialog extends JDialog {
 		detailTable.setDefaultEditor(Object.class, null);
 		//detailTable.getColumnModel().getColumn(3).setPreferredWidth(100); // Tăng chiều rộng cột Ngày nhập
 		JScrollPane scrollPane = new JScrollPane(detailTable);
-		add(scrollPane, BorderLayout.CENTER);
+		getContentPane().add(scrollPane, BorderLayout.CENTER);
 
 		// Thêm nút Đóng
 		JButton closeButton = new JButton("Đóng");
+		closeButton.setBackground(new Color(30, 144, 255));
 		closeButton.addActionListener(e -> dispose());
-		add(closeButton, BorderLayout.SOUTH);
+		getContentPane().add(closeButton, BorderLayout.SOUTH);
 
 		// Thêm dữ liệu vào bảng
 		float tongSoLuong = 0;

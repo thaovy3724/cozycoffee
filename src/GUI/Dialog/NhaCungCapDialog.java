@@ -21,6 +21,7 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import java.awt.Color;
 import javax.swing.JComboBox;
+import java.awt.Cursor;
 
 public class NhaCungCapDialog extends JDialog {
 	private NhaCungCapBUS nhaCungCapBus = new NhaCungCapBUS();
@@ -36,6 +37,8 @@ public class NhaCungCapDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public NhaCungCapDialog() {
+		setModal(true);
+		setTitle("Thêm nhà cung cấp");
 		setBounds(100, 100, 569, 322);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(255, 255, 255));
@@ -48,9 +51,10 @@ public class NhaCungCapDialog extends JDialog {
 		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		contentPanel.setLayout(gbl_contentPanel);
 		{
-			lblTitle = new JLabel();
-			lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
-			GridBagConstraints gbc_lblTitle = new GridBagConstraints();
+			lblTitle = new JLabel("Thêm nhà cung cấp");
+			lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+	        lblTitle.setForeground(new Color(33, 150, 243));
+	        GridBagConstraints gbc_lblTitle = new GridBagConstraints();
 			gbc_lblTitle.insets = new Insets(5, 10, 5, 0);
 			gbc_lblTitle.gridwidth = 4;
 			gbc_lblTitle.anchor = GridBagConstraints.WEST;
@@ -65,6 +69,8 @@ public class NhaCungCapDialog extends JDialog {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setModal(true);
+
+		
 	}
 
 	private void textFieldInit(){
@@ -92,7 +98,7 @@ public class NhaCungCapDialog extends JDialog {
 		{
 			errTenNCC = new JLabel();
 			errTenNCC.setForeground(Color.RED);
-			errTenNCC.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+			errTenNCC.setFont(new Font("Segoe UI", Font.ITALIC, 12));
 			GridBagConstraints gbc_errTenNCC = new GridBagConstraints();
 			gbc_errTenNCC.anchor = GridBagConstraints.WEST;
 			gbc_errTenNCC.insets = new Insets(0, 10, 5, 10);
@@ -124,7 +130,7 @@ public class NhaCungCapDialog extends JDialog {
 		{
 			errDiaChi = new JLabel();
 			errDiaChi.setForeground(Color.RED);
-			errDiaChi.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+			errDiaChi.setFont(new Font("Segoe UI", Font.ITALIC, 12));
 			GridBagConstraints gbc_errDiaChi = new GridBagConstraints();
 			gbc_errDiaChi.anchor = GridBagConstraints.WEST;
 			gbc_errDiaChi.insets = new Insets(0, 10, 5, 10);
@@ -156,7 +162,7 @@ public class NhaCungCapDialog extends JDialog {
 		{
 			errDienThoai = new JLabel();
 			errDienThoai.setForeground(Color.RED);
-			errDienThoai.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+			errDienThoai.setFont(new Font("Segoe UI", Font.ITALIC, 12));
 			GridBagConstraints gbc_errDienThoai = new GridBagConstraints();
 			gbc_errDienThoai.anchor = GridBagConstraints.WEST;
 			gbc_errDienThoai.insets = new Insets(0, 10, 5, 10);
@@ -188,7 +194,7 @@ public class NhaCungCapDialog extends JDialog {
 		{
 			errEmail = new JLabel();
 			errEmail.setForeground(Color.RED);
-			errEmail.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+			errEmail.setFont(new Font("Segoe UI", Font.ITALIC, 12));
 			GridBagConstraints gbc_errEmail = new GridBagConstraints();
 			gbc_errEmail.anchor = GridBagConstraints.WEST;
 			gbc_errEmail.insets = new Insets(0, 10, 5, 10);
@@ -234,7 +240,8 @@ public class NhaCungCapDialog extends JDialog {
 			panel.setLayout(fl_panel);
 			{
 				btnSubmit = new JButton("Thêm");
-				btnSubmit.setBackground(new Color(0, 128, 0));
+				btnSubmit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				btnSubmit.setBackground(new Color(30, 144, 255));
 				btnSubmit.setForeground(new Color(255, 255, 255));
 				btnSubmit.setFont(new Font("Segoe UI", Font.BOLD, 14));
 				btnSubmit.setContentAreaFilled(false);
@@ -244,7 +251,8 @@ public class NhaCungCapDialog extends JDialog {
 			}
 			{
 				btnCancel = new JButton("Hủy");
-				btnCancel.setBackground(new Color(255, 51, 102));
+				btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				btnCancel.setBackground(new Color(255, 0, 0));
 				btnCancel.setFont(new Font("Segoe UI", Font.BOLD, 14));
 				btnCancel.setForeground(new Color(255, 255, 255));
 				btnCancel.setContentAreaFilled(false);

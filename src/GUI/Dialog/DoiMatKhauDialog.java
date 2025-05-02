@@ -9,12 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 
-import BUS.DanhMucBUS;
 import BUS.TaiKhoanBUS;
-import DTO.DanhMucDTO;
 import DTO.TaiKhoanDTO;
-import GUI.AdminFrame;
-import GUI.StaffFrame;
 
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
@@ -25,6 +21,7 @@ import java.awt.Font;
 import java.awt.Insets;
 
 import java.awt.Color;
+import java.awt.Cursor;
 
 public class DoiMatKhauDialog extends JDialog {
 
@@ -57,7 +54,8 @@ public class DoiMatKhauDialog extends JDialog {
 		contentPanel.setLayout(gbl_contentPanel);
 		{
 			JLabel lblTitle = new JLabel("Đổi mật khẩu");
-			lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
+			lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+	        lblTitle.setForeground(new Color(33, 150, 243));
 			GridBagConstraints gbc_lblTitle = new GridBagConstraints();
 			gbc_lblTitle.anchor = GridBagConstraints.WEST;
 			gbc_lblTitle.gridwidth = 4;
@@ -159,6 +157,7 @@ public class DoiMatKhauDialog extends JDialog {
 		actionPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		{
 			btnSubmit = new JButton("Thêm");
+			btnSubmit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			btnSubmit.setBackground(new Color(0, 128, 0));
 			btnSubmit.setFont(new Font("Segoe UI", Font.BOLD, 14));
 			btnSubmit.setForeground(Color.WHITE);
@@ -169,6 +168,7 @@ public class DoiMatKhauDialog extends JDialog {
 		}
 		{
 			btnCancel = new JButton("Hủy");
+			btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			btnCancel.setBackground(new Color(255, 51, 102));
 			btnCancel.setForeground(new Color(255, 255, 255));
 			btnCancel.setFont(new Font("Segoe UI", Font.BOLD, 14));

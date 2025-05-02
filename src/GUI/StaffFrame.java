@@ -27,6 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Cursor;
 
 public class StaffFrame extends JFrame {
 
@@ -65,9 +66,6 @@ public class StaffFrame extends JFrame {
         setPreferredSize(new Dimension(1200, 700));
         setMinimumSize(new Dimension(800, 400));
         getContentPane().setLayout(new BorderLayout());
-
-        getContentPane().add(menuInit(), BorderLayout.WEST);
-        
                 
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.add(navbarInit(), BorderLayout.NORTH);
@@ -77,7 +75,8 @@ public class StaffFrame extends JFrame {
         dynamicPanel.setLayout(new BorderLayout());
         centerPanel.add(dynamicPanel, BorderLayout.CENTER);
         getContentPane().add(centerPanel, BorderLayout.CENTER);
-
+        
+        getContentPane().add(menuInit(), BorderLayout.WEST);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -120,7 +119,29 @@ public class StaffFrame extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.weightx = 1.0;
+        JToggleButton btnBanHang = new JToggleButton("Bán hàng");
+        btnBanHang.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnBanHang.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        btnBanHang.setBackground(new Color (250, 250, 210));
+        btnBanHang.setForeground(new Color(34, 40, 49));
+        btnBanHang.setActionCommand("banhang");
+        btnBanHang.setPreferredSize(new Dimension(210, 50));
+        ImageHelper iconThongKe = new ImageHelper(28, 28, StaffFrame.class.getResource("/ASSET/Images/1.png"));
+        btnBanHang.setIcon(iconThongKe.getScaledImage());
+        btnBanHang.setIconTextGap(12);
+        toggleBtnInit(btnBanHang);
+        menuPanel.add(btnBanHang, gbc);
+
+        // Button: Bán hàng
+        gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 15, 5, 15);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.weightx = 1.0;
+        
         JToggleButton btnHoaDon = new JToggleButton("Hóa đơn");
+        btnHoaDon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnHoaDon.setFont(new Font("Segoe UI", Font.BOLD, 15));
         btnHoaDon.setBackground(new Color(250, 250, 210)); // Light neutral background
         btnHoaDon.setForeground(new Color(34, 40, 49)); // Dark text for contrast
@@ -131,26 +152,9 @@ public class StaffFrame extends JFrame {
         btnHoaDon.setIconTextGap(12);
         toggleBtnInit(btnHoaDon);
         menuPanel.add(btnHoaDon, gbc);
-
-        // Button: Bán hàng
-        gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 15, 5, 15);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.weightx = 1.0;
-        JToggleButton btnBanHang = new JToggleButton("Bán hàng");
-        btnBanHang.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        btnBanHang.setBackground(new Color (250, 250, 210));
-        btnBanHang.setForeground(new Color(34, 40, 49));
-        btnBanHang.setActionCommand("banhang");
-        btnBanHang.setPreferredSize(new Dimension(210, 50));
-        ImageHelper iconThongKe = new ImageHelper(28, 28, StaffFrame.class.getResource("/ASSET/Images/1.png"));
-        btnBanHang.setIcon(iconThongKe.getScaledImage());
-        btnBanHang.setIconTextGap(12);
-
-        toggleBtnInit(btnBanHang);
-        menuPanel.add(btnBanHang, gbc);
+        dynamicPanel.add(new BanHangPanel(currentUser), BorderLayout.CENTER);
+        dynamicPanel.revalidate();
+        dynamicPanel.repaint();
 
         // Button: Công thức
         gbc = new GridBagConstraints();
@@ -160,6 +164,7 @@ public class StaffFrame extends JFrame {
         gbc.gridy = 4;
         gbc.weightx = 1.0;
         JToggleButton btnCongThuc = new JToggleButton("Công thức");
+        btnCongThuc.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnCongThuc.setFont(new Font("Segoe UI", Font.BOLD, 15));
         btnCongThuc.setBackground(new Color(250, 250, 210));
         btnCongThuc.setForeground(new Color(34, 40, 49));
@@ -191,6 +196,7 @@ public class StaffFrame extends JFrame {
         navbarPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
 
         JButton changePasswordBtn = new JButton("Đổi mật khẩu");
+        changePasswordBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         changePasswordBtn.setPreferredSize(new Dimension(130, 35));
         changePasswordBtn.setFont(LABEL_FONT);
         changePasswordBtn.setBackground(Color.WHITE);
@@ -219,6 +225,7 @@ public class StaffFrame extends JFrame {
         navbarPanel.add(changePasswordBtn);
 
         JLabel tenTkLB = new JLabel(currentUser.getTenTK());
+        tenTkLB.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         tenTkLB.setFont(LABEL_FONT);
         tenTkLB.setBackground(Color.WHITE);
         tenTkLB.setOpaque(true);
@@ -228,6 +235,7 @@ public class StaffFrame extends JFrame {
         navbarPanel.add(tenTkLB);
 
         JButton logoutBtn = new JButton("Đăng xuất");
+        logoutBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         logoutBtn.setFont(LABEL_FONT);
         logoutBtn.setBackground(Color.WHITE);
         logoutBtn.setOpaque(true);
@@ -301,7 +309,7 @@ public class StaffFrame extends JFrame {
                 break;
             
             case "congthuc":
-                selectedPanel = new CongThucPanel();
+                selectedPanel = new CongThucPanel(currentUser);
                 break;
 
             case "banhang":

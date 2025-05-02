@@ -134,6 +134,7 @@ public class CongThucDialog extends JDialog {
         contentPanel.add(txtMoTaScroll, gbc_txtMoTa);
 
         btnAdd = new JButton("Thêm nguyên liệu");
+        btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnAdd.setBackground(new Color(0, 128, 0));
         btnAdd.setForeground(Color.WHITE);
@@ -293,6 +294,7 @@ public class CongThucDialog extends JDialog {
         scrollPane = new JScrollPane();
         scrollPane.setPreferredSize(new Dimension(500, 120));
         scrollPane.setViewportView(tableNguyenLieu);
+        scrollPane.getViewport().setBackground(Color.WHITE); // đổi màu nền
         scrollPane.setBorder(new LineBorder(new Color(189, 189, 189), 1));
         GridBagConstraints gbc_scrollPane = new GridBagConstraints();
         gbc_scrollPane.gridheight = 4;
@@ -315,6 +317,7 @@ public class CongThucDialog extends JDialog {
         actionPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
 
         btnSubmit = new JButton("Thêm");
+        btnSubmit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnSubmit.setBackground(new Color(33, 150, 243));
         btnSubmit.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnSubmit.setForeground(Color.WHITE);
@@ -334,6 +337,7 @@ public class CongThucDialog extends JDialog {
         actionPanel.add(btnSubmit);
 
         btnCancel = new JButton("Hủy");
+        btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnCancel.setBackground(new Color(244, 67, 54));
         btnCancel.setForeground(Color.WHITE);
         btnCancel.setFont(new Font("Segoe UI", Font.BOLD, 14));

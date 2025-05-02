@@ -5,6 +5,7 @@ import BUS.CongThucBUS;
 import BUS.SanPhamBUS;
 import DTO.CongThucDTO;
 import DTO.SanPhamDTO;
+import DTO.TaiKhoanDTO;
 import GUI.Dialog.CongThucDialog;
 
 import javax.swing.JPanel;
@@ -27,6 +28,7 @@ import java.awt.Component;
 public class CongThucPanel extends JPanel {
     private CongThucBUS congThucBus = new CongThucBUS();
     private SanPhamBUS sanPhamBus = new SanPhamBUS(); // Vẫn giữ để lấy tên sản phẩm
+    private TaiKhoanDTO currentUser;
 
     private static final long serialVersionUID = 1L;
     private JButton btnEdit, btnDel, btnSearch, btnReset, btnDetail;
@@ -36,7 +38,8 @@ public class CongThucPanel extends JPanel {
     private DefaultTableModel tableModel;
     private JButton btnAdd;
 
-    public CongThucPanel() {
+    public CongThucPanel(TaiKhoanDTO currentUser) {
+        this.currentUser = currentUser;
         setLayout(new BorderLayout(0, 0));
 
         add(container, BorderLayout.CENTER);
@@ -57,42 +60,44 @@ public class CongThucPanel extends JPanel {
         container.add(actionPanel);
         actionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         actionPanel.setBackground(new Color(255, 240, 220));
-        
-        btnAdd = new JButton("Thêm");
-        btnAdd.setForeground(new Color(0, 0, 0));
-        btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnAdd.setBackground(new Color(173, 255, 47));
-        btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnAdd.setIcon(new ImageIcon(CongThucPanel.class.getResource("/ASSET/Images/icons8_add_30px.png")));
-        btnAdd.addActionListener(e -> showAdd());
-        actionPanel.add(btnAdd);
+        if(currentUser.getIdNQ() == 1){
+            // Nếu là admin thì hiển thị đủ quyền
+            btnAdd = new JButton("Thêm");
+            btnAdd.setForeground(new Color(0, 0, 0));
+            btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            btnAdd.setBackground(new Color(173, 255, 47));
+            btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 13));
+            btnAdd.setIcon(new ImageIcon(CongThucPanel.class.getResource("/ASSET/Images/icons8_add_30px.png")));
+            btnAdd.addActionListener(e -> showAdd());
+            actionPanel.add(btnAdd);
 
-        btnEdit = new JButton("Sửa");
-        btnEdit.setBackground(new Color(221, 160, 221));
-        btnEdit.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnEdit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnEdit.setIcon(new ImageIcon(CongThucPanel.class.getResource("/ASSET/Images/icons8_wrench_30px.png")));
-        btnEdit.addActionListener(e -> showEdit());
-        actionPanel.add(btnEdit);
+            btnEdit = new JButton("Sửa");
+            btnEdit.setBackground(new Color(135, 206, 235));
+            btnEdit.setFont(new Font("Segoe UI", Font.BOLD, 13));
+            btnEdit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            btnEdit.setIcon(new ImageIcon(CongThucPanel.class.getResource("/ASSET/Images/icons8_wrench_30px.png")));
+            btnEdit.addActionListener(e -> showEdit());
+            actionPanel.add(btnEdit);
 
-        btnDel = new JButton("Xóa");
-        btnDel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnDel.setBackground(new Color(255, 215, 0));
-        btnDel.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnDel.setIcon(new ImageIcon(CongThucPanel.class.getResource("/ASSET/Images/icons8_cancel_30px_1.png")));
-        btnDel.addActionListener(e -> delete());
-        actionPanel.add(btnDel);
-        
-        btnDetail = new JButton("Xem");
-        btnDetail.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnDetail.setBackground(new Color(224, 255, 255));
-        btnDetail.setMaximumSize(new Dimension(100, 23));
-        btnDetail.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnDetail.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnDetail.setPreferredSize(new Dimension(100, 39));
-        btnDetail.setIcon(new ImageIcon(CongThucPanel.class.getResource("/ASSET/Images/icons8_more_20px.png")));
-        btnDetail.addActionListener(e -> showDetail());
-        actionPanel.add(btnDetail);
+            btnDel = new JButton("Xóa");
+            btnDel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            btnDel.setBackground(new Color(255, 215, 0));
+            btnDel.setFont(new Font("Segoe UI", Font.BOLD, 13));
+            btnDel.setIcon(new ImageIcon(CongThucPanel.class.getResource("/ASSET/Images/icons8_cancel_30px_1.png")));
+            btnDel.addActionListener(e -> delete());
+            actionPanel.add(btnDel);
+        }
+            
+            btnDetail = new JButton("Xem");
+            btnDetail.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            btnDetail.setBackground(new Color(255, 192, 203));
+            btnDetail.setMaximumSize(new Dimension(100, 23));
+            btnDetail.setAlignmentX(Component.CENTER_ALIGNMENT);
+            btnDetail.setFont(new Font("Segoe UI", Font.BOLD, 13));
+            btnDetail.setPreferredSize(new Dimension(100, 39));
+            btnDetail.setIcon(new ImageIcon(CongThucPanel.class.getResource("/ASSET/Images/icons8_more_20px.png")));
+            btnDetail.addActionListener(e -> showDetail());
+            actionPanel.add(btnDetail);
     }
 
     private void searchBoxInit() {
@@ -108,16 +113,18 @@ public class CongThucPanel extends JPanel {
         txtSearch.setColumns(20);
 
         btnSearch = new JButton("Tìm");
+        btnSearch.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnSearch.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnSearch.setBackground(new Color(245, 255, 250));
+        btnSearch.setBackground(new Color(255, 255, 255));
         ImageHelper imgSrch = new ImageHelper(20, 20, CongThucPanel.class.getResource("/ASSET/Images/searchIcon.png"));
         btnSearch.setIcon(imgSrch.getScaledImage());
         btnSearch.addActionListener(e -> search());
         searchPanel.add(btnSearch);
 
         btnReset = new JButton("Làm mới");
+        btnReset.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnReset.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnReset.setBackground(new Color(245, 255, 250));
+        btnReset.setBackground(new Color(255, 255, 255));
         ImageHelper imgReset = new ImageHelper(20, 20, CongThucPanel.class.getResource("/ASSET/Images/icons8_replay_30px.png"));
         btnReset.setIcon(imgReset.getScaledImage());
         btnReset.addActionListener(e -> {
@@ -138,8 +145,8 @@ public class CongThucPanel extends JPanel {
         };
 
         JScrollPane tablePane = new JScrollPane();
-        tablePane.setBackground(new Color(255, 255, 255));
         container.add(tablePane);
+        tablePane.getViewport().setBackground(new Color(255, 240, 220));
 
         table = new JTable();
         table.setGridColor(new Color(0, 0, 0));

@@ -21,6 +21,7 @@ import java.awt.Insets;
 
 import javax.swing.JTextField;
 import java.awt.Color;
+import java.awt.Cursor;
 
 public class NguyenLieuDialog extends JDialog {
     private NguyenLieuBUS nguyenLieuBus = new NguyenLieuBUS();
@@ -50,7 +51,8 @@ public class NguyenLieuDialog extends JDialog {
         contentPanel.setLayout(gbl_contentPanel);
         {
             lblTitle = new JLabel();
-            lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
+            lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+            lblTitle.setForeground(new Color(33, 150, 243));
             GridBagConstraints gbc_lblTitle = new GridBagConstraints();
             gbc_lblTitle.anchor = GridBagConstraints.WEST;
             gbc_lblTitle.gridwidth = 4;
@@ -94,7 +96,7 @@ public class NguyenLieuDialog extends JDialog {
         {
             errTenNL = new JLabel();
             errTenNL.setForeground(Color.RED);
-            errTenNL.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+            errTenNL.setFont(new Font("Segoe UI", Font.ITALIC, 12));
             GridBagConstraints gbc_errTenNL = new GridBagConstraints();
             gbc_errTenNL.gridwidth = 2;
             gbc_errTenNL.anchor = GridBagConstraints.WEST;
@@ -128,7 +130,7 @@ public class NguyenLieuDialog extends JDialog {
         {
             errDonVi = new JLabel();
             errDonVi.setForeground(Color.RED);
-            errDonVi.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+            errDonVi.setFont(new Font("Segoe UI", Font.ITALIC, 12));
             GridBagConstraints gbc_errDonVi = new GridBagConstraints();
             gbc_errDonVi.gridwidth = 2;
             gbc_errDonVi.anchor = GridBagConstraints.WEST;
@@ -136,6 +138,16 @@ public class NguyenLieuDialog extends JDialog {
             gbc_errDonVi.gridx = 1;
             gbc_errDonVi.gridy = 4;
             contentPanel.add(errDonVi, gbc_errDonVi);
+        }
+        {
+            JLabel lblTrangThai = new JLabel("Trạng thái");
+            lblTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+            GridBagConstraints gbc_lblTrangThai = new GridBagConstraints();
+            gbc_lblTrangThai.anchor = GridBagConstraints.EAST;
+            gbc_lblTrangThai.insets = new Insets(0, 10, 5, 5);
+            gbc_lblTrangThai.gridx = 0;
+            gbc_lblTrangThai.gridy = 5;
+            contentPanel.add(lblTrangThai, gbc_lblTrangThai);
         }
     }
 
@@ -152,7 +164,8 @@ public class NguyenLieuDialog extends JDialog {
         actionPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         {
             btnSubmit = new JButton("Thêm");
-            btnSubmit.setBackground(new Color(0, 128, 0));
+            btnSubmit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            btnSubmit.setBackground(new Color(30, 144, 255));
             btnSubmit.setFont(new Font("Segoe UI", Font.BOLD, 14));
             btnSubmit.setForeground(Color.WHITE);
             btnSubmit.setContentAreaFilled(false);
@@ -162,7 +175,8 @@ public class NguyenLieuDialog extends JDialog {
         }
         {
             btnCancel = new JButton("Hủy");
-            btnCancel.setBackground(new Color(255, 51, 102));
+            btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            btnCancel.setBackground(new Color(255, 0, 0));
             btnCancel.setForeground(new Color(255, 255, 255));
             btnCancel.setFont(new Font("Segoe UI", Font.BOLD, 14));
             btnCancel.setContentAreaFilled(false);

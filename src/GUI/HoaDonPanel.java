@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
 import javax.swing.JLabel;
+import java.awt.Color;
+import java.awt.Cursor;
 
 public class HoaDonPanel extends JPanel {
 	private HoaDonBUS hoaDonBus = new HoaDonBUS();
@@ -65,8 +67,12 @@ public class HoaDonPanel extends JPanel {
 		JPanel searchPanel = new JPanel();
 		container.add(searchPanel);
 		searchPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		searchPanel.setBackground(new Color(255, 240, 220));
 		
 		btnSearch = new JButton("Tìm");
+		btnSearch.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnSearch.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnSearch.setBackground(new Color(255, 255, 255));
 		ImageHelper imgSrch = new ImageHelper(20, 20, HoaDonPanel.class.getResource("/ASSET/Images/searchIcon.png"));
 		btnSearch.setIcon(imgSrch.getScaledImage());
 		btnSearch.addActionListener(e->search());
@@ -78,19 +84,24 @@ public class HoaDonPanel extends JPanel {
 		JPanel searchContentPanel1 = new JPanel();
 		searchContentPanel.add(searchContentPanel1);
 		searchContentPanel1.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		
+		searchContentPanel1.setBackground(new Color(255, 240, 220));
+
 		JLabel lblDateStart = new JLabel("Từ ngày");
+		lblDateStart.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		searchContentPanel1.add(lblDateStart);
 		
 		dateChooserStart = new JDateChooser();
+		dateChooserStart.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		searchContentPanel1.add(dateChooserStart);
 		dateChooserStart.setDateFormatString("yyyy-MM-dd");
 		((JTextField) dateChooserStart.getDateEditor().getUiComponent()).setEditable(false); // Tắt editor
 		
 		JLabel lblDateEnd = new JLabel("đến ngày");
+		lblDateEnd.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		searchContentPanel1.add(lblDateEnd);
 		
 		dateChooserEnd = new JDateChooser();
+		dateChooserEnd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		searchContentPanel1.add(dateChooserEnd);
 		dateChooserEnd.setDateFormatString("yyyy-MM-dd");
 		((JTextField) dateChooserEnd.getDateEditor().getUiComponent()).setEditable(false); // Tắt editor
@@ -98,23 +109,31 @@ public class HoaDonPanel extends JPanel {
 		JPanel searchContentPanel2 = new JPanel();
 		searchContentPanel.add(searchContentPanel2);
 		searchContentPanel2.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		
+		searchContentPanel2.setBackground(new Color(255, 240, 220));
+
 		JLabel lblAmountStart = new JLabel("Khoảng tiền");
+		lblAmountStart.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		searchContentPanel2.add(lblAmountStart);
 		
 		txtMinTongTien = new JTextField();
+		txtMinTongTien.setFont(new Font("Segoe UI", Font.PLAIN, 11));
 		searchContentPanel2.add(txtMinTongTien);
 		txtMinTongTien.setColumns(10);
 		
 		JLabel lblAmountEnd = new JLabel("đến");
+		lblAmountEnd.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		searchContentPanel2.add(lblAmountEnd);
 		
 		txtMaxTongTien = new JTextField();
+		txtMaxTongTien.setFont(new Font("Segoe UI", Font.PLAIN, 11));
 		searchContentPanel2.add(txtMaxTongTien);
 		txtMaxTongTien.setColumns(10);
 		searchPanel.add(btnSearch);
 		
 		btnReset = new JButton("Làm mới");
+		btnReset.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnReset.setBackground(new Color(255, 255, 255));
+		btnReset.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		ImageHelper imgReset = new ImageHelper(20, 20, HoaDonPanel.class.getResource("/ASSET/Images/icons8_replay_30px.png"));
 		btnReset.setIcon(imgReset.getScaledImage());
 		btnReset.addActionListener(e->{
@@ -135,6 +154,7 @@ public class HoaDonPanel extends JPanel {
 		};   
 
 		JScrollPane hoaDonScrollPane = new JScrollPane();
+		hoaDonScrollPane.getViewport().setBackground(new Color(255, 240, 220));
 		container.add(hoaDonScrollPane);
 		
 		hoaDonTable = new JTable();
@@ -171,12 +191,14 @@ public class HoaDonPanel extends JPanel {
 		JPanel ctHoaDonPanel = new JPanel();
 		container.add(ctHoaDonPanel);
 		ctHoaDonPanel.setLayout(new BoxLayout(ctHoaDonPanel, BoxLayout.Y_AXIS));
+		ctHoaDonPanel.setBackground(new Color(255, 240, 220));
 		
 		JLabel lblChitiet = new JLabel("Chi tiết hóa đơn");
-		lblChitiet.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		lblChitiet.setFont(new Font("Segoe UI", Font.BOLD, 16));
 		ctHoaDonPanel.add(lblChitiet);
 		
 		JScrollPane ctHoaDonScrollPane = new JScrollPane();
+		ctHoaDonScrollPane.getViewport().setBackground(new Color(255, 240, 220));
 		ctHoaDonPanel.add(ctHoaDonScrollPane);
 		
 		ctHoaDonTable = new JTable();

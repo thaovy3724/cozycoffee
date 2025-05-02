@@ -25,6 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Cursor;
 
 public class AdminFrame extends JFrame {
 
@@ -109,6 +110,7 @@ public class AdminFrame extends JFrame {
         gbc.gridy = 2;
         gbc.weightx = 1.0;
         JToggleButton btnThongKe = new JToggleButton("Thống kê");
+        btnThongKe.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnThongKe.setBackground(new Color(250, 250, 210));
         ImageHelper iconThongKe = new ImageHelper(30, 30, AdminFrame.class.getResource("/ASSET/Images/1.png"));
         btnThongKe.setIcon(iconThongKe.getScaledImage());
@@ -117,7 +119,6 @@ public class AdminFrame extends JFrame {
         
         btnThongKe.setIconTextGap(10);
         // set default
-        btnThongKe.setSelected(true);
         dynamicPanel.add(new ThongKePanel(), BorderLayout.CENTER);
         dynamicPanel.revalidate();
         dynamicPanel.repaint();
@@ -132,6 +133,7 @@ public class AdminFrame extends JFrame {
         gbc.gridy = 3;
         gbc.weightx = 1.0;
         JToggleButton btnHoaDon = new JToggleButton("Hóa đơn");
+        btnHoaDon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnHoaDon.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnHoaDon.setBackground(new Color(250, 250, 210));
         btnHoaDon.setActionCommand("hoadon");
@@ -150,6 +152,7 @@ public class AdminFrame extends JFrame {
         gbc.gridy = 4;
         gbc.weightx = 1.0;
         JToggleButton btnSanPham = new JToggleButton("Sản phẩm");
+        btnSanPham.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnSanPham.setBackground(new Color(250, 250, 210));
         btnSanPham.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnSanPham.setActionCommand("sanpham");
@@ -167,6 +170,7 @@ public class AdminFrame extends JFrame {
         gbc.gridy = 5;
         gbc.weightx = 1.0;
         JToggleButton btnNguyenLieu = new JToggleButton("Nguyên liệu");
+        btnNguyenLieu.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnNguyenLieu.setBackground(new Color(250, 250, 210));
         btnNguyenLieu.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnNguyenLieu.setActionCommand("nguyenlieu");
@@ -185,6 +189,7 @@ public class AdminFrame extends JFrame {
         gbc.gridy = 6;
         gbc.weightx = 1.0;
         JToggleButton btnCongThuc = new JToggleButton("Công thức");
+        btnCongThuc.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnCongThuc.setBackground(new Color(250, 250, 210));
         btnCongThuc.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnCongThuc.setActionCommand("congthuc");
@@ -203,6 +208,7 @@ public class AdminFrame extends JFrame {
         gbc.gridy = 7;
         gbc.weightx = 1.0;
         JToggleButton btnDanhMuc = new JToggleButton("Danh mục");
+        btnDanhMuc.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnDanhMuc.setBackground(new Color(250, 250, 210));
         btnDanhMuc.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnDanhMuc.setActionCommand("danhmuc");
@@ -221,6 +227,7 @@ public class AdminFrame extends JFrame {
         gbc.gridy = 8;
         gbc.weightx = 1.0;
         JToggleButton btnNhaCungCap = new JToggleButton("Nhà cung cấp");
+        btnNhaCungCap.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnNhaCungCap.setBackground(new Color(250, 250, 210));
         btnNhaCungCap.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnNhaCungCap.setActionCommand("nhacungcap");
@@ -239,6 +246,7 @@ public class AdminFrame extends JFrame {
         gbc.gridy = 9;
         gbc.weightx = 1.0;
         JToggleButton btnPhieuNhap = new JToggleButton("Phiếu nhập");
+        btnPhieuNhap.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnPhieuNhap.setBackground(new Color(250, 250, 210));
         btnPhieuNhap.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnPhieuNhap.setActionCommand("phieunhap");
@@ -257,6 +265,7 @@ public class AdminFrame extends JFrame {
         gbc.gridy = 10;
         gbc.weightx = 1.0;
         JToggleButton btnTaiKhoan = new JToggleButton("Tài khoản");
+        btnTaiKhoan.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnTaiKhoan.setBackground(new Color(250, 250, 210));
         btnTaiKhoan.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnTaiKhoan.setActionCommand("taikhoan");
@@ -278,6 +287,7 @@ public class AdminFrame extends JFrame {
         navbarPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
 
         JButton changePasswordBtn = new JButton("Đổi mật khẩu");
+        changePasswordBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         changePasswordBtn.setPreferredSize(new Dimension(130, 35));
         changePasswordBtn.setFont(LABEL_FONT);
         changePasswordBtn.setBackground(Color.WHITE);
@@ -306,6 +316,7 @@ public class AdminFrame extends JFrame {
         navbarPanel.add(changePasswordBtn);
 
         tenTkLB = new JLabel(currentUser.getTenTK());
+        tenTkLB.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         tenTkLB.setFont(LABEL_FONT);
         tenTkLB.setBackground(Color.WHITE);
         tenTkLB.setOpaque(true);
@@ -315,6 +326,7 @@ public class AdminFrame extends JFrame {
         navbarPanel.add(tenTkLB);
 
         JButton logoutBtn = new JButton("Đăng xuất");
+        logoutBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         logoutBtn.setFont(LABEL_FONT);
         logoutBtn.setBackground(Color.WHITE);
         logoutBtn.setOpaque(true);
@@ -396,7 +408,7 @@ public class AdminFrame extends JFrame {
                 selectedPanel = new NguyenLieuPanel(); // Thay bằng panel Nguyên liệu
                 break;
             case "congthuc":
-                selectedPanel = new CongThucPanel(); // Thay bằng panel Công thức
+                selectedPanel = new CongThucPanel(currentUser); // Thay bằng panel Công thức
                 break;
             case "danhmuc":
                 selectedPanel = new DanhMucPanel();
@@ -405,7 +417,7 @@ public class AdminFrame extends JFrame {
                 selectedPanel = new NhaCungCapPanel(); // Thay bằng panel Nhà cung cấp
                 break;
             case "phieunhap":
-                selectedPanel = new JPanel(); // Thay bằng panel Phiếu nhập
+                selectedPanel = new PhieuNhapPanel(currentUser); // Thay bằng panel Phiếu nhập
                 break;
            case "taikhoan":
                // Truyền AdminFrame vào TaiKhoanPanel
