@@ -1,15 +1,12 @@
 package BUS;
 
-import java.util.List;
-
-import DAO.CongThucDAO;
-import DAO.SanPhamDAO;
-import DTO.CT_CongThucDTO;
 import DTO.CongThucDTO;
+import DTO.CT_CongThucDTO;
+import DAO.CongThucDAO;
+import java.util.List;
 
 public class CongThucBUS {
     private final CongThucDAO congThucDao = new CongThucDAO();
-    private final SanPhamDAO sanPhamDao = new SanPhamDAO();
     private final CT_CongThucBUS ctCongThucBus = new CT_CongThucBUS();
 
     public List<CongThucDTO> getAll() {
@@ -29,49 +26,19 @@ public class CongThucBUS {
     }
 
     public String add(CongThucDTO ct, List<CT_CongThucDTO> chiTietList) {
-        if (ct.getMota() == null || ct.getMota().trim().isEmpty()) {
-            return "Mô tả không được để trống";
-        }
-
-        if (!sanPhamDao.exists(ct.getIdSP())) {
-            return "Sản phẩm không tồn tại";
-        }
-
+        String error = "";
         List<CongThucDTO> congThucList = congThucDao.findByIdSP(ct.getIdSP());
         if (congThucList != null && !congThucList.isEmpty()) {
-            return "Sản phẩm đã có công thức, không thể thêm công thức mới";
+            error = "Sản phẩm đã có công thức, không thể thêm công thức mới";
+        }else if(congThucDao.add(ct, chiTietList) == -1){
+            error = "Xảy ra lỗi trong quá trình thêm mới";
         }
-
-        // Gọi CongThucDAO.add và lấy idCT được sinh tự động
-        int newIdCT = congThucDao.add(ct);
-        if (newIdCT == -1) {
-            return "Không thể thêm công thức";
-        }
-
-        // Cập nhật idCT cho chi tiết công thức và thêm vào ct_congthuc
-        for (CT_CongThucDTO chiTiet : chiTietList) {
-            chiTiet.setIdCT(newIdCT);
-            String error = ctCongThucBus.add(chiTiet);
-            if (!error.isEmpty()) {
-                // Xóa công thức đã thêm để đảm bảo tính toàn vẹn
-                congThucDao.delete(newIdCT);
-                return error;
-            }
-        }
-        return "";
+        return error;
     }
 
     public String update(CongThucDTO ct, List<CT_CongThucDTO> chiTietList) {
         if (ct.getIdCT() <= 0 || congThucDao.findByIdCT(ct.getIdCT()) == null) {
             return "Công thức không tồn tại";
-        }
-
-        if (ct.getMota() == null || ct.getMota().trim().isEmpty()) {
-            return "Mô tả không được để trống";
-        }
-
-        if (!sanPhamDao.exists(ct.getIdSP())) {
-            return "Sản phẩm không tồn tại";
         }
 
         boolean success = congThucDao.update(ct);
@@ -89,23 +56,6 @@ public class CongThucBUS {
     }
 
     public boolean delete(int idCT) {
-        CongThucDTO ct = congThucDao.findByIdCT(idCT);
-        if (ct == null) {
-            return false; // Công thức không tồn tại
-        }
-        int idSP = ct.getIdSP();
-        // Kiểm tra idSP có tồn tại trong bảng sanpham
-        if (!sanPhamDao.exists(idSP)) {
-            return false; // Sản phẩm không tồn tại
-        }
-        // Kiểm tra xem idSP có công thức nào khác ngoài idCT hiện tại
-        List<CongThucDTO> congThucList = congThucDao.findByIdSP(idSP);
-        if (congThucList != null && congThucList.size() > 1) {
-            // Có công thức khác liên kết với idSP, không cho phép xóa
-            return false;
-        }
-
-        ctCongThucBus.deleteByCongThuc(idCT);
         return congThucDao.delete(idCT);
     }
 

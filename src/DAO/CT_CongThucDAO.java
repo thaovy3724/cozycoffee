@@ -1,13 +1,9 @@
 package DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import DTO.CT_CongThucDTO;
 import java.util.ArrayList;
 import java.util.List;
-
-import DTO.CT_CongThucDTO;
+import java.sql.*;
 
 public class CT_CongThucDAO extends BaseDAO<CT_CongThucDTO> {
     public CT_CongThucDAO() {
@@ -50,9 +46,7 @@ public class CT_CongThucDAO extends BaseDAO<CT_CongThucDTO> {
             }
             return "Lỗi cơ sở dữ liệu: " + e.getMessage();
         } finally {
-            if (pstmt != null) {
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-			}
+            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
             db.close(link);
         }
     }
@@ -68,9 +62,7 @@ public class CT_CongThucDAO extends BaseDAO<CT_CongThucDTO> {
             e.printStackTrace();
             return false;
         } finally {
-            if (pstmt != null) {
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-			}
+            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
             db.close(link);
         }
     }
@@ -92,12 +84,8 @@ public class CT_CongThucDAO extends BaseDAO<CT_CongThucDTO> {
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
-            if (rs != null) {
-				try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-			}
-            if (pstmt != null) {
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-			}
+            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
             db.close(link);
         }
         return result;

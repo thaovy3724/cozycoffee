@@ -15,7 +15,6 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -23,20 +22,17 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import com.toedter.calendar.JDateChooser;
+
 import BUS.Lo_NguyenLieuBUS;
 import BUS.NguyenLieuBUS;
 import BUS.NhaCungCapBUS;
 import BUS.PhieuNhapBUS;
-import DAO.NhaCungCapDAO;
-import DTO.CT_CongThucDTO;
-import DTO.CongThucDTO;
 import DTO.Lo_NguyenLieuDTO;
 import DTO.NguyenLieuDTO;
 import DTO.NhaCungCapDTO;
 import DTO.PhieuNhapDTO;
-import DTO.SanPhamDTO;
 import DTO.TaiKhoanDTO;
-import com.toedter.calendar.JDateChooser;
 
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -45,35 +41,32 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.GridBagConstraints;
 import java.awt.Font;
-import java.util.Vector;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+import java.awt.Cursor;
 
 public class PhieuNhapDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
 
-    PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
-    NhaCungCapBUS nhaCungCapBUS = new NhaCungCapBUS();
-    NguyenLieuBUS nguyenLieuBUS = new NguyenLieuBUS();
-    Lo_NguyenLieuBUS lo_NguyenLieuBUS = new Lo_NguyenLieuBUS();
+    PhieuNhapBUS phieuNhapBus = new PhieuNhapBUS();
+    NhaCungCapBUS nhaCungCapBus = new NhaCungCapBUS();
+    NguyenLieuBUS nguyenLieuBus = new NguyenLieuBUS();
+    Lo_NguyenLieuBUS lo_NguyenLieuBus = new Lo_NguyenLieuBUS();
 
     private JButton btnSubmit, btnAdd, btnCancel;
     private JLabel lblTitle;
@@ -120,10 +113,6 @@ public class PhieuNhapDialog extends JDialog {
         gbc_lblTitle.gridy = 0;
         contentPanel.add(lblTitle, gbc_lblTitle);
 
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setModal(true);
-
         textFieldInit();
         initTable();
         actionInit();
@@ -158,6 +147,7 @@ public class PhieuNhapDialog extends JDialog {
         contentPanel.add(cboNCC, gbc_cboNCC);
 
         btnAdd = new JButton("Thêm chi tiết phiếu nhập");
+        btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnAdd.setBackground(new Color(0, 128, 0));
         btnAdd.setForeground(Color.WHITE);
@@ -235,14 +225,14 @@ public class PhieuNhapDialog extends JDialog {
         tableLoNguyenLieu.getTableHeader().setForeground(Color.WHITE);
         tableLoNguyenLieu.setSelectionBackground(new Color(187, 222, 251));
 
-        nguyenLieuList = nguyenLieuBUS.getAll();
+        nguyenLieuList = nguyenLieuBus.getAll();
 
         tableLoNguyenLieu.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<>()) {
             private JComboBox<NguyenLieuDTO> cboBox;
 
             @Override
             public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
-                    int column) {
+                                                         int column) {
                 cboBox = new JComboBox<>();
                 cboBox.addItem(new NguyenLieuDTO(0, "---Chọn nguyên liệu---"));
                 for (NguyenLieuDTO nguyenLieu : nguyenLieuList) {
@@ -285,7 +275,7 @@ public class PhieuNhapDialog extends JDialog {
         tableLoNguyenLieu.getColumnModel().getColumn(0).setCellRenderer(new TableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                    boolean hasFocus, int row, int column) {
+                                                           boolean hasFocus, int row, int column) {
                 JComboBox<NguyenLieuDTO> cboBox = new JComboBox<>();
                 cboBox.addItem(new NguyenLieuDTO(0, "---Chọn nguyên liệu---"));
                 for (NguyenLieuDTO nguyenLieu : nguyenLieuList) {
@@ -335,6 +325,7 @@ public class PhieuNhapDialog extends JDialog {
         scrollPane = new JScrollPane();
         scrollPane.setPreferredSize(new Dimension(500, 240));
         scrollPane.setViewportView(tableLoNguyenLieu);
+        scrollPane.getViewport().setBackground(Color.WHITE); // đổi màu nền
         scrollPane.setBorder(new LineBorder(new Color(189, 189, 189), 1));
         GridBagConstraints gbc_scrollPane = new GridBagConstraints();
         gbc_scrollPane.gridheight = 4;
@@ -358,6 +349,7 @@ public class PhieuNhapDialog extends JDialog {
         actionPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
 
         btnSubmit = new JButton("Thêm");
+        btnSubmit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnSubmit.setBackground(new Color(33, 150, 243));
         btnSubmit.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnSubmit.setForeground(Color.WHITE);
@@ -378,6 +370,7 @@ public class PhieuNhapDialog extends JDialog {
         actionPanel.add(btnSubmit);
 
         btnCancel = new JButton("Hủy");
+        btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnCancel.setBackground(new Color(244, 67, 54));
         btnCancel.setForeground(Color.WHITE);
         btnCancel.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -416,7 +409,7 @@ public class PhieuNhapDialog extends JDialog {
     }
 
     public void showAdd() {
-        List<NhaCungCapDTO> dsNCC = nhaCungCapBUS.getAllActive();
+        List<NhaCungCapDTO> dsNCC = nhaCungCapBus.getAllActive();
         loadComboBoxNCC(dsNCC);
         cboTrangThai.setEnabled(false);
 
@@ -433,14 +426,14 @@ public class PhieuNhapDialog extends JDialog {
     }
 
     public void showEdit(int idPN) {
-        PhieuNhapDTO pn = phieuNhapBUS.findByIdPN(idPN);
+        PhieuNhapDTO pn = phieuNhapBus.findByIdPN(idPN);
         if (pn == null) {
             JOptionPane.showMessageDialog(this, "Không tìm thấy phiếu nhập!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
         lblTitle.setText("Sửa phiếu nhập");
         List<NhaCungCapDTO> danhSachNCC =
-                nhaCungCapBUS.getAllActiveExcept(pn.getIdNCC());
+                nhaCungCapBus.getAllActiveExcept(pn.getIdNCC());
         loadComboBoxNCC(danhSachNCC);
         if (pn.getIdNCC() != 0) {
             for (int i = 0; i < cboNCC.getItemCount(); i++) {
@@ -456,11 +449,11 @@ public class PhieuNhapDialog extends JDialog {
 
         tableModel.setRowCount(0);
 
-        List<Lo_NguyenLieuDTO> loNguyenLieuList = lo_NguyenLieuBUS.getChiTietPhieuNhap(idPN);
+        List<Lo_NguyenLieuDTO> loNguyenLieuList = lo_NguyenLieuBus.getAllByIdPN(idPN);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         if (loNguyenLieuList != null && !loNguyenLieuList.isEmpty()) {
             for (Lo_NguyenLieuDTO lnl : loNguyenLieuList) {
-                NguyenLieuDTO nl = nguyenLieuBUS.findByIdNL(lnl.getIdNL());
+                NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(lnl.getIdNL());
                 if(nl != null) {
                     LocalDate hsd = lnl.getHsd() != null ? lnl.getHsd() : LocalDate.now();
                     tableModel.addRow(new Object[] { nl, lnl.getSoluongnhap()
@@ -481,13 +474,13 @@ public class PhieuNhapDialog extends JDialog {
     }
 
     public void showDetail(int idPN) {
-        PhieuNhapDTO pn = phieuNhapBUS.findByIdPN(idPN);
+        PhieuNhapDTO pn = phieuNhapBus.findByIdPN(idPN);
         if (pn == null) {
             JOptionPane.showMessageDialog(this, "Không tìm thấy phiếu nhập!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
         // Tải danh sách nhà cung cấp và hiển thị nhà cung cấp của phiếu nhập
-        List<NhaCungCapDTO> danhSachNCC = nhaCungCapBUS.getAll();
+        List<NhaCungCapDTO> danhSachNCC = nhaCungCapBus.getAll();
         loadComboBoxNCC(danhSachNCC);
         if (pn.getIdNCC() != 0) {
             for (int i = 0; i < cboNCC.getItemCount(); i++) {
@@ -511,10 +504,10 @@ public class PhieuNhapDialog extends JDialog {
 
         tableModel.setRowCount(0);
         // Tải chi tiết phiếu nhập từ cơ sở dữ liệu
-        List<Lo_NguyenLieuDTO> loNguyenLieuList = lo_NguyenLieuBUS.getChiTietPhieuNhap(idPN);
+        List<Lo_NguyenLieuDTO> loNguyenLieuList = lo_NguyenLieuBus.getAllByIdPN(idPN);
         if (loNguyenLieuList != null && !loNguyenLieuList.isEmpty()) {
             for (Lo_NguyenLieuDTO lnl : loNguyenLieuList) {
-                NguyenLieuDTO nl = nguyenLieuBUS.findByIdNL(lnl.getIdNL());
+                NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(lnl.getIdNL());
                 if (nl != null) {
                     LocalDate hsd = lnl.getHsd() != null ? lnl.getHsd() : LocalDate.now();
                     tableModel.addRow(new Object[] {
@@ -863,7 +856,7 @@ public class PhieuNhapDialog extends JDialog {
                     PhieuNhapDTO pn = new PhieuNhapDTO(today, today, idTK, idNCC, trangthai);
 
                     //Thêm phiếu nhập vào cơ sở dữ liệu
-                    int result = phieuNhapBUS.add(pn, loNguyenLieuList);
+                    int result = phieuNhapBus.add(pn, loNguyenLieuList);
 
                     if (result != -1) {
                         JOptionPane.showMessageDialog(this, "Thêm phiếu nhập thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
@@ -872,7 +865,7 @@ public class PhieuNhapDialog extends JDialog {
                 } else {
                     int idPN = Integer.parseInt(actionCommand.substring(beginIndex));
                     PhieuNhapDTO pn = new PhieuNhapDTO(idPN, "", today, idTK, idNCC, trangthai);
-                    String error = phieuNhapBUS.update(pn, loNguyenLieuList);
+                    String error = phieuNhapBus.update(pn, loNguyenLieuList);
                     if (error != "") {
                         JOptionPane.showMessageDialog(this, "Cập nhật phiếu nhập thất bại!", "LỖI", JOptionPane.ERROR_MESSAGE);
                     } else {

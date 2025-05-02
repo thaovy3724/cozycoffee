@@ -1,25 +1,27 @@
 package GUI.Dialog;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import BUS.NhaCungCapBUS;
 import DTO.NhaCungCapDTO;
+
+import java.awt.GridBagLayout;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.Font;
+import javax.swing.JTextField;
+import java.awt.Color;
+import javax.swing.JComboBox;
+import java.awt.Cursor;
 
 public class NhaCungCapDialog extends JDialog {
 	private NhaCungCapBUS nhaCungCapBus = new NhaCungCapBUS();
@@ -29,6 +31,7 @@ public class NhaCungCapDialog extends JDialog {
 	private JTextField txtTenNCC, txtDiaChi, txtDienThoai, txtEmail;
 	private JComboBox<String> cboTrangThai = new JComboBox<>();
 	private JLabel errTenNCC, errDiaChi, errDienThoai, errEmail;
+	private JLabel lblTitle;
 	private JButton btnSubmit, btnCancel;
 	/**
 	 * Create the dialog.
@@ -48,9 +51,10 @@ public class NhaCungCapDialog extends JDialog {
 		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		contentPanel.setLayout(gbl_contentPanel);
 		{
-			JLabel lblTitle = new JLabel("Thêm nhà cung cấp");
-			lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
-			GridBagConstraints gbc_lblTitle = new GridBagConstraints();
+			lblTitle = new JLabel("Thêm nhà cung cấp");
+			lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+	        lblTitle.setForeground(new Color(33, 150, 243));
+	        GridBagConstraints gbc_lblTitle = new GridBagConstraints();
 			gbc_lblTitle.insets = new Insets(5, 10, 5, 0);
 			gbc_lblTitle.gridwidth = 4;
 			gbc_lblTitle.anchor = GridBagConstraints.WEST;
@@ -63,10 +67,10 @@ public class NhaCungCapDialog extends JDialog {
 		actionInit();
 
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setModal(true);
 
-
+		
 	}
 
 	private void textFieldInit(){
@@ -94,7 +98,7 @@ public class NhaCungCapDialog extends JDialog {
 		{
 			errTenNCC = new JLabel();
 			errTenNCC.setForeground(Color.RED);
-			errTenNCC.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+			errTenNCC.setFont(new Font("Segoe UI", Font.ITALIC, 12));
 			GridBagConstraints gbc_errTenNCC = new GridBagConstraints();
 			gbc_errTenNCC.anchor = GridBagConstraints.WEST;
 			gbc_errTenNCC.insets = new Insets(0, 10, 5, 10);
@@ -126,7 +130,7 @@ public class NhaCungCapDialog extends JDialog {
 		{
 			errDiaChi = new JLabel();
 			errDiaChi.setForeground(Color.RED);
-			errDiaChi.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+			errDiaChi.setFont(new Font("Segoe UI", Font.ITALIC, 12));
 			GridBagConstraints gbc_errDiaChi = new GridBagConstraints();
 			gbc_errDiaChi.anchor = GridBagConstraints.WEST;
 			gbc_errDiaChi.insets = new Insets(0, 10, 5, 10);
@@ -158,7 +162,7 @@ public class NhaCungCapDialog extends JDialog {
 		{
 			errDienThoai = new JLabel();
 			errDienThoai.setForeground(Color.RED);
-			errDienThoai.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+			errDienThoai.setFont(new Font("Segoe UI", Font.ITALIC, 12));
 			GridBagConstraints gbc_errDienThoai = new GridBagConstraints();
 			gbc_errDienThoai.anchor = GridBagConstraints.WEST;
 			gbc_errDienThoai.insets = new Insets(0, 10, 5, 10);
@@ -190,7 +194,7 @@ public class NhaCungCapDialog extends JDialog {
 		{
 			errEmail = new JLabel();
 			errEmail.setForeground(Color.RED);
-			errEmail.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+			errEmail.setFont(new Font("Segoe UI", Font.ITALIC, 12));
 			GridBagConstraints gbc_errEmail = new GridBagConstraints();
 			gbc_errEmail.anchor = GridBagConstraints.WEST;
 			gbc_errEmail.insets = new Insets(0, 10, 5, 10);
@@ -236,7 +240,8 @@ public class NhaCungCapDialog extends JDialog {
 			panel.setLayout(fl_panel);
 			{
 				btnSubmit = new JButton("Thêm");
-				btnSubmit.setBackground(new Color(0, 128, 0));
+				btnSubmit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				btnSubmit.setBackground(new Color(30, 144, 255));
 				btnSubmit.setForeground(new Color(255, 255, 255));
 				btnSubmit.setFont(new Font("Segoe UI", Font.BOLD, 14));
 				btnSubmit.setContentAreaFilled(false);
@@ -246,7 +251,8 @@ public class NhaCungCapDialog extends JDialog {
 			}
 			{
 				btnCancel = new JButton("Hủy");
-				btnCancel.setBackground(new Color(255, 51, 102));
+				btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				btnCancel.setBackground(new Color(255, 0, 0));
 				btnCancel.setFont(new Font("Segoe UI", Font.BOLD, 14));
 				btnCancel.setForeground(new Color(255, 255, 255));
 				btnCancel.setContentAreaFilled(false);
@@ -257,10 +263,12 @@ public class NhaCungCapDialog extends JDialog {
 		}
 	}
 
-	public void showAdd() {
+	public void showAdd() {		
 		// reset action button
 		cboTrangThai.setEnabled(false);
 
+		setTitle("Thêm nhà cung cấp");
+		lblTitle.setText("Thêm nhà cung cấp");
 		btnSubmit.setText("Thêm");
 		btnSubmit.setActionCommand("add");
 		setVisible(true);
@@ -273,7 +281,9 @@ public class NhaCungCapDialog extends JDialog {
 		txtDienThoai.setText(nhaCungCap.getSdt());
 		txtEmail.setText(nhaCungCap.getEmail());
 		cboTrangThai.setSelectedItem(nhaCungCap.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
-
+		
+		setTitle("Sửa nhà cung cấp");
+		lblTitle.setText("Sửa nhà cung cấp");
 		// reset action button
 		btnSubmit.setText("Cập nhật");
 		btnSubmit.setActionCommand("edit_"+idNCC);
@@ -299,7 +309,7 @@ public class NhaCungCapDialog extends JDialog {
 			errDiaChi.setText("Địa chỉ không được để trống");
 			isError = true;
 		}
-
+		
 		// dienthoai
 		String dienThoaiRegex = "^0\\d{9}$";
 		String dienThoai = txtDienThoai.getText();
@@ -310,7 +320,7 @@ public class NhaCungCapDialog extends JDialog {
 			errDienThoai.setText("Điện thoại không đúng định dạng");
 			isError = true;
 		}
-
+		
 		// email
 		/* Email có định dạng:
 		* 		+ Tên người dùng (có thể bao gồm ._%+-): [a-zA-Z0-9._%+-]
@@ -352,7 +362,7 @@ public class NhaCungCapDialog extends JDialog {
 				int idNCC = Integer.parseInt(actionCommand.substring(beginIndex));
 				error = nhaCungCapBus.update(new NhaCungCapDTO(idNCC, tenNCC, diaChi, dienThoai, email, trangthai));
 			}
-
+			
 			// show message
 			if(error != "") {
 				// fail
@@ -360,11 +370,10 @@ public class NhaCungCapDialog extends JDialog {
 			}
 			else {
 				// success
-				if(beginIndex == 0) {
+				if(beginIndex == 0) 
 					JOptionPane.showMessageDialog(this, "Thêm thành công ");
-				} else {
+				else 
 					JOptionPane.showMessageDialog(this, "Cập nhật thành công ");
-				}
 			}
 		}
 	}

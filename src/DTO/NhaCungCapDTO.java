@@ -76,8 +76,8 @@ public class NhaCungCapDTO {
         this.trangthai = trangthai;
     }
 
-    // HUONGNGUYEN 29/4
+    @Override
     public String toString() {
-        return tenNCC;
+        return this.tenNCC;
     }
 }

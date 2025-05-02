@@ -14,6 +14,11 @@ public class CT_CongThucDTO {
         this.soluong = soluong;
     }
 
+    public CT_CongThucDTO(int idNL, float soluong) {
+        this.idNL = idNL;
+        this.soluong = soluong;
+    }
+
     public int getIdCT() {
         return idCT;
     }

@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import DTO.CT_HoaDonDTO;
@@ -67,14 +68,173 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
 			link.commit();
 		}catch(ClassNotFoundException | SQLException e){
 			try{
-				if(link != null) link.rollback();
+				link.rollback();
+				newIdHD = -1;
 			}catch(SQLException ex){
 				ex.printStackTrace();
 			}
-			e.printStackTrace();
         }finally {
             db.close(link);
         }
 		return newIdHD;
 	}
+
+	public void updateInventory(int idHD){
+		Connection link = null;
+		PreparedStatement pstmt = null;
+        try {
+            String sql = "{CALL xuLyDonHang(?)}";
+            link = db.connectDB();
+            pstmt = link.prepareCall(sql);
+            pstmt.setInt(1,idHD);
+            pstmt.executeUpdate();
+        }catch(ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }finally {
+            db.close(link);
+        }
+	}
+
+	public int getTotalAmount(int idHD){
+		Connection link = null;
+		PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int result = 0;
+        try {
+            String sql = "SELECT SUM(soluong * gialucdat) AS tongtien"+
+			" FROM ct_hoadon"+ 
+			" WHERE idHD = ?";
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            pstmt.setInt(1,idHD);
+            rs = pstmt.executeQuery();
+            if (rs.next()) result = rs.getInt("tongtien");
+        }catch(ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }finally {
+            db.close(link);
+        }
+        return result;
+	}
+
+	public List<HoaDonDTO> search(Date dateStart, Date dateEnd, Integer minPrice, Integer maxPrice) {
+        Connection link = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<HoaDonDTO> result = new ArrayList<>();
+        try {
+			String sql = "SELECT hd.idHD, ngaytao, idTK, SUM(soluong * gialucdat) AS tongtien " +
+						 "FROM hoadon hd " +
+						 "INNER JOIN ct_hoadon ct ON hd.idHD = ct.idHD " +
+						 "WHERE 1=1";
+			List<Object> params = new ArrayList<>();
+	
+			if (dateStart != null) {
+				sql += " AND ngaytao >= ?";
+				params.add(new java.sql.Date(dateStart.getTime()));
+			}
+	
+			if (dateEnd != null) {
+				sql += " AND ngaytao <= ?";
+				params.add(new java.sql.Date(dateEnd.getTime()));
+			}
+	
+			sql += " GROUP BY hd.idHD, ngaytao, idTK HAVING 1=1";
+	
+			if (minPrice != null) {
+				sql += " AND SUM(soluong * gialucdat) >= ?";
+				params.add(minPrice);
+			}
+	
+			if (maxPrice != null) {
+				sql += " AND SUM(soluong * gialucdat) <= ?";
+				params.add(maxPrice);
+			}
+	
+			link = db.connectDB();
+			pstmt = link.prepareStatement(sql);
+	
+			// Gán tham số động
+			for (int i = 0; i < params.size(); i++) {
+				Object param = params.get(i);
+				if (param instanceof Integer) {
+					pstmt.setInt(i + 1, (Integer) param);
+				} else if (param instanceof Date) {
+					pstmt.setDate(i + 1, (Date) param);
+				}
+			}
+	
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				result.add(new HoaDonDTO(
+					rs.getInt("idHD"),
+					rs.getDate("ngaytao"),
+					rs.getInt("idTK")
+				));
+			}
+	
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.close(link);
+        }
+        return result;
+    }
+
+	public HoaDonDTO findByIdHD(int idHD){
+		Connection link = null;
+		PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        HoaDonDTO result = null;
+        try {
+            String sql = "SELECT * FROM " + table + " WHERE idHD = ?";
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            pstmt.setInt(1,idHD);
+            rs = pstmt.executeQuery();
+            if (rs.next()) result = mapResultSetToDTO(rs);
+        }catch(ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }finally {
+            db.close(link);
+        }
+        return result;
+	}
+
+    // Hiếu
+    public List<HoaDonDTO> searchByDate(Date start, Date end) {
+        Connection link = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<HoaDonDTO> result = new ArrayList<>();
+        List<Date> params = new ArrayList<>();
+
+        try {
+            StringBuilder sql = new StringBuilder("SELECT * FROM hoadon WHERE 1=1 ");
+            if (start != null) {
+                sql.append("AND (ngaytao >= ?) ");
+                params.add(start);
+            }
+            if (end != null) {
+                sql.append("AND (ngaytao <= ?) ");
+                params.add(end);
+            }
+
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql.toString());
+            for (int i=0; i<params.size(); i++) {
+                pstmt.setDate(i+1, params.get(i));
+            }
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                result.add(mapResultSetToDTO(rs));
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.close(link);
+        }
+
+        return result;
+    }
 }

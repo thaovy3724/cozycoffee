@@ -8,12 +8,13 @@ import java.sql.*;
 
 public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
     public NguyenLieuDAO() {
-        super("nguyenlieu",
-            List.of(
-                    "idNL",
-                    "tenNL",
-                    "donvi"
-            ));
+        super(
+        "nguyenlieu", 
+        List.of(
+         "idNL",
+         "tenNL",
+         "donvi"
+        ));
     }
 
     @Override
@@ -24,23 +25,23 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
                 rs.getString("donvi")
         );
     }
-
+    
     public boolean add(NguyenLieuDTO nl) {
         List<Object> params = new ArrayList<>();
         params.add(nl.getTenNL());
         params.add(nl.getDonvi());
         return super.add(params);
     }
-
+    
     public boolean update(NguyenLieuDTO nl) {
         List<Object> params = new ArrayList<>();
-        //      params.add(nl.getIdNL());
+//      params.add(nl.getIdNL());
         params.add(nl.getTenNL());
         params.add(nl.getDonvi());
         String condition = "idNL = "+nl.getIdNL();
         return super.update(params, condition);
     }
-
+    
     public boolean isInRecipe(int idNL) {
         Connection link = null;
         PreparedStatement pstmt = null;
@@ -60,7 +61,7 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
         }
         return isValue;
     }
-
+    
     public boolean isInInvoice(int idNL) {
         Connection link = null;
         PreparedStatement pstmt = null;
@@ -80,12 +81,12 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
         }
         return hasNL;
     }
-
+    
     public boolean delete(int idNL) {
         String col = "idNL";
         return super.delete(col, idNL);
     }
-
+    
     public List<NguyenLieuDTO> search(String keyWord){
         Connection link = null;
         PreparedStatement pstmt = null;
@@ -106,7 +107,7 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
         }
         return result;
     }
-
+    
     public NguyenLieuDTO findByIdNL(int idNL) {
         Connection link = null;
         PreparedStatement pstmt = null;
@@ -126,7 +127,7 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
         }
         return result;
     }
-
+    
     public boolean isExist(NguyenLieuDTO nl) {
         Connection link = null;
         PreparedStatement pstmt = null;
@@ -136,16 +137,16 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
             StringBuilder sql = new StringBuilder("SELECT * FROM ");
             sql.append(table);
             sql.append(" WHERE tenNL LIKE ?");
-            if(nl.getIdNL() != 0)
+            if(nl.getIdNL() != 0) 
                 sql.append(" AND idNL != ?");
-
+           
             // noi param
             link = db.connectDB();
             pstmt = link.prepareStatement(sql.toString());
             pstmt.setString(1, nl.getTenNL().trim()); // Loại bỏ khoảng trắng thừa
-            if(nl.getIdNL() != 0)
+            if(nl.getIdNL() != 0) 
                 pstmt.setInt(2, nl.getIdNL());
-
+            
             // thuc thi
             rs = pstmt.executeQuery();
             isExist = rs.next();

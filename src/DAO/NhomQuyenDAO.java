@@ -1,12 +1,12 @@
 package DAO;
 
+import DTO.NhomQuyenDTO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-
-import DTO.NhomQuyenDTO;
 
 public class NhomQuyenDAO extends BaseDAO<NhomQuyenDTO>{
 	public NhomQuyenDAO() {
@@ -18,8 +18,7 @@ public class NhomQuyenDAO extends BaseDAO<NhomQuyenDTO>{
 	}
 
 
-    @Override
-	public NhomQuyenDTO mapResultSetToDTO(ResultSet rs) throws SQLException {
+    public NhomQuyenDTO mapResultSetToDTO(ResultSet rs) throws SQLException {
         return new NhomQuyenDTO(
                 rs.getInt("idNQ"),
                 rs.getString("tenNQ")
@@ -37,9 +36,7 @@ public class NhomQuyenDAO extends BaseDAO<NhomQuyenDTO>{
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1,idNQ);
             rs = pstmt.executeQuery();
-            if (rs.next()) {
-				result = mapResultSetToDTO(rs);
-			}
+            if (rs.next()) result = mapResultSetToDTO(rs);
         }catch(ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {

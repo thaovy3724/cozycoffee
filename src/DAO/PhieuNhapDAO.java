@@ -1,10 +1,12 @@
 package DAO;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import DTO.Lo_NguyenLieuDTO;
 import DTO.PhieuNhapDTO;
+import DTO.TrangThai_PnDTO;
 
 public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 	public PhieuNhapDAO() {
@@ -109,7 +111,6 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 			pstmt.setInt(4, pn.getIdTT());
 			pstmt.executeUpdate();
 
-			Lo_NguyenLieuDAO lo_NguyenLieuDao = new Lo_NguyenLieuDAO();
 			if (danhSachChiTiet != null && !danhSachChiTiet.isEmpty()) {
 				for (Lo_NguyenLieuDTO ctpn : danhSachChiTiet) {
 					float tonKho = (pn.getIdTT() == 2) ?
@@ -200,5 +201,112 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 	public boolean delete(int idPN) {
 		String col = "idPN";
 		return super.delete(col, idPN);
+	}
+
+	// Hiếu
+	public List<PhieuNhapDTO> searchCompleteByDate(Date start, Date end) {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<PhieuNhapDTO> result = new ArrayList<>();
+		List<Date> params = new ArrayList<>();
+
+		try {
+			StringBuilder sql = new StringBuilder("SELECT * FROM phieunhap WHERE idTT = 2 ");
+			if (start != null) {
+				sql.append("AND (ngaycapnhat >= ?) ");
+				params.add(start);
+			}
+			if (end != null) {
+				sql.append("AND (ngaycapnhat <= ?) ");
+				params.add(end);
+			}
+
+			link = db.connectDB();
+			pstmt = link.prepareStatement(sql.toString());
+			for (int i=0; i<params.size(); i++) {
+				pstmt.setDate(i+1, params.get(i));
+			}
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.close(link);
+		}
+
+		return result;
+	}
+
+	public long getTotalAmount(int idPN) {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		long tongtien = 0;
+
+		try {
+			String sql = "SELECT sum(lnl.dongia * lnl.soluongnhap) AS tongtien " +
+					"FROM phieunhap pn " +
+					"INNER JOIN lo_nguyenlieu lnl on pn.idPN = lnl.idPN " +
+					"WHERE pn.idPN = ?";
+
+			link = db.connectDB();
+			pstmt = link.prepareStatement(sql);
+			pstmt.setInt(1, idPN);
+			rs = pstmt.executeQuery();
+			if (rs.next()) tongtien = rs.getLong("tongtien");
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			db.close(link);
+		}
+
+		return tongtien;
+	}
+
+//	HUONGNGUYEN 2/5
+	public List<PhieuNhapDTO> search(Date dateStart, Date dateEnd,
+									 TrangThai_PnDTO ttpn) {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<PhieuNhapDTO> result = new ArrayList<>();
+		try {
+			link = db.connectDB();
+			String sql = "SELECT " + table + ".* FROM " + table + " WHERE 1 = 1";
+			List<Object> params = new ArrayList<>();
+			if (ttpn.getIdTT() != 0) {
+				sql += " AND idTT = ?";
+				params.add(ttpn.getIdTT());
+			}
+			if (dateStart != null && dateEnd != null) {
+				sql += " AND ngaytao BETWEEN ? AND ?";
+				params.add(dateStart);
+				params.add(dateEnd);
+			}
+
+			pstmt = link.prepareStatement(sql);
+			// Gán tham số động
+			for (int i = 0; i < params.size(); i++) {
+				Object param = params.get(i);
+
+				if (param instanceof Integer) {
+					pstmt.setInt(i + 1, (Integer) param);
+				} else if (param instanceof Date) {
+					pstmt.setDate(i + 1, (Date) param);
+				}
+			}
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.close(link);
+		}
+		return result;
 	}
 }

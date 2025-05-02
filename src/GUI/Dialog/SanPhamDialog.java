@@ -1,13 +1,29 @@
 package GUI.Dialog;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+
+import BUS.SanPhamBUS;
+import BUS.DanhMucBUS;
+import DTO.DanhMucDTO;
+import DTO.SanPhamDTO;
+import GUI.ImageHelper;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import java.awt.Component;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
+import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -18,25 +34,11 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
 import javax.imageio.ImageIO;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.WindowConstants;
-
-import BUS.DanhMucBUS;
-import BUS.SanPhamBUS;
-import DTO.DanhMucDTO;
-import DTO.SanPhamDTO;
-import GUI.ImageHelper;
+import java.awt.Cursor;
 
 public class SanPhamDialog extends JDialog {
 	private SanPhamBUS sanPhamBus = new SanPhamBUS();
@@ -47,27 +49,31 @@ public class SanPhamDialog extends JDialog {
 	private JTextField txtTenSP, txtGia;
 	private JComboBox<DanhMucDTO> cboDM = new JComboBox<>();
 	private JComboBox<String> cboTrangThai = new JComboBox<>();
-	private JLabel errTenSP, errGia;
+	private JLabel errTenSP, errGia, errHinh;
 	private JLabel lblImage;
+	private JLabel lblTitle;
 	private JButton btnSubmit, btnCancel;
-	private String uploadedImage;
+	private File uploadFile;
 
 	/**
 	 * Create the dialog.
 	 */
 	public SanPhamDialog() {
-		setTitle("Thêm sản phẩm");
-		setBounds(100, 100, 576, 431);
+		setBackground(new Color(255, 255, 255));
+		getContentPane().setBackground(new Color(255, 255, 255));
+		setBounds(100, 100, 576, 403);
 		getContentPane().setLayout(new BorderLayout());
 		{
 			JPanel titlePanel = new JPanel();
+			titlePanel.setBackground(new Color(255, 255, 255));
 			FlowLayout fl_titlePanel = (FlowLayout) titlePanel.getLayout();
 			fl_titlePanel.setAlignment(FlowLayout.LEFT);
 			getContentPane().add(titlePanel, BorderLayout.NORTH);
 			{
-				JLabel lblTitle = new JLabel("Thêm sản phẩm");
-				lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
-				titlePanel.add(lblTitle);
+				lblTitle = new JLabel();
+				lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+		        lblTitle.setForeground(new Color(33, 150, 243));
+		        titlePanel.add(lblTitle);
 			}
 		}
 		imageInit();
@@ -75,24 +81,40 @@ public class SanPhamDialog extends JDialog {
 		actionInit();
 
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setModal(true);
 	}
 
 	private void imageInit(){
 		JPanel imagePanel = new JPanel();
+		imagePanel.setBackground(new Color(255, 255, 255));
 		getContentPane().add(imagePanel, BorderLayout.WEST);
 		imagePanel.setLayout(new BoxLayout(imagePanel, BoxLayout.Y_AXIS));
 		{
 			lblImage = new JLabel("");
-			ImageHelper image = new ImageHelper(200, 200, SanPhamDialog.class.getResource("/ASSET/Uploads/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg"));
-			{
-				Component verticalStrut = Box.createVerticalStrut(50);
-				imagePanel.add(verticalStrut);
-			}
+			ImageHelper image = new ImageHelper(200, 200, SanPhamDialog.class.getResource("/ASSET/Uploads/default.jpg"));
 			lblImage.setIcon(image.getScaledImage());
 			lblImage.setAlignmentX(Component.CENTER_ALIGNMENT);
 			imagePanel.add(lblImage);
+		}
+		{
+			Component verticalStrut = Box.createVerticalStrut(20);
+			imagePanel.add(verticalStrut);
+		}
+		{
+			Component verticalStrut = Box.createVerticalStrut(5);
+			imagePanel.add(verticalStrut);
+		}
+		{
+			errHinh = new JLabel("");
+			errHinh.setAlignmentX(Component.CENTER_ALIGNMENT);
+			errHinh.setForeground(Color.RED);
+			errHinh.setFont(new Font("Segoe UI", Font.ITALIC, 13));
+			imagePanel.add(errHinh);
+		}
+		{
+			Component verticalStrut = Box.createVerticalStrut(20);
+			imagePanel.add(verticalStrut);
 		}
 		{
 			JButton btnUpload = new JButton("Tải ảnh");
@@ -108,12 +130,13 @@ public class SanPhamDialog extends JDialog {
 	}
 
 	private void textFieldInit(){
+		txtPanel.setBackground(new Color(255, 255, 255));
 		getContentPane().add(txtPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_txtPanel = new GridBagLayout();
 		gbl_txtPanel.columnWidths = new int[]{0, 0};
-		gbl_txtPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_txtPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_txtPanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_txtPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_txtPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		txtPanel.setLayout(gbl_txtPanel);
 		{
 			JLabel lblTenSP = new JLabel("Tên sản phẩm");
@@ -140,8 +163,8 @@ public class SanPhamDialog extends JDialog {
 			txtTenSP.setColumns(10);
 		}
 		{
-			JLabel errTenSP = new JLabel();
-			errTenSP.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+			errTenSP = new JLabel();
+			errTenSP.setFont(new Font("Segoe UI", Font.ITALIC, 13));
 			errTenSP.setForeground(Color.RED);
 			GridBagConstraints gbc_errTenSP = new GridBagConstraints();
 			gbc_errTenSP.anchor = GridBagConstraints.WEST;
@@ -163,6 +186,7 @@ public class SanPhamDialog extends JDialog {
 			txtPanel.add(lblDM, gbc_lblDM);
 		}
 		{
+			cboDM.setBackground(new Color(192, 192, 192));
 			cboDM.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 			GridBagConstraints gbc_cboDM = new GridBagConstraints();
 			gbc_cboDM.fill = GridBagConstraints.HORIZONTAL;
@@ -174,18 +198,6 @@ public class SanPhamDialog extends JDialog {
 			txtPanel.add(cboDM, gbc_cboDM);
 		}
 		{
-			JLabel errDM = new JLabel();
-			errDM.setForeground(Color.RED);
-			errDM.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-			GridBagConstraints gbc_errDM = new GridBagConstraints();
-			gbc_errDM.gridwidth = 4;
-			gbc_errDM.anchor = GridBagConstraints.WEST;
-			gbc_errDM.insets = new Insets(0, 10, 10, 10);
-			gbc_errDM.gridx = 0;
-			gbc_errDM.gridy = 5;
-			txtPanel.add(errDM, gbc_errDM);
-		}
-		{
 			JLabel lblGia = new JLabel("Giá bán");
 			lblGia.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 			GridBagConstraints gbc_lblGia = new GridBagConstraints();
@@ -193,7 +205,7 @@ public class SanPhamDialog extends JDialog {
 			gbc_lblGia.anchor = GridBagConstraints.WEST;
 			gbc_lblGia.insets = new Insets(0, 10, 5, 10);
 			gbc_lblGia.gridx = 0;
-			gbc_lblGia.gridy = 6;
+			gbc_lblGia.gridy = 5;
 			txtPanel.add(lblGia, gbc_lblGia);
 		}
 		{
@@ -206,60 +218,64 @@ public class SanPhamDialog extends JDialog {
 			gbc_txtGia.insets = new Insets(0, 10, 5, 10);
 			gbc_txtGia.fill = GridBagConstraints.HORIZONTAL;
 			gbc_txtGia.gridx = 0;
-			gbc_txtGia.gridy = 7;
+			gbc_txtGia.gridy = 6;
 			txtPanel.add(txtGia, gbc_txtGia);
 		}
 		{
-			JLabel errGia = new JLabel();
+			errGia = new JLabel();
+			errGia.setIcon(null);
 			errGia.setForeground(Color.RED);
-			errGia.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+			errGia.setFont(new Font("Segoe UI", Font.ITALIC, 13));
 			GridBagConstraints gbc_errGia = new GridBagConstraints();
 			gbc_errGia.gridwidth = 4;
 			gbc_errGia.anchor = GridBagConstraints.WEST;
 			gbc_errGia.insets = new Insets(0, 10, 10, 10);
 			gbc_errGia.gridx = 0;
-			gbc_errGia.gridy = 8;
+			gbc_errGia.gridy = 7;
 			txtPanel.add(errGia, gbc_errGia);
 		}
 		{
-			JLabel lblTrangThai = new JLabel("Trạng thái");
-			lblTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-			GridBagConstraints gbc_lblTrangThai = new GridBagConstraints();
-			gbc_lblTrangThai.gridwidth = 4;
-			gbc_lblTrangThai.anchor = GridBagConstraints.WEST;
-			gbc_lblTrangThai.insets = new Insets(0, 10, 5, 10);
-			gbc_lblTrangThai.gridx = 0;
-			gbc_lblTrangThai.gridy = 9;
-			txtPanel.add(lblTrangThai, gbc_lblTrangThai);
-		}
-		{
+			cboTrangThai.setBackground(new Color(192, 192, 192));
 			cboTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-			GridBagConstraints gbc_cboTrangThai = new GridBagConstraints();
-			gbc_cboTrangThai.gridwidth = 4;
-			gbc_cboTrangThai.anchor = GridBagConstraints.WEST;
-			gbc_cboTrangThai.insets = new Insets(0, 10, 5, 10);
-			gbc_cboTrangThai.fill = GridBagConstraints.HORIZONTAL;
-			gbc_cboTrangThai.gridx = 0;
-			gbc_cboTrangThai.gridy = 10;
-			cboTrangThai.addItem("Hoạt động");
 			cboTrangThai.addItem("Bị khóa");
-			txtPanel.add(cboTrangThai, gbc_cboTrangThai);
+			cboTrangThai.addItem("Hoạt động");
+			{
+				JLabel lblTrangThai = new JLabel("Trạng thái");
+				lblTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+				GridBagConstraints gbc_lblTrangThai = new GridBagConstraints();
+				gbc_lblTrangThai.gridwidth = 4;
+				gbc_lblTrangThai.anchor = GridBagConstraints.WEST;
+				gbc_lblTrangThai.insets = new Insets(0, 10, 5, 10);
+				gbc_lblTrangThai.gridx = 0;
+				gbc_lblTrangThai.gridy = 8;
+				txtPanel.add(lblTrangThai, gbc_lblTrangThai);
+			}
 		}
 	}
 
 	private void actionInit(){
+		GridBagConstraints gbc_cboTrangThai = new GridBagConstraints();
+		gbc_cboTrangThai.gridwidth = 4;
+		gbc_cboTrangThai.anchor = GridBagConstraints.WEST;
+		gbc_cboTrangThai.insets = new Insets(0, 10, 5, 10);
+		gbc_cboTrangThai.fill = GridBagConstraints.HORIZONTAL;
+		gbc_cboTrangThai.gridx = 0;
+		gbc_cboTrangThai.gridy = 9;
+		txtPanel.add(cboTrangThai, gbc_cboTrangThai);
 		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(new Color(255, 255, 255));
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
 		gbc_panel_1.gridwidth = 4;
 		gbc_panel_1.anchor = GridBagConstraints.EAST;
 		gbc_panel_1.insets = new Insets(0, 10, 10, 10);
 		gbc_panel_1.fill = GridBagConstraints.BOTH;
 		gbc_panel_1.gridx = 0;
-		gbc_panel_1.gridy = 12;
+		gbc_panel_1.gridy = 11;
 		txtPanel.add(panel_1, gbc_panel_1);
 		{
 			btnSubmit = new JButton("Thêm");
-			btnSubmit.setBackground(new Color(0, 128, 0));
+			btnSubmit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			btnSubmit.setBackground(new Color(30, 144, 255));
 			btnSubmit.setForeground(Color.WHITE);
 			btnSubmit.setFont(new Font("Segoe UI", Font.BOLD, 14));
 			btnSubmit.setContentAreaFilled(false);
@@ -269,9 +285,10 @@ public class SanPhamDialog extends JDialog {
 		}
 		{
 			btnCancel = new JButton("Hủy");
+			btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			btnCancel.setForeground(Color.WHITE);
 			btnCancel.setFont(new Font("Segoe UI", Font.BOLD, 14));
-			btnCancel.setBackground(new Color(255, 51, 102));
+			btnCancel.setBackground(new Color(255, 0, 0));
 			btnCancel.setContentAreaFilled(false);
 			btnCancel.setOpaque(true);
 			btnCancel.addActionListener(e->cancel());
@@ -281,17 +298,18 @@ public class SanPhamDialog extends JDialog {
 
 	private void loadComboBoxDM(List<DanhMucDTO> arr) {
 		cboDM.removeAllItems();
-		for(DanhMucDTO item : arr) {
+		for(DanhMucDTO item : arr) 
 			cboDM.addItem(item);
-		}
 	}
 
 	public void showAdd() {
-		// load tất cả danh mục đang hoạt động
+		// load tất cả danh mục đang hoạt động 
 		List<DanhMucDTO> listDM = danhMucBus.getAllActive();
 		loadComboBoxDM(listDM);
 		cboTrangThai.setEnabled(false);
-
+		
+		setTitle("Thêm sản phẩm");
+		lblTitle.setText("Thêm sản phẩm");
 		// reset action button
 		btnSubmit.setText("Thêm");
 		btnSubmit.setActionCommand("add");
@@ -302,53 +320,60 @@ public class SanPhamDialog extends JDialog {
 		SanPhamDTO sanPham = sanPhamBus.findByIdSP(idSP);
 		txtTenSP.setText(sanPham.getTenSP());
 		txtGia.setText(String.valueOf(sanPham.getGiaban()));
-		ImageHelper img = new ImageHelper(200, 200, SanPhamDialog.class.getResource("../../ASSET/Uploads/"+sanPham.getHinhanh()));
+		ImageHelper img = new ImageHelper(200, 200, SanPhamDialog.class.getResource("/ASSET/Uploads/"+sanPham.getHinhanh()));
 		lblImage.setIcon(img.getScaledImage());
 		cboTrangThai.setSelectedItem(sanPham.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
-
-		// load tất cả danh mục đang hoạt động
+		
+		// load tất cả danh mục đang hoạt động 
 		List<DanhMucDTO> listDM = danhMucBus.getAllActiveExcept(sanPham.getIdDM());
 		loadComboBoxDM(listDM);
-
+		
 		// set default
 		DanhMucDTO dmuc = danhMucBus.findByIdDM(sanPham.getIdDM());
 		cboDM.setSelectedItem(dmuc);
-
+		
+		setTitle("Sửa sản phẩm");
+		lblTitle.setText("Sửa sản phẩm");
 		// reset action button
 		btnSubmit.setText("Cập nhật");
 		btnSubmit.setActionCommand("edit_"+idSP);
 		setVisible(true);
 	}
 
-	private boolean isError() {
+	private boolean isError(boolean isEdit) {
 		// remove existed errors
-		JLabel[] errors = {errTenSP, errGia};
-		for (JLabel error : errors) {
+		JLabel[] errors = {errTenSP, errGia, errHinh};
+		for (JLabel error : errors)
 			error.setText("");
-		}
 
 		boolean isError = false;
-
+		
+		// hinhanh
+		if(!isEdit && uploadFile == null) {
+			errHinh.setText("Hình sản phẩm không được để trống");
+			isError = true;
+		}
+		
 		// tenSP
 		if(txtTenSP.getText().trim().equals("")) {
 			errTenSP.setText("Tên sản phẩm không được để trống");
 			isError = true;
 		}
-
+		
 		// gia ban
 		String giaban = txtGia.getText();
 		if(giaban.trim().equals("")){
-			errTenSP.setText("Giá bán không được để trống");
+			errGia.setText("Giá bán không được để trống");
 			isError = true;
 		}else{
 			try {
-				int gia = Integer.parseInt(giaban);
+				int gia = Integer.parseInt(giaban); 
 				if (gia <= 0) {
-					errTenSP.setText("Giá bán phải lớn hơn 0");
+					errGia.setText("Giá bán phải lớn hơn 0");
 					isError = true;
 				}
 			} catch (NumberFormatException e) {
-				errTenSP.setText("Giá bán phải là số hợp lệ");
+				errGia.setText("Giá bán phải là số hợp lệ");
 				isError = true;
 			}
 		}
@@ -357,39 +382,56 @@ public class SanPhamDialog extends JDialog {
 
 	private void submitForm() {
 		// validate du lieu
-		if(!isError()) {
+		String actionCommand = btnSubmit.getActionCommand();
+		int beginIndex = actionCommand.indexOf('_')+1;
+		if(!isError(beginIndex != 0)) {
 			// collect data
 			String tenSP = txtTenSP.getText();
-			int giaban = Integer.parseInt(txtGia.getText());
+			int giaban = Integer.parseInt(txtGia.getText()); 
 			DanhMucDTO dmucSelected = (DanhMucDTO) cboDM.getSelectedItem();
 			int idDM = dmucSelected.getIdDM();
 			int trangthai = cboTrangThai.getSelectedItem() == "Hoạt động" ? 1 : 0;
+			
+			// image
+			String imageName = null;
+			if(uploadFile != null) {
+				String sourcePath = uploadFile.getAbsolutePath();
+	            String destinationFolder = "src/ASSET/Uploads/";
+	            String originalFileName = uploadFile.getName();
+	            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+	            imageName = UUID.randomUUID().toString() + fileExtension;
+	            String destinationPath = destinationFolder + imageName;
 
+	            try {
+	                // Copy the image to the destination folder
+	                Files.copy(Paths.get(sourcePath), Paths.get(destinationPath), StandardCopyOption.REPLACE_EXISTING);
+	            }catch (IOException ex) {
+	                JOptionPane.showMessageDialog(this, "Lỗi khi tải ảnh: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+	            }
+			}
+			
 			// action
 			String error = "";
-			String actionCommand = btnSubmit.getActionCommand();
-			int beginIndex = actionCommand.indexOf('_')+1;
 			if(beginIndex == 0) {
 				// add
-				error = sanPhamBus.add(new SanPhamDTO(tenSP, giaban, uploadedImage, trangthai, idDM));
+				error = sanPhamBus.add(new SanPhamDTO(tenSP, giaban, imageName, trangthai, idDM));
 			}else {
 				// update
 				int idSP = Integer.parseInt(actionCommand.substring(beginIndex));
-				error = sanPhamBus.update(new SanPhamDTO(idSP, tenSP, giaban, uploadedImage, trangthai, idDM));
+				error = sanPhamBus.update(new SanPhamDTO(idSP, tenSP, giaban, imageName, trangthai, idDM));
 			}
-
+			
 			// show message
 			if(error != "") {
 				// fail
-				JOptionPane.showMessageDialog(this, error);
+				JOptionPane.showMessageDialog(this, error, "Lỗi", JOptionPane.ERROR_MESSAGE);
 			}
 			else {
 				// success
-				if(beginIndex == 0) {
+				if(beginIndex == 0) 
 					JOptionPane.showMessageDialog(this, "Thêm thành công ");
-				} else {
+				else 
 					JOptionPane.showMessageDialog(this, "Cập nhật thành công ");
-				}
 			}
 		}
 	}
@@ -402,40 +444,20 @@ public class SanPhamDialog extends JDialog {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image files", "jpg", "png", "jpeg"));
         int result = chooser.showOpenDialog(null);
-
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = chooser.getSelectedFile();
-            String sourcePath = selectedFile.getAbsolutePath();
-            String destinationFolder = "../../ASSET/Uploads/";
-            String originalFileName = selectedFile.getName();
-            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-            String randomFileName = UUID.randomUUID().toString() + fileExtension;
-            String destinationPath = destinationFolder + randomFileName;
-
-            try {
-                // Validate file type
-                if (!fileExtension.matches("\\.(jpg|png|jpeg)")) {
-                    JOptionPane.showMessageDialog(this, "Chỉ hỗ trợ file JPG, PNG, JPEG", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                // Copy the image to the destination folder
-                Files.copy(Paths.get(sourcePath), Paths.get(destinationPath), StandardCopyOption.REPLACE_EXISTING);
-
-                // Update the JLabel with the uploaded image
-                BufferedImage buff = ImageIO.read(new File(destinationPath));
-                Image img = buff.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-                ImageIcon icon = new ImageIcon(img);
-                lblImage.setIcon(icon);
-
-                // Store the destination path for later use
-                uploadedImage = randomFileName;
-                System.out.println("Image uploaded successfully to: " + destinationPath);
-
-            } catch (IOException ex) {
+        
+        // Chọn ảnh từ máy
+        try {
+	        if (result == JFileChooser.APPROVE_OPTION) {
+	            uploadFile = chooser.getSelectedFile();
+	            // image preview
+	            BufferedImage buff = ImageIO.read(uploadFile);
+	            Image img = buff.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+	            ImageIcon icon = new ImageIcon(img);
+	            lblImage.setIcon(icon);
+	        }
+	        else uploadFile = null;
+        }catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, "Lỗi khi tải ảnh: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-            }
         }
-    }
-
+	}
 }

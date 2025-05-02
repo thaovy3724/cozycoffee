@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 15, 2025 at 08:09 AM
+-- Generation Time: May 02, 2025 at 05:51 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -20,8 +20,101 @@ SET time_zone = "+00:00";
 --
 -- Database: `coffeeshop`
 --
-CREATE DATABASE IF NOT EXISTS `coffeeshop` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `coffeeshop`;
+
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `xuLyDonHang` (IN `input_idHD` INT)   BEGIN
+    DECLARE sp_id INT;
+    DECLARE sp_soLuong INT;
+    DECLARE ct_id INT;
+    DECLARE nl_id INT;
+    DECLARE nl_soLuongCan FLOAT;
+    DECLARE nl_soLuongCanUpdate FLOAT;
+    DECLARE lo_id INT;
+    DECLARE lo_soLuongTon FLOAT;
+
+    DECLARE done_sp INT DEFAULT 0;
+    DECLARE done_ct INT DEFAULT 0;
+    DECLARE done_nl INT DEFAULT 0;
+    DECLARE done_lo INT DEFAULT 0;
+
+    DECLARE cur_sp CURSOR FOR 
+        SELECT idSP, soluong FROM ct_hoadon WHERE idHD = input_idHD;
+
+    DECLARE cur_ct CURSOR FOR 
+        SELECT idCT FROM congthuc WHERE idSP = sp_id;
+
+    DECLARE cur_nl CURSOR FOR 
+        SELECT idNL, soluong FROM ct_congthucc WHERE idCT = ct_id;
+
+    DECLARE cur_lo CURSOR FOR 
+        SELECT idPN, tonkho FROM lo_nguyenlieu 
+        WHERE idNL = nl_id AND tonkho > 0 
+        ORDER BY hsd ASC;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done_lo = 1;
+
+    OPEN cur_sp;
+    read_sp: LOOP
+        FETCH cur_sp INTO sp_id, sp_soLuong;
+        IF done_sp THEN
+            LEAVE read_sp;
+        END IF;
+
+        SET done_ct = 0;
+        OPEN cur_ct;
+        read_ct: LOOP
+            FETCH cur_ct INTO ct_id;
+            IF done_ct THEN
+                LEAVE read_ct;
+            END IF;
+
+            SET done_nl = 0;
+            OPEN cur_nl;
+            read_nl: LOOP
+                FETCH cur_nl INTO nl_id, nl_soLuongCan;
+                IF done_nl THEN
+                    LEAVE read_nl;
+                END IF;
+
+                SET nl_soLuongCanUpdate = nl_soLuongCan * sp_soLuong;
+
+                SET done_lo = 0;
+                OPEN cur_lo;
+                read_lo: LOOP
+                    FETCH cur_lo INTO lo_id, lo_soLuongTon;
+                    IF done_lo OR nl_soLuongCanUpdate <= 0 THEN
+                        LEAVE read_lo;
+                    END IF;
+
+                    IF lo_soLuongTon >= nl_soLuongCanUpdate THEN
+                        UPDATE lo_nguyenlieu
+                        SET tonkho = tonkho - nl_soLuongCanUpdate
+                        WHERE idPN = lo_id;
+                        SET nl_soLuongCanUpdate = 0;
+                        LEAVE read_lo;
+                    ELSE
+                        SET nl_soLuongCanUpdate = nl_soLuongCanUpdate - lo_soLuongTon;
+                        UPDATE lo_nguyenlieu
+                        SET tonkho = 0
+                        WHERE idPN = lo_id;
+                    END IF;
+                END LOOP;
+                CLOSE cur_lo;
+
+            END LOOP;
+            CLOSE cur_nl;
+
+        END LOOP;
+        CLOSE cur_ct;
+
+    END LOOP;
+    CLOSE cur_sp;
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -31,10 +124,29 @@ USE `coffeeshop`;
 
 CREATE TABLE `congthuc` (
   `idCT` int NOT NULL,
-  `mota` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `trangthai` tinyint(1) NOT NULL,
+  `mota` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `idSP` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `congthuc`
+--
+
+INSERT INTO `congthuc` (`idCT`, `mota`, `idSP`) VALUES
+(2, 'abc', 2),
+(3, 'abc', 3);
+
+--
+-- Triggers `congthuc`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_after_delete_congthuc` AFTER DELETE ON `congthuc` FOR EACH ROW BEGIN
+    UPDATE sanpham
+    SET trangthai = 0
+    WHERE idSP = OLD.idSP;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -47,6 +159,15 @@ CREATE TABLE `ct_congthuc` (
   `idNL` int NOT NULL,
   `soluong` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `ct_congthuc`
+--
+
+INSERT INTO `ct_congthuc` (`idCT`, `idNL`, `soluong`) VALUES
+(2, 1, 1),
+(2, 2, 1),
+(3, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -61,6 +182,19 @@ CREATE TABLE `ct_hoadon` (
   `gialucdat` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `ct_hoadon`
+--
+
+INSERT INTO `ct_hoadon` (`idSP`, `idHD`, `soluong`, `gialucdat`) VALUES
+(2, 2, 1, 1),
+(2, 6, 1, 10000),
+(2, 7, 1, 10000),
+(2, 8, 1, 10000),
+(2, 9, 2, 10000),
+(3, 9, 1, 100000),
+(3, 10, 2, 100000);
+
 -- --------------------------------------------------------
 
 --
@@ -69,7 +203,7 @@ CREATE TABLE `ct_hoadon` (
 
 CREATE TABLE `danhmuc` (
   `idDM` int NOT NULL,
-  `tenDM` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tenDM` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `trangthai` tinyint(1) NOT NULL,
   `idDMCha` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -80,11 +214,10 @@ CREATE TABLE `danhmuc` (
 
 INSERT INTO `danhmuc` (`idDM`, `tenDM`, `trangthai`, `idDMCha`) VALUES
 (13, 'nước uống', 0, NULL),
-(15, 'chè', 1, 13),
-(16, 'sodaaaa', 1, 13),
-(17, 'cà phê', 1, 13),
-(18, 'thức ăn', 1, NULL),
-(19, 'nuoc', 1, NULL);
+(15, 'chè', 0, NULL),
+(16, 'sodaaaa2', 1, 13),
+(17, 'cà phê', 1, 16),
+(18, 'thức ăn', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -97,6 +230,21 @@ CREATE TABLE `hoadon` (
   `ngaytao` date NOT NULL,
   `idTK` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `hoadon`
+--
+
+INSERT INTO `hoadon` (`idHD`, `ngaytao`, `idTK`) VALUES
+(2, '2025-04-28', 2),
+(3, '2025-04-28', 1),
+(4, '2025-04-28', 1),
+(5, '2025-04-28', 1),
+(6, '2025-04-28', 1),
+(7, '2025-04-29', 1),
+(8, '2025-04-29', 1),
+(9, '2025-05-01', 1),
+(10, '2025-05-01', 1);
 
 -- --------------------------------------------------------
 
@@ -113,6 +261,14 @@ CREATE TABLE `lo_nguyenlieu` (
   `hsd` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `lo_nguyenlieu`
+--
+
+INSERT INTO `lo_nguyenlieu` (`idNL`, `idPN`, `soluongnhap`, `tonkho`, `dongia`, `hsd`) VALUES
+(1, 1, 10, 10, 50000, '2025-05-14'),
+(2, 1, 100, 100, 50000, '2025-05-14');
+
 -- --------------------------------------------------------
 
 --
@@ -122,9 +278,16 @@ CREATE TABLE `lo_nguyenlieu` (
 CREATE TABLE `nguyenlieu` (
   `idNL` int NOT NULL,
   `donvi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tenNL` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `trangthai` tinyint(1) NOT NULL
+  `tenNL` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `nguyenlieu`
+--
+
+INSERT INTO `nguyenlieu` (`idNL`, `donvi`, `tenNL`) VALUES
+(1, 'củ', 'cà rốt'),
+(2, 'kg', 'đường');
 
 -- --------------------------------------------------------
 
@@ -134,12 +297,19 @@ CREATE TABLE `nguyenlieu` (
 
 CREATE TABLE `nhacungcap` (
   `idNCC` int NOT NULL,
-  `tenNCC` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `diachi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tenNCC` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `diachi` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `sdt` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `trangthai` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `nhacungcap`
+--
+
+INSERT INTO `nhacungcap` (`idNCC`, `tenNCC`, `diachi`, `sdt`, `email`, `trangthai`) VALUES
+(2, 'abc', 'abc', '0778052785', 'phuongnam@gmail.com', 1);
 
 -- --------------------------------------------------------
 
@@ -149,7 +319,7 @@ CREATE TABLE `nhacungcap` (
 
 CREATE TABLE `nhomquyen` (
   `idNQ` int NOT NULL,
-  `tenNQ` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `tenNQ` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -157,7 +327,7 @@ CREATE TABLE `nhomquyen` (
 --
 
 INSERT INTO `nhomquyen` (`idNQ`, `tenNQ`) VALUES
-(1, 'admin'),
+(1, 'Admin'),
 (2, 'Nhân viên\r\n');
 
 -- --------------------------------------------------------
@@ -175,6 +345,13 @@ CREATE TABLE `phieunhap` (
   `idTT` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `phieunhap`
+--
+
+INSERT INTO `phieunhap` (`idPN`, `ngaytao`, `ngaycapnhat`, `idTK`, `idNCC`, `idTT`) VALUES
+(1, '2025-05-01', '2025-05-01', 2, 2, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -183,12 +360,20 @@ CREATE TABLE `phieunhap` (
 
 CREATE TABLE `sanpham` (
   `idSP` int NOT NULL,
-  `tenSP` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tenSP` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `giaban` int NOT NULL,
   `hinhanh` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `trangthai` tinyint(1) NOT NULL,
   `idDM` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `sanpham`
+--
+
+INSERT INTO `sanpham` (`idSP`, `tenSP`, `giaban`, `hinhanh`, `trangthai`, `idDM`) VALUES
+(2, 'honey', 10000, '173cc6db-396f-4574-8bc3-0a0ebb65f819.jpg', 1, 15),
+(3, 'sữa', 100000, '019d0a20-7a41-432e-816d-1119e7a6a560.jpg', 1, 15);
 
 -- --------------------------------------------------------
 
@@ -198,12 +383,20 @@ CREATE TABLE `sanpham` (
 
 CREATE TABLE `taikhoan` (
   `idTK` int NOT NULL,
-  `tenTK` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tenTK` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `matkhau` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `trangthai` tinyint(1) NOT NULL,
   `idNQ` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `taikhoan`
+--
+
+INSERT INTO `taikhoan` (`idTK`, `tenTK`, `matkhau`, `email`, `trangthai`, `idNQ`) VALUES
+(1, 'thaovy3724', '$2a$10$S9hM1lWCViB1IAeLqeGd9uh2aOtm1l/OG7atMylHQeInw2p6ECxgy', 'thaovy3724@gmail.com', 1, 1),
+(2, 'Như Ý', '0778052785Vyle.', 'nhuy3011@gmail.com', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -213,7 +406,7 @@ CREATE TABLE `taikhoan` (
 
 CREATE TABLE `trangthai_pn` (
   `idTT` int NOT NULL,
-  `tenTT` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `tenTT` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -325,31 +518,31 @@ ALTER TABLE `trangthai_pn`
 -- AUTO_INCREMENT for table `congthuc`
 --
 ALTER TABLE `congthuc`
-  MODIFY `idCT` int NOT NULL AUTO_INCREMENT;
+  MODIFY `idCT` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `danhmuc`
 --
 ALTER TABLE `danhmuc`
-  MODIFY `idDM` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `idDM` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `hoadon`
 --
 ALTER TABLE `hoadon`
-  MODIFY `idHD` int NOT NULL AUTO_INCREMENT;
+  MODIFY `idHD` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `nguyenlieu`
 --
 ALTER TABLE `nguyenlieu`
-  MODIFY `idNL` int NOT NULL AUTO_INCREMENT;
+  MODIFY `idNL` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `nhacungcap`
 --
 ALTER TABLE `nhacungcap`
-  MODIFY `idNCC` int NOT NULL AUTO_INCREMENT;
+  MODIFY `idNCC` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `nhomquyen`
@@ -361,19 +554,19 @@ ALTER TABLE `nhomquyen`
 -- AUTO_INCREMENT for table `phieunhap`
 --
 ALTER TABLE `phieunhap`
-  MODIFY `idPN` int NOT NULL AUTO_INCREMENT;
+  MODIFY `idPN` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `sanpham`
 --
 ALTER TABLE `sanpham`
-  MODIFY `idSP` int NOT NULL AUTO_INCREMENT;
+  MODIFY `idSP` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `taikhoan`
 --
 ALTER TABLE `taikhoan`
-  MODIFY `idTK` int NOT NULL AUTO_INCREMENT;
+  MODIFY `idTK` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `trangthai_pn`
@@ -403,7 +596,8 @@ ALTER TABLE `ct_congthuc`
 --
 ALTER TABLE `ct_hoadon`
   ADD CONSTRAINT `ct_hoadon_ibfk_1` FOREIGN KEY (`idSP`) REFERENCES `sanpham` (`idSP`),
-  ADD CONSTRAINT `ct_hoadon_ibfk_2` FOREIGN KEY (`idHD`) REFERENCES `hoadon` (`idHD`);
+  ADD CONSTRAINT `ct_hoadon_ibfk_2` FOREIGN KEY (`idHD`) REFERENCES `hoadon` (`idHD`),
+  ADD CONSTRAINT `ct_hoadon_ibfk_3` FOREIGN KEY (`idSP`) REFERENCES `sanpham` (`idSP`);
 
 --
 -- Constraints for table `hoadon`
@@ -437,6 +631,17 @@ ALTER TABLE `sanpham`
 --
 ALTER TABLE `taikhoan`
   ADD CONSTRAINT `taikhoan_ibfk_1` FOREIGN KEY (`idNQ`) REFERENCES `nhomquyen` (`idNQ`);
+
+DELIMITER $$
+--
+-- Events
+--
+CREATE DEFINER=`root`@`localhost` EVENT `cap_nhat_ton_kho_het_han` ON SCHEDULE EVERY 1 DAY STARTS '2025-05-01 08:09:15' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE lo_nguyenlieu
+  SET tonkho = 0
+  WHERE hsd < CURRENT_DATE
+    AND tonkho > 0$$
+
+DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -9,4 +9,7 @@ module cozycoffee {
 	requires java.sql;
 	requires mysql.connector.j;
     requires jcalendar;
+    requires kernel;
+    requires layout;
+    requires jbcrypt;
 }

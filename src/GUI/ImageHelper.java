@@ -8,13 +8,13 @@ public class ImageHelper {
 	int width;
 	int height;
 	URL url;
-
+	
 	public ImageHelper(int width, int height, URL url) {
 		this.width = width;
 		this.height = height;
 		this.url = url;
 	}
-
+	
 	public ImageIcon getScaledImage() {
 		// Load the original image
 		ImageIcon originalIcon = new ImageIcon(url);
