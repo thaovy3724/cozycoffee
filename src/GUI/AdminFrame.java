@@ -66,9 +66,6 @@ public class AdminFrame extends JFrame {
         setMinimumSize(new Dimension(800, 400));
         getContentPane().setLayout(new BorderLayout());
 
-        getContentPane().add(menuInit(), BorderLayout.WEST);
-        
-                
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.add(navbarInit(), BorderLayout.NORTH);
 
@@ -78,6 +75,7 @@ public class AdminFrame extends JFrame {
         centerPanel.add(dynamicPanel, BorderLayout.CENTER);
         getContentPane().add(centerPanel, BorderLayout.CENTER);
 
+        getContentPane().add(menuInit(), BorderLayout.WEST);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);

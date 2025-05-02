@@ -14,14 +14,12 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-import BUS.CT_CongThucBUS;
 import BUS.CT_HoaDonBUS;
 import BUS.HoaDonBUS;
 import BUS.Lo_NguyenLieuBUS;
 import BUS.NguyenLieuBUS;
 import BUS.PhieuNhapBUS;
 import BUS.SanPhamBUS;
-import BUS.TaiKhoanBUS;
 import DTO.CT_HoaDonDTO;
 import DTO.ComboItem;
 import DTO.HoaDonDTO;
@@ -431,13 +429,14 @@ public class ThongKePanel extends JPanel {
 		NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(idNL);
 		if (nl == null) return;
 
-		List<PhieuNhapDTO> danhSachPN = phieuNhapBus.searchByDate(Date.valueOf(start), Date.valueOf(end));
+		List<PhieuNhapDTO> danhSachPN = phieuNhapBus.searchCompleteByDate(Date.valueOf(start), Date.valueOf(end));
 		List<Lo_NguyenLieuDTO> danhSachLo = new ArrayList<>();
 
 		for (PhieuNhapDTO pn : danhSachPN) {
 			List<Lo_NguyenLieuDTO> loList = lo_NguyenLieuBus.getAllByIdPN(pn.getIdPN());
 			for (Lo_NguyenLieuDTO lo : loList) {
 				if (lo.getIdNL() == nl.getIdNL()) {
+					System.out.print(1);
 					danhSachLo.add(lo);
 				}
 			}
@@ -476,7 +475,7 @@ public class ThongKePanel extends JPanel {
 					long doanhThuThang = hoaDonBus.getAllTongTien(hoaDonList);
 					doanhThu[i] += doanhThuThang;
 
-					List<PhieuNhapDTO> phieuNhapList = phieuNhapBus.searchByDate(Date.valueOf(startOfMonth), Date.valueOf(endOfMonth));
+					List<PhieuNhapDTO> phieuNhapList = phieuNhapBus.searchCompleteByDate(Date.valueOf(startOfMonth), Date.valueOf(endOfMonth));
 					long tongChiThang = phieuNhapBus.getAllTongTien(phieuNhapList);
 					tongChi[i] += tongChiThang;
 
@@ -546,7 +545,7 @@ public class ThongKePanel extends JPanel {
 					long doanhThuTuan = hoaDonBus.getAllTongTien(hoaDonList);
 					doanhThu[i] += doanhThuTuan;
 
-					List<PhieuNhapDTO> phieuNhapList = phieuNhapBus.searchByDate(sqlWeekStart, sqlWeekEnd);
+					List<PhieuNhapDTO> phieuNhapList = phieuNhapBus.searchCompleteByDate(sqlWeekStart, sqlWeekEnd);
 					long tongChiTuan = phieuNhapBus.getAllTongTien(phieuNhapList);
 					tongChi[i] += tongChiTuan;
 
@@ -619,7 +618,7 @@ public class ThongKePanel extends JPanel {
 						LocalDate startOfMonth = LocalDate.of(year, i + 1, 1);
 						LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
 
-						List<PhieuNhapDTO> phieuNhapList = phieuNhapBus.searchByDate(Date.valueOf(startOfMonth), Date.valueOf(endOfMonth));
+						List<PhieuNhapDTO> phieuNhapList = phieuNhapBus.searchCompleteByDate(Date.valueOf(startOfMonth), Date.valueOf(endOfMonth));
 						for (PhieuNhapDTO pn : phieuNhapList) {
 							List<Lo_NguyenLieuDTO> lo_NLList = lo_NguyenLieuBus.getAllByIdPN(pn.getIdPN());
 							for (Lo_NguyenLieuDTO lo : lo_NLList) {
@@ -678,7 +677,7 @@ public class ThongKePanel extends JPanel {
 						Date sqlWeekStart = Date.valueOf(weekStart);
 						Date sqlWeekEnd = Date.valueOf(weekEnd);
 
-						List<PhieuNhapDTO> phieuNhapList = phieuNhapBus.searchByDate(sqlWeekStart, sqlWeekEnd);
+						List<PhieuNhapDTO> phieuNhapList = phieuNhapBus.searchCompleteByDate(sqlWeekStart, sqlWeekEnd);
 						for (PhieuNhapDTO pn : phieuNhapList) {
 							List<Lo_NguyenLieuDTO> lo_NLList = lo_NguyenLieuBus.getAllByIdPN(pn.getIdPN());
 							for (Lo_NguyenLieuDTO lo : lo_NLList) {
@@ -758,7 +757,7 @@ public class ThongKePanel extends JPanel {
 					for (int i = 0; i < 12; i++) {
 						row[i + 1] = tongBanSPThang[i];
 					}
-					row[row.length - 1] = tongBanNam;
+					row[row.length - 1] = tongBanSPNam;
 					thongKeJTableModel.addRow(row);
 				}
 

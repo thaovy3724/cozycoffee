@@ -28,8 +28,8 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 	protected PhieuNhapDTO mapResultSetToDTO(ResultSet rs) throws SQLException {
 		return new PhieuNhapDTO(
 				rs.getInt("idPN"),
-				rs.getString("ngaytao"),
-				rs.getString("ngaycapnhat"),
+				rs.getDate("ngaytao"),
+				rs.getDate("ngaycapnhat"),
 				rs.getInt("idTK"),
 				rs.getInt("idNCC"),
 				rs.getInt("idTT"));
@@ -119,7 +119,7 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
         return result;
     }
 
-	public List<PhieuNhapDTO> searchByDate(Date start, Date end) {
+	public List<PhieuNhapDTO> searchCompleteByDate(Date start, Date end) {
         Connection link = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -127,7 +127,7 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
         List<Date> params = new ArrayList<>();
 
         try {
-            StringBuilder sql = new StringBuilder("SELECT * FROM phieunhap WHERE 1=1 ");
+            StringBuilder sql = new StringBuilder("SELECT * FROM phieunhap WHERE idTT = 2 ");
             if (start != null) {
                 sql.append("AND (ngaycapnhat >= ?) ");
                 params.add(start);

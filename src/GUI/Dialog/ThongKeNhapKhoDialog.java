@@ -69,10 +69,8 @@ public class ThongKeNhapKhoDialog extends JDialog {
 			float soLuong = lo.getSoluongnhap();
 			int donGia = lo.getDongia();
 			long tongtien = (long) (soLuong * donGia);
-			String ngayNhap = phieuNhapBUS.findByIdPN(lo.getIdPN())
-							.getNgaycapnhat()
-							.format(dateFormatter)
-							.toString();
+			
+			String ngayNhap = phieuNhapBUS.findByIdPN(lo.getIdPN()).getNgaycapnhat().format(dateFormatter);
 			detailModel.addRow(new Object[]{
 					"Lô "+ idLo,
 					soLuong,
@@ -94,24 +92,6 @@ public class ThongKeNhapKhoDialog extends JDialog {
 		});
 
 		setVisible(true);
-
-
-//		{
-//			JPanel buttonPane = new JPanel();
-//			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-//			{
-//				JButton okButton = new JButton("OK");
-//				okButton.setActionCommand("OK");
-//				buttonPane.add(okButton);
-//				getRootPane().setDefaultButton(okButton);
-//			}
-//			{
-//				JButton cancelButton = new JButton("Cancel");
-//				cancelButton.setActionCommand("Cancel");
-//				buttonPane.add(cancelButton);
-//			}
-//		}
 	}
 
 }

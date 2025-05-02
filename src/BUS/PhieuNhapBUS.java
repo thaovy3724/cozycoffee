@@ -23,8 +23,8 @@ public class PhieuNhapBUS {
     }
 
     // Hiếu
-    public List<PhieuNhapDTO> searchByDate(Date start, Date end) {
-        return phieuNhapDao.searchByDate(start, end);
+    public List<PhieuNhapDTO> searchCompleteByDate(Date start, Date end) {
+        return phieuNhapDao.searchCompleteByDate(start, end);
     }
 
     public long getAllTongTien(List<PhieuNhapDTO> phieuNhapDTOList) {

@@ -103,4 +103,6 @@ public class PhieuNhapDTO {
     public void setIdTT(int idTT) {
         this.idTT = idTT;
     }
+
+    
 }
