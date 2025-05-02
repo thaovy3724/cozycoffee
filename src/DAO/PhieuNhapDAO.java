@@ -75,7 +75,7 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 				pstmt.setFloat(3, chitiet.getSoluongnhap());
 				pstmt.setFloat(4, chitiet.getSoluongnhap());
 				pstmt.setInt(5, chitiet.getDongia());
-				pstmt.setString(6, chitiet.getHsd());
+				pstmt.setDate(6, Date.valueOf(chitiet.getHsd()));
 
 				rowsAffected = pstmt.executeUpdate();
 				if (rowsAffected == 0) {
@@ -98,33 +98,28 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 		return newIdPN;
 	}
 
-    public long getTongTienByIDPN(int idPN) {
+	// Hiếu
+	public PhieuNhapDTO findByIdPN(int idPN) {
         Connection link = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        long tongtien = 0;
-
+        PhieuNhapDTO result = null;
         try {
-            String sql = "SELECT sum(lnl.dongia * lnl.soluongnhap) AS tongtien " +
-                    "FROM phieunhap pn " +
-                    "INNER JOIN lo_nguyenlieu lnl on pn.idPN = lnl.idPN " +
-                    "WHERE pn.idPN = ?";
-
+            String sql = "SELECT * FROM " + table + " WHERE idPN = ?";
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1, idPN);
             rs = pstmt.executeQuery();
-            if (rs.next()) tongtien = rs.getLong("tongtien");
-        } catch (ClassNotFoundException | SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
+            if (rs.next()) result = mapResultSetToDTO(rs);
+        }catch(ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }finally {
             db.close(link);
         }
-
-        return tongtien;
+        return result;
     }
 
-    public List<PhieuNhapDTO> searchByDate(Date start, Date end) {
+	public List<PhieuNhapDTO> searchByDate(Date start, Date end) {
         Connection link = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -158,5 +153,31 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
         }
 
         return result;
+    }
+
+	public long getTotalAmount(int idPN) {
+        Connection link = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        long tongtien = 0;
+
+        try {
+            String sql = "SELECT sum(lnl.dongia * lnl.soluongnhap) AS tongtien " +
+                    "FROM phieunhap pn " +
+                    "INNER JOIN lo_nguyenlieu lnl on pn.idPN = lnl.idPN " +
+                    "WHERE pn.idPN = ?";
+
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            pstmt.setInt(1, idPN);
+            rs = pstmt.executeQuery();
+            if (rs.next()) tongtien = rs.getLong("tongtien");
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            db.close(link);
+        }
+
+        return tongtien;
     }
 }

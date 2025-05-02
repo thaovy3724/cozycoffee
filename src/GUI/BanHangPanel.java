@@ -43,6 +43,8 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import java.awt.FlowLayout;
+import java.awt.Dimension;
+import java.awt.Cursor;
 
 public class BanHangPanel extends JPanel {
 	private SanPhamBUS sanPhamBus = new SanPhamBUS();
@@ -86,7 +88,7 @@ public class BanHangPanel extends JPanel {
 		leftPanel.add(actionPanel, BorderLayout.NORTH);
 		
 		txtSearch = new JTextField();
-		txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+		txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		actionPanel.add(txtSearch);
 		txtSearch.setColumns(18);
 		
@@ -96,20 +98,20 @@ public class BanHangPanel extends JPanel {
 		actionPanel.add(cboDM);
 		
 		btnSearch = new JButton("Tìm");
-		btnSearch.setBackground(new Color(191, 146, 100));
+		btnSearch.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		ImageHelper searchIcon = new ImageHelper(20, 20, BanHangPanel.class.getResource("/ASSET/Images/searchIcon.png"));
+		btnSearch.setIcon(searchIcon.getScaledImage());
+		btnSearch.setBackground(new Color(245, 255, 250));
 		btnSearch.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		btnSearch.setContentAreaFilled(false);
 		btnSearch.setOpaque(true);
 		btnSearch.addActionListener(e->search());
 		actionPanel.add(btnSearch);
 		productListPanel.setBackground(new Color(255, 240, 220));
-		// === Action Panel ===
-
-		// === Product Panel ===
-		productListPanel.setLayout(new GridLayout(0, 3, 10, 10));
 		
 		JScrollPane productListScrollPane = new JScrollPane(productListPanel);
-		loadProduct(null);
+		productListPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		loadProduct(sanPhamBus.getAllActive());
 		leftPanel.add(productListScrollPane, BorderLayout.CENTER);
 		// === Product Panel ===
 	}
@@ -174,6 +176,7 @@ public class BanHangPanel extends JPanel {
 		paymentPanel.add(lblTotalQuantity, gbc_lblTotalQuantity);
 		
 		JButton btnPay = new JButton("Thanh toán");
+		btnPay.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnPay.setForeground(Color.WHITE);
 		btnPay.setBackground(new Color(244, 67, 54));
 		btnPay.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -219,7 +222,9 @@ public class BanHangPanel extends JPanel {
 		deletePanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
 		btnDel = new JButton("Xóa");
-		btnDel.setBackground(new Color(184, 0, 0));
+		btnDel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnDel.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnDel.setBackground(new Color(255, 215, 0));
 		btnDel.setIcon(new ImageIcon(BanHangPanel.class.getResource("/ASSET/Images/icons8_cancel_30px_1.png")));
 		btnDel.addActionListener(e->delete());
 		deletePanel.add(btnDel);
@@ -290,56 +295,73 @@ public class BanHangPanel extends JPanel {
 		// ==== Order detail ====
 	}
 
-	private void loadProduct(List<SanPhamDTO> arr){
-//		// remove all items inside productListPanel
-		productListPanel.removeAll();
-		productListPanel.revalidate();
-		productListPanel.repaint();
+	private void loadProduct(List<SanPhamDTO> arr) {
+	    // Remove all items inside productListPanel
+	    productListPanel.removeAll();
+	    productListPanel.revalidate();
+	    productListPanel.repaint();
 
-		// load san pham
-		if(arr == null) arr = sanPhamBus.getAllActive();
-		//kiem tra mang co null ko
-		if(arr.size() != 0){
+	    // Load san pham
+	    if (arr != null){
 			ImageHelper addIcon = new ImageHelper(20, 20, BanHangPanel.class.getResource("/ASSET/Images/icons8_add_30px.png"));
-			for(SanPhamDTO sp : arr){
-				// hiển thị các card chứa thông tin sản phẩm (hình ảnh, tên SP, giá bán, nút mua)
-				//==== Card ====
+
+			for (SanPhamDTO sp : arr) {
+				// Hiển thị các card chứa thông tin sản phẩm
+				// ==== Card ====
 				JPanel productCard = new JPanel();
+				productCard.setBackground(new Color(245, 222, 179));
 				productListPanel.add(productCard);
 				productCard.setLayout(new BoxLayout(productCard, BoxLayout.Y_AXIS));
 				productCard.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-				
+
+				// Giới hạn kích thước của productCard
+				productCard.setPreferredSize(new Dimension(120, 165)); // Điều chỉnh chiều cao và chiều rộng
+				productCard.setMaximumSize(new Dimension(120, 165));   // Đảm bảo không vượt quá kích thước này
+
+				// Hình ảnh sản phẩm
 				JLabel lblProductImage = new JLabel("");
 				lblProductImage.setAlignmentX(Component.CENTER_ALIGNMENT);
-				ImageHelper productImg = new ImageHelper(100, 100, BanHangPanel.class.getResource("/ASSET/Uploads/"+sp.getHinhanh()));
+	//	        ImageHelper productImg = new ImageHelper(80, 80, BanHangPanel.class.getResource("/ASSET/Uploads/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg"));
+				ImageHelper productImg = new ImageHelper(80, 80, BanHangPanel.class.getResource("/ASSET/Uploads/" + sp.getHinhanh()));
 				lblProductImage.setIcon(productImg.getScaledImage());
 				productCard.add(lblProductImage);
-				
-				Component verticalStrut = Box.createVerticalStrut(5);
+
+				// Khoảng cách nhỏ hơn
+				Component verticalStrut = Box.createVerticalStrut(5); // Giảm từ 5 xuống 3
 				productCard.add(verticalStrut);
-				
+
+				// Tên sản phẩm
+	//	        JLabel lblTenSP = new JLabel("Cafe");
 				JLabel lblTenSP = new JLabel(sp.getTenSP());
 				lblTenSP.setAlignmentX(Component.CENTER_ALIGNMENT);
-				lblTenSP.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+				lblTenSP.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Giảm font size từ 15 xuống 14
 				productCard.add(lblTenSP);
-				
-				Component verticalStrut_1 = Box.createVerticalStrut(5);
+
+				Component verticalStrut_1 = Box.createVerticalStrut(3); // Giảm từ 5 xuống 3
 				productCard.add(verticalStrut_1);
-				
+
+				// Giá bán
+	//	        JLabel lblGiaban = new JLabel(formatCurrency(100000));
 				JLabel lblGiaban = new JLabel(formatCurrency(sp.getGiaban()));
-				lblGiaban.setFont(new Font("Segoe UI", Font.BOLD, 13));
+				lblGiaban.setFont(new Font("Segoe UI", Font.BOLD, 12)); // Giảm font size từ 13 xuống 12
 				lblGiaban.setAlignmentX(Component.CENTER_ALIGNMENT);
 				productCard.add(lblGiaban);
-				
+
+				// Nút "Thêm"
 				JButton btnAdd = new JButton("Thêm");
-				btnAdd.setBackground(new Color(0,128,0));
+				btnAdd.setForeground(new Color(255, 255, 255));
+				btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				btnAdd.setBackground(new Color(0, 128, 0));
 				btnAdd.setAlignmentX(Component.CENTER_ALIGNMENT);
-				btnAdd.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+				btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 12)); // Giảm font size từ 13 xuống 12
 				btnAdd.setIcon(addIcon.getScaledImage());
-				btnAdd.addActionListener(e->addDetail(sp));
+				btnAdd.addActionListener(e -> addDetail(sp));
+				
+				Component verticalStrut_2 = Box.createVerticalStrut(4);
+				productCard.add(verticalStrut_2);
 				productCard.add(btnAdd);
-				//==== Card ====
-		}
+				// ==== Card ====
+			}
 		}
 	}
 

@@ -18,16 +18,21 @@ public class PhieuNhapBUS {
         return phieuNhapDao.add(phieuNhap, chitiet);
     }
 
-    public long getAllPNTongTien(List<PhieuNhapDTO> phieuNhapDTOList) {
+    public PhieuNhapDTO findByIdPN(int idPN) {
+        return phieuNhapDao.findByIdPN(idPN);
+    }
+
+    // Hiếu
+    public List<PhieuNhapDTO> searchByDate(Date start, Date end) {
+        return phieuNhapDao.searchByDate(start, end);
+    }
+
+    public long getAllTongTien(List<PhieuNhapDTO> phieuNhapDTOList) {
         long tongtien = 0;
         for (PhieuNhapDTO pn : phieuNhapDTOList) {
-            tongtien += phieuNhapDao.getTongTienByIDPN(pn.getIdPN());
+            tongtien += phieuNhapDao.getTotalAmount(pn.getIdPN());
         }
 
         return tongtien;
-    }
-
-    public List<PhieuNhapDTO> searchPhieuNhapByDate(Date start, Date end) {
-        return phieuNhapDao.searchByDate(start, end);
     }
 }

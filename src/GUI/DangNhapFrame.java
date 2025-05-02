@@ -18,6 +18,8 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
+import java.awt.Cursor;
 
 /*
  * Do ở frame đăng nhập tạm thời có một tính năng nên tui để actionListener trong cái khởi tạo luôn nha
@@ -29,6 +31,7 @@ public class DangNhapFrame extends JFrame {
 	private JPasswordField passwordField;
 
 	public DangNhapFrame() {
+		getContentPane().setBackground(new Color(255, 228, 181));
 		// Cấu hình JFrame
 		setTitle("Login");
 		setSize(800, 500);
@@ -40,52 +43,59 @@ public class DangNhapFrame extends JFrame {
 		JLabel lblIcon = new JLabel("");
 		lblIcon.setHorizontalAlignment(SwingConstants.CENTER);
 		lblIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
-		lblIcon.setBounds(50, 75, 350, 350);
+		lblIcon.setBounds(0, 0, 389, 463);
 		// Thêm hình ảnh (thay đường dẫn bằng file ảnh của bạn)
-		ImageHelper img = new ImageHelper(400, 400, DangNhapFrame.class.getResource("/ASSET/Images/logoBg.png"));
+		ImageHelper img = new ImageHelper(400, 465, DangNhapFrame.class.getResource("/ASSET/Images/logoBg.png"));
 		lblIcon.setIcon(img.getScaledImage());
 		getContentPane().add(lblIcon);
 
 		// Form đăng nhập (JPanel)
 		JPanel panel = new JPanel();
-		panel.setBounds(450, 125, 300, 250);
+		panel.setBackground(new Color(255, 228, 181));
+		panel.setBounds(409, 28, 353, 392);
 		panel.setLayout(null);
 		getContentPane().add(panel);
 
-		// Tiêu đề "Xin chào"
-		JLabel lblFormHeader = new JLabel("XIN CHÀO");
-		lblFormHeader.setAlignmentX(Component.CENTER_ALIGNMENT);
-		lblFormHeader.setFont(new Font("Inter", Font.BOLD, 14));
-		lblFormHeader.setBounds(115, 10, 80, 25);
-		panel.add(lblFormHeader);
-
 		// label tenTK
 		JLabel lblUsername_1 = new JLabel("Tên tài khoản");
-		lblUsername_1.setBounds(20, 50, 80, 25);
+		lblUsername_1.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 14));
+		lblUsername_1.setBounds(20, 119, 94, 25);
 		panel.add(lblUsername_1);
 
 		// tenTK field
 		textTenTK = new JTextField();
-		textTenTK.setBounds(100, 50, 180, 25);
+		textTenTK.setBounds(20, 154, 323, 41);
 		panel.add(textTenTK);
 
 		// label matkhau
 		JLabel lblMatKhau = new JLabel("Mật khẩu");
-		lblMatKhau.setBounds(20, 100, 80, 25);
+		lblMatKhau.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 14));
+		lblMatKhau.setBounds(20, 205, 80, 25);
 		panel.add(lblMatKhau);
 
 		//password field
 		passwordField = new JPasswordField();
-		passwordField.setBounds(100, 100, 180, 25);
+		passwordField.setBounds(20, 240, 323, 41);
 		panel.add(passwordField);
 
 		// Nút Login
 		JButton btnLogin = new JButton("ĐĂNG NHẬP");
-		btnLogin.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnLogin.setForeground(new Color(255, 255, 255));
-		btnLogin.setBackground(new Color(128, 128, 255));
-		btnLogin.setBounds(30, 175, 240, 60);
+		btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnLogin.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		btnLogin.setForeground(new Color(255, 255, 255, 240));
+		btnLogin.setBackground(new Color(139, 69, 19));
+		btnLogin.setBounds(221, 326, 122, 41);
 		panel.add(btnLogin);
+		
+				// Tiêu đề "Xin chào"
+				JLabel lblFormHeader = new JLabel("HELLO CAFÉ");
+				lblFormHeader.setIcon(new ImageIcon(DangNhapFrame.class.getResource("/ASSET/Images/logo.png")));
+
+				lblFormHeader.setBounds(46, 0, 307, 109);
+				panel.add(lblFormHeader);
+				lblFormHeader.setVerticalAlignment(SwingConstants.TOP);
+				lblFormHeader.setAlignmentX(Component.CENTER_ALIGNMENT);
+				lblFormHeader.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 30));
 
 		// Sự kiện cho nút Login
 		btnLogin.addActionListener(new ActionListener() {

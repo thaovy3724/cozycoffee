@@ -23,17 +23,11 @@ import javax.swing.JOptionPane;
 import java.awt.GridBagConstraints;
 import java.awt.Font;
 import java.awt.Insets;
-import java.util.List;
 
-import javax.swing.JTextField;
 import java.awt.Color;
-import javax.swing.JComboBox;
 
 public class DoiMatKhauDialog extends JDialog {
-	private DanhMucBUS danhMucBus = new DanhMucBUS();
 
-    private AdminFrame adminFrame;
-    private StaffFrame staffFrame;
     private TaiKhoanDTO currentUser;
     
 	private static final long serialVersionUID = 1L;
@@ -45,7 +39,8 @@ public class DoiMatKhauDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public DoiMatKhauDialog() {
+	public DoiMatKhauDialog(TaiKhoanDTO currentUser) {
+		this.currentUser = currentUser;
         setTitle("Đổi mật khẩu");
 		setSize(442, 168);
 		getContentPane().setLayout(new BorderLayout());
@@ -204,40 +199,32 @@ public class DoiMatKhauDialog extends JDialog {
 
 		// PwdConfirm
 		char[] pwdConfirm = txtConfirmPwd.getPassword();
-		if(PwdConfirm.trim().isEmpty()){
-			errPwdConfirm.setText("Mật khẩu xác nhận không được để trống");
+		String pwdConfirmStr = pwdConfirm.toString();
+		if(pwdConfirmStr.isEmpty()){
+			errConfirmPwd.setText("Mật khẩu xác nhận không được để trống");
 			isError = true;
-		}else if(!PwdConfirm.equals(txtPwd.getText())){
-			errPwdConfirm.setText("Mật khẩu xác nhận không chính xác");
+		}else if(!pwdConfirmStr.equals(newPwdStr)){
+			errConfirmPwd.setText("Mật khẩu xác nhận không chính xác");
 			isError = true;
 		}
+		return isError;
     }
 
 	private void handleChangePassword() {
         String newPassword = new String(txtNewPwd.getPassword());
-        String confirmPassword = new String(txtConfirmPwd.getPassword());
 
-
-        // Kiểm tra mật khẩu
-        if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
-            errNewPwd.setText("Mật khẩu không được để trống");
-        }
-
-        if (!newPassword.equals(confirmPassword)) {
-            JOptionPane.showMessageDialog(this, "Mật khẩu xác nhận không khớp", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Cập nhật mật khẩu
-        TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();
-        String hashedPassword = taiKhoanBUS.hashPassword(newPassword);
-        currentUser.setMatkhau(hashedPassword);
-        String error = taiKhoanBUS.updatePassword(currentUser);
-        if (error.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-            dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, error, "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
+		if(!isError()){
+			// Cập nhật mật khẩu
+			TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();
+			String hashedPassword = taiKhoanBUS.hashPassword(newPassword);
+			currentUser.setMatkhau(hashedPassword);
+			String error = taiKhoanBUS.updatePassword(currentUser);
+			if (error.isEmpty()) {
+				JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+				dispose();
+			} else {
+				JOptionPane.showMessageDialog(this, error, "Lỗi", JOptionPane.ERROR_MESSAGE);
+			}
+		}
     }
 }

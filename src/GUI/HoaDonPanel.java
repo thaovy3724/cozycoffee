@@ -92,8 +92,8 @@ public class HoaDonPanel extends JPanel {
 		
 		dateChooserEnd = new JDateChooser();
 		searchContentPanel1.add(dateChooserEnd);
-		dateChooserStart.setDateFormatString("yyyy-MM-dd");
-		((JTextField) dateChooserStart.getDateEditor().getUiComponent()).setEditable(false); // Tắt editor
+		dateChooserEnd.setDateFormatString("yyyy-MM-dd");
+		((JTextField) dateChooserEnd.getDateEditor().getUiComponent()).setEditable(false); // Tắt editor
 
 		JPanel searchContentPanel2 = new JPanel();
 		searchContentPanel.add(searchContentPanel2);

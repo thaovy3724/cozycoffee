@@ -220,22 +220,17 @@ public class HoaDonBUS {
         }
     }
 
-    public long getAllHDTongTien(List<HoaDonDTO> hoaDonDTOList) {
+     // Tìm kiếm hóa đơn theo khoảng ngày tạo
+     public List<HoaDonDTO> searchByDate(Date start, Date end) {
+        return hoaDonDao.searchByDate(start, end);
+    }
+
+    public long getAllTongTien(List<HoaDonDTO> hoaDonDTOList) {
         long tongtien = 0;
         for(HoaDonDTO hd: hoaDonDTOList) {
-            tongtien += hoaDonDao.getTongTienByIdHD(hd.getIdHD());
+            tongtien += hoaDonDao.getTotalAmount(hd.getIdHD());
         }
 
         return tongtien;
-    }
-
-    // Tìm kiếm hóa đơn theo khoảng tổng tiền
-    public List<HoaDonDTO> searchHoaDonByTongTien(int giaBD, int giaKT) {
-        return hoaDonDao.searchByTongTien(giaBD, giaKT);
-    }
-
-    // Tìm kiếm hóa đơn theo khoảng ngày tạo
-    public List<HoaDonDTO> searchHoaDonByDate(Date start, Date end) {
-        return hoaDonDao.searchByDate(start, end);
     }
 }

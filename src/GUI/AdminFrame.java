@@ -1,7 +1,7 @@
 package GUI;
 
 import DTO.TaiKhoanDTO;
-import GUI.Dialog.DoiMatKhauDialogCopy;
+import GUI.Dialog.DoiMatKhauDialog;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -118,6 +118,8 @@ public class AdminFrame extends JFrame {
         btnThongKe.setPreferredSize(new Dimension(200, 50));
         
         btnThongKe.setIconTextGap(10);
+        // set default
+        btnThongKe.setSelected(true);
         toggleBtnInit(btnThongKe);
         menuPanel.add(btnThongKe, gbc);
         
@@ -296,7 +298,7 @@ public class AdminFrame extends JFrame {
 			@Override
             public void actionPerformed(ActionEvent e) {
 				// Mở dialog đổi mật khẩu
-				new DoiMatKhauDialogCopy(AdminFrame.this);
+				new DoiMatKhauDialog(currentUser);
                 // nếu chỉ dùng "this" sẽ trỏ đến lớp ActionListener
 			}
 		});
@@ -336,10 +338,12 @@ public class AdminFrame extends JFrame {
         });
 
         logoutBtn.addActionListener(e -> {
-            int confirm = showOptionDialog(
-                    "Xác nhận đăng xuất",
-                    "Bạn có chắc chắn muốn đăng xuất không?"
-            );
+            int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Bạn có chắc chắn muốn đăng xuất không?",
+                "Xác nhận đăng xuất",
+                JOptionPane.YES_NO_OPTION
+        );
             if (confirm == JOptionPane.YES_OPTION) {
                 dispose();
                 new DangNhapFrame().setVisible(true);
@@ -379,7 +383,7 @@ public class AdminFrame extends JFrame {
 
         switch (panelType) {
             case "thongke":
-                selectedPanel = new JPanel(); // Thay bằng panel Thống kê
+                selectedPanel = new ThongKePanel(); // Thay bằng panel Thống kê
                 break;
             case "hoadon":
                 selectedPanel = new HoaDonPanel(); // Thay bằng panel Hóa đơn
@@ -411,14 +415,5 @@ public class AdminFrame extends JFrame {
         dynamicPanel.add(selectedPanel, BorderLayout.CENTER);
         dynamicPanel.revalidate();
         dynamicPanel.repaint();
-    }
-
-    private int showOptionDialog(String title, String message) {
-        return JOptionPane.showConfirmDialog(
-                AdminFrame.this,
-                message,
-                title,
-                JOptionPane.YES_NO_OPTION
-        );
     }
 }

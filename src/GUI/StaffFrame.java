@@ -1,7 +1,7 @@
 package GUI;
 
 import DTO.TaiKhoanDTO;
-import GUI.Dialog.DoiMatKhauDialogCopy;
+import GUI.Dialog.DoiMatKhauDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -212,7 +212,7 @@ public class StaffFrame extends JFrame {
 			@Override
             public void actionPerformed(ActionEvent e) {
 				// Mở dialog đổi mật khẩu
-				new DoiMatKhauDialogCopy(StaffFrame.this);
+				new DoiMatKhauDialog(currentUser);
                 // nếu chỉ dùng "this" sẽ trỏ đến lớp ActionListener
 			}
 		});
@@ -252,10 +252,12 @@ public class StaffFrame extends JFrame {
         });
 
         logoutBtn.addActionListener(e -> {
-            int confirm = showOptionDialog(
-                    "Xác nhận đăng xuất",
-                    "Bạn có chắc chắn muốn đăng xuất không?"
-            );
+            int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Bạn có chắc chắn muốn đăng xuất không?",
+                "Xác nhận đăng xuất",
+                JOptionPane.YES_NO_OPTION
+        );
             if (confirm == JOptionPane.YES_OPTION) {
                 dispose();
                 new DangNhapFrame().setVisible(true);
@@ -311,14 +313,5 @@ public class StaffFrame extends JFrame {
         dynamicPanel.add(selectedPanel, BorderLayout.CENTER);
         dynamicPanel.revalidate();
         dynamicPanel.repaint();
-    }
-
-    private int showOptionDialog(String title, String message) {
-        return JOptionPane.showConfirmDialog(
-                StaffFrame.this,
-                message,
-                title,
-                JOptionPane.YES_NO_OPTION
-        );
     }
 }
