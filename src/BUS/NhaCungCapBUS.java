@@ -17,6 +17,10 @@ public class NhaCungCapBUS {
 		return nhaCungCapDao.getAllActive();
 	}
 
+	public List<NhaCungCapDTO> getAllActiveExcept(int idNCC) {
+		return nhaCungCapDao.getAllActiveExcept(idNCC);
+	}
+
 	public String add(NhaCungCapDTO nhaCungCap) {
 		// kiểm tra tên nhà cung cấp hoặc email hoặc số điện thoại đã tồn tại chưa
 		String error = "";

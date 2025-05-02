@@ -126,8 +126,7 @@ public class NguyenLieuPanel extends JPanel {
                 Object[] row = {
                    nl.getIdNL(),
                     nl.getTenNL(),
-                    nl.getDonvi(),
-                    nl.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa"
+                    nl.getDonvi()
                 };
                 tableModel.addRow(row);
             }

@@ -221,7 +221,6 @@ public class NguyenLieuDialog extends JDialog {
         NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(idNL);
         txtTenNL.setText(nl.getTenNL());
         txtDonVi.setText(nl.getDonvi());
-        cboTrangThai.setSelectedItem(nl.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
 
         // reset action button
         btnSubmit.setText("Cập nhật");
@@ -255,7 +254,6 @@ public class NguyenLieuDialog extends JDialog {
             // collect data
             String tenNL = txtTenNL.getText().trim();
             String donvi = txtDonVi.getText().trim();
-            int trangthai = cboTrangThai.getSelectedItem() == "Hoạt động" ? 1 : 0;
 
             // action
             String error = "";
@@ -263,11 +261,11 @@ public class NguyenLieuDialog extends JDialog {
             int beginIndex = actionCommand.indexOf('_')+1;
             if(beginIndex == 0) {
                 // add
-                error = nguyenLieuBus.add(new NguyenLieuDTO(tenNL, donvi, trangthai));
+                error = nguyenLieuBus.add(new NguyenLieuDTO(tenNL, donvi));
             }else {
                 // update
                 int idNL = Integer.parseInt(actionCommand.substring(beginIndex));
-                error = nguyenLieuBus.update(new NguyenLieuDTO(idNL, tenNL, donvi, trangthai));
+                error = nguyenLieuBus.update(new NguyenLieuDTO(idNL, tenNL, donvi));
             }
 
             // show message

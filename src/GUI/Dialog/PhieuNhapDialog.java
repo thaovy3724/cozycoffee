@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import BUS.Lo_NguyenLieuBUS;
 import BUS.NguyenLieuBUS;
 import BUS.NhaCungCapBUS;
 import BUS.PhieuNhapBUS;
@@ -35,6 +36,7 @@ import DTO.NhaCungCapDTO;
 import DTO.PhieuNhapDTO;
 import DTO.SanPhamDTO;
 import DTO.TaiKhoanDTO;
+import com.toedter.calendar.JDateChooser;
 
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -47,6 +49,7 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -57,6 +60,7 @@ import javax.swing.JOptionPane;
 
 import java.awt.GridBagConstraints;
 import java.awt.Font;
+import java.util.Vector;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
@@ -67,10 +71,12 @@ public class PhieuNhapDialog extends JDialog {
     private final JPanel contentPanel = new JPanel();
 
     PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
-    NhaCungCapBUS nhaCungCapBus = new NhaCungCapBUS();
+    NhaCungCapBUS nhaCungCapBUS = new NhaCungCapBUS();
     NguyenLieuBUS nguyenLieuBUS = new NguyenLieuBUS();
+    Lo_NguyenLieuBUS lo_NguyenLieuBUS = new Lo_NguyenLieuBUS();
 
     private JButton btnSubmit, btnAdd, btnCancel;
+    private JLabel lblTitle;
     private JComboBox<NhaCungCapDTO> cboNCC;
     private JComboBox<String> cboTrangThai = new JComboBox<>();
     private JTable tableLoNguyenLieu;
@@ -103,7 +109,7 @@ public class PhieuNhapDialog extends JDialog {
                 Double.MIN_VALUE };
         contentPanel.setLayout(gbl_contentPanel);
 
-        JLabel lblTitle = new JLabel("Thêm phiếu nhập");
+        lblTitle = new JLabel("Thêm phiếu nhập");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
         lblTitle.setForeground(new Color(33, 150, 243));
         GridBagConstraints gbc_lblTitle = new GridBagConstraints();
@@ -162,7 +168,7 @@ public class PhieuNhapDialog extends JDialog {
             NguyenLieuDTO defaultNguyenLieu = nguyenLieuList != null && !nguyenLieuList.isEmpty()
                     ? nguyenLieuList.get(0)
                     : new NguyenLieuDTO(0, "---Chọn nguyên liệu---");
-            tableModel.addRow(new Object[] { defaultNguyenLieu, "", "", "", "", "Xóa" });
+            tableModel.addRow(new Object[] { defaultNguyenLieu, "", "", "", LocalDate.now(), "Xóa" });
             tableLoNguyenLieu.revalidate();
             tableLoNguyenLieu.repaint();
         });
@@ -197,7 +203,6 @@ public class PhieuNhapDialog extends JDialog {
         gbc_cboTrangThai.gridy = 2;
         cboTrangThai.addItem("Chưa hoàn tất");
         cboTrangThai.addItem("Hoàn tất");
-        cboTrangThai.addItem("Bị hủy");
         contentPanel.add(cboTrangThai, gbc_cboTrangThai);
 
         GridBagConstraints gbc_btnAdd = new GridBagConstraints();
@@ -211,8 +216,8 @@ public class PhieuNhapDialog extends JDialog {
 
     private void initTable() {
         tableModel = new DefaultTableModel(
-                new Object[] { "Nguyên liệu", "Số lượng nhập", "Đơn vị tính", "Đơn giá nhập", "Ngày hết hạn",
-                        "Thao tác" },
+                new Object[] { "Nguyên liệu", "Số lượng nhập", "Đơn vị tính",
+                        "Đơn giá nhập", "Ngày hết hạn", "Thao tác" },
                 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -230,7 +235,7 @@ public class PhieuNhapDialog extends JDialog {
         tableLoNguyenLieu.getTableHeader().setForeground(Color.WHITE);
         tableLoNguyenLieu.setSelectionBackground(new Color(187, 222, 251));
 
-        nguyenLieuList = nguyenLieuBUS.getAllActive();
+        nguyenLieuList = nguyenLieuBUS.getAll();
 
         tableLoNguyenLieu.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<>()) {
             private JComboBox<NguyenLieuDTO> cboBox;
@@ -321,12 +326,8 @@ public class PhieuNhapDialog extends JDialog {
             }
         }));
 
-        tableLoNguyenLieu.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new JTextField() {
-            {
-                setFont(new Font("Segoe UI", Font.PLAIN, 13));
-                setBorder(new LineBorder(new Color(189, 189, 189), 1));
-            }
-        }));
+        tableLoNguyenLieu.getColumnModel().getColumn(4).setCellRenderer(new DateChooserRenderer());
+        tableLoNguyenLieu.getColumnModel().getColumn(4).setCellEditor(new DateChooserEditor());
 
         tableLoNguyenLieu.getColumnModel().getColumn(5).setCellRenderer((new ButtonRenderer()));
         tableLoNguyenLieu.getColumnModel().getColumn(5).setCellEditor((new ButtonEditor()));
@@ -415,15 +416,15 @@ public class PhieuNhapDialog extends JDialog {
     }
 
     public void showAdd() {
-        List<NhaCungCapDTO> dsNCC = nhaCungCapBus.getAllActive();
+        List<NhaCungCapDTO> dsNCC = nhaCungCapBUS.getAllActive();
         loadComboBoxNCC(dsNCC);
         cboTrangThai.setEnabled(false);
 
         tableModel.setRowCount(0);
         if (nguyenLieuList != null && !nguyenLieuList.isEmpty()) {
-            tableModel.addRow(new Object[] { nguyenLieuList.get(0), "", "", "", "", "Xóa" });
+            tableModel.addRow(new Object[] { nguyenLieuList.get(0), "", "", "", LocalDate.now(), "Xóa" });
         } else {
-            tableModel.addRow(new Object[] { new NguyenLieuDTO(0, "---Chọn nguyên liệu---"), "", "", "", "", "Xóa" });
+            tableModel.addRow(new Object[] { new NguyenLieuDTO(0, "---Chọn nguyên liệu---"), "", "", "", LocalDate.now(), "Xóa" });
         }
 
         btnSubmit.setText("Thêm");
@@ -431,6 +432,154 @@ public class PhieuNhapDialog extends JDialog {
         setVisible(true);
     }
 
+    public void showEdit(int idPN) {
+        PhieuNhapDTO pn = phieuNhapBUS.findByIdPN(idPN);
+        if (pn == null) {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy phiếu nhập!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        lblTitle.setText("Sửa phiếu nhập");
+        List<NhaCungCapDTO> danhSachNCC =
+                nhaCungCapBUS.getAllActiveExcept(pn.getIdNCC());
+        loadComboBoxNCC(danhSachNCC);
+        if (pn.getIdNCC() != 0) {
+            for (int i = 0; i < cboNCC.getItemCount(); i++) {
+                NhaCungCapDTO ncc = cboNCC.getItemAt(i);
+                if (ncc.getIdNCC() == pn.getIdNCC()) {
+                    cboNCC.setSelectedIndex(i);
+                    break;
+                }
+            }
+        } else {
+            cboNCC.setSelectedIndex(0);
+        }
+
+        tableModel.setRowCount(0);
+
+        List<Lo_NguyenLieuDTO> loNguyenLieuList = lo_NguyenLieuBUS.getChiTietPhieuNhap(idPN);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if (loNguyenLieuList != null && !loNguyenLieuList.isEmpty()) {
+            for (Lo_NguyenLieuDTO lnl : loNguyenLieuList) {
+                NguyenLieuDTO nl = nguyenLieuBUS.findByIdNL(lnl.getIdNL());
+                if(nl != null) {
+                    LocalDate hsd = lnl.getHsd() != null ? lnl.getHsd() : LocalDate.now();
+                    tableModel.addRow(new Object[] { nl, lnl.getSoluongnhap()
+                            , nl.getDonvi(), lnl.getDongia(), hsd, "Xóa" });
+                }
+            }
+        }
+
+        if(tableModel.getRowCount() == 0 && nguyenLieuList != null && !nguyenLieuList.isEmpty()) {
+            tableModel.addRow(new Object[] { nguyenLieuList.get(0), "", nguyenLieuList.get(0).getDonvi(), "", LocalDate.now(), "Xóa" });
+        } else if (tableModel.getRowCount() == 0) {
+            tableModel.addRow(new Object[] { new NguyenLieuDTO(0, "---Chọn nguyên liệu---"), "", "", "", LocalDate.now(), "Xóa" });
+        }
+
+        btnSubmit.setText("Cập nhật");
+        btnSubmit.setActionCommand("edit_" + idPN);
+        setVisible(true);
+    }
+
+    public void showDetail(int idPN) {
+        PhieuNhapDTO pn = phieuNhapBUS.findByIdPN(idPN);
+        if (pn == null) {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy phiếu nhập!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        // Tải danh sách nhà cung cấp và hiển thị nhà cung cấp của phiếu nhập
+        List<NhaCungCapDTO> danhSachNCC = nhaCungCapBUS.getAll();
+        loadComboBoxNCC(danhSachNCC);
+        if (pn.getIdNCC() != 0) {
+            for (int i = 0; i < cboNCC.getItemCount(); i++) {
+                NhaCungCapDTO ncc = cboNCC.getItemAt(i);
+                if (ncc.getIdNCC() == pn.getIdNCC()) {
+                    cboNCC.setSelectedIndex(i);
+                    break;
+                }
+            }
+        } else {
+            cboNCC.setSelectedIndex(0);
+        }
+
+        // Hiển thị trạng thái
+        cboTrangThai.setSelectedItem(pn.getIdTT() == 1 ? "Chưa hoàn tất" :
+                "Hoàn tất");
+
+        // Vô hiệu hóa không cho sửa
+        cboNCC.setEnabled(false);
+        cboTrangThai.setEnabled(false);
+
+        tableModel.setRowCount(0);
+        // Tải chi tiết phiếu nhập từ cơ sở dữ liệu
+        List<Lo_NguyenLieuDTO> loNguyenLieuList = lo_NguyenLieuBUS.getChiTietPhieuNhap(idPN);
+        if (loNguyenLieuList != null && !loNguyenLieuList.isEmpty()) {
+            for (Lo_NguyenLieuDTO lnl : loNguyenLieuList) {
+                NguyenLieuDTO nl = nguyenLieuBUS.findByIdNL(lnl.getIdNL());
+                if (nl != null) {
+                    LocalDate hsd = lnl.getHsd() != null ? lnl.getHsd() : LocalDate.now();
+                    tableModel.addRow(new Object[] {
+                            nl,
+                            lnl.getSoluongnhap(),
+                            nl.getDonvi(),
+                            lnl.getDongia(),
+                            hsd
+                    });
+                }
+            }
+        }
+        // Thêm hàng mặc định nếu bảng trống (chỉ để hiển thị, không cho phép chỉnh sửa)
+        if (tableModel.getRowCount() == 0 && nguyenLieuList != null && !nguyenLieuList.isEmpty()) {
+            tableModel.addRow(new Object[] {
+                    nguyenLieuList.get(0),
+                    "",
+                    nguyenLieuList.get(0).getDonvi(),
+                    "",
+                    LocalDate.now()
+            });
+        } else if (tableModel.getRowCount() == 0) {
+            tableModel.addRow(new Object[] {
+                    new NguyenLieuDTO(0, "---Chọn nguyên liệu---"),
+                    "",
+                    "",
+                    "",
+                    LocalDate.now()
+            });
+        }
+
+        Vector<Vector> dataVector = tableModel.getDataVector();
+        // Chuyển vector về dạng mảng 2 chiều
+        Object[][] data = new Object[dataVector.size()][];
+        for (int i = 0; i < dataVector.size(); i++) {
+            data[i] = dataVector.get(i).toArray();
+        }
+
+        tableModel = new DefaultTableModel(
+                data,
+                new Object[] { "Nguyên liệu", "Số lượng nhập", "Đơn vị tính", "Đơn giá nhập", "Ngày hết hạn" }
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Không cho phép chỉnh sửa bất kỳ ô nào
+            }
+        };
+        tableLoNguyenLieu.setModel(tableModel);
+
+        // Vô hiệu hóa renderer và editor của cột "Ngày hết hạn" (chỉ hiển thị văn bản)
+        tableLoNguyenLieu.getColumnModel().getColumn(4).setCellEditor(null); // Xóa editor
+        tableLoNguyenLieu.getColumnModel().getColumn(4).setCellRenderer(new DateChooserRenderer()); // Giữ renderer để hiển thị ngày
+
+        // Ẩn nút btnAdd và btnSubmit
+        btnAdd.setVisible(false);
+        btnSubmit.setVisible(false);
+
+        lblTitle.setText("Chi tiết phiếu nhập");
+        btnCancel.setText("Đóng");
+
+        // Hiển thị dialog
+        setVisible(true);
+    }
+
+    /* Custom nút Xóa cho một cột Thao tác trong bảng */
     class ButtonRenderer extends JButton implements TableCellRenderer {
         public ButtonRenderer() {
             setText("Xóa");
@@ -503,6 +652,81 @@ public class PhieuNhapDialog extends JDialog {
         }
     }
 
+    /* Custom JDateChooser cho cột Ngày hết hạn */
+    class DateChooserRenderer extends JLabel implements TableCellRenderer {
+        private final DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        public DateChooserRenderer() {
+            setOpaque(true);
+            setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table,
+                                                       Object value,
+                                                       boolean isSelected,
+                                                       boolean hasFocused,
+                                                       int row, int column) {
+            if (value instanceof LocalDate) {
+                setText(((LocalDate) value).format(formatter));
+            } else {
+                setText("");
+            }
+
+            if (isSelected) {
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            } else {
+                setBackground(table.getBackground());
+                setForeground(table.getForeground());
+            }
+
+            return this;
+        }
+    }
+
+    class DateChooserEditor extends AbstractCellEditor implements TableCellEditor {
+        private JDateChooser dateChooser;
+
+        public DateChooserEditor() {
+            dateChooser = new JDateChooser();
+            dateChooser.setDateFormatString("yyyy-MM-dd");
+            //Ngăn không cho người dùng nhập thủ công
+            ((JTextField) dateChooser.getDateEditor().getUiComponent()).setEditable(false);
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table,
+                                                     Object value,
+                                                     boolean isSelected,
+                                                     int row, int column) {
+            if (value instanceof LocalDate ld) {
+                dateChooser.setDate(java.util.Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            } else {
+                dateChooser.setDate(java.util.Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            }
+
+            return dateChooser;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            java.util.Date date = dateChooser.getDate();
+            return date != null ?
+                    date.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()
+                    : null;
+        }
+
+        @Override
+        public boolean stopCellEditing() {
+            fireEditingStopped();
+            return super.stopCellEditing();
+        }
+    }
+
     private boolean isError() {
         boolean isError = false;
 
@@ -514,39 +738,39 @@ public class PhieuNhapDialog extends JDialog {
         return isError;
     }
 
-    private String validateForm(String soLuong, String donGia, String ngayHetHan) {
+    private String validateForm(int index,
+                                String soLuong,
+                                String donGia,
+                                Object ngayHetHan) {
         if (soLuong.isEmpty()) {
-            return "Vui lòng nhập số lượng nhập!";
+            return "Vui lòng nhập số lượng nhập tại hàng " + (index + 1) + "!";
         }
         if (donGia.isEmpty()) {
-            return "Vui lòng nhập đơn giá!";
+            return "Vui lòng nhập đơn giá tại hàng " + (index + 1) + "!";
         }
-        if (ngayHetHan.isEmpty()) {
-            return "Vui lòng nhập ngày hết hạn!";
+        if (ngayHetHan == null) {
+            return "Vui lòng chọn ngày hết hạn tại hàng " + (index + 1) + "!";
         }
 
         try {
             Float.parseFloat(soLuong);
         } catch (NumberFormatException e) {
-            return "Số lượng không hợp lệ!";
+            return "Số lượng không hợp lệ tại hàng " + (index + 1) + "!";
         }
 
         try {
             Integer.parseInt(donGia);
         } catch (NumberFormatException e) {
-            return "Đơn giá không hợp lệ!";
+            return "Đơn giá không hợp tại hàng " + (index + 1) + "!";
         }
 
-        try {
-            // Tạo SimpleDateFormat với định dạng
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            sdf.setLenient(false); // Tắt chế độ linh hoạt để kiểm tra nghiêm ngặt
-            java.util.Date parsedDate = sdf.parse(ngayHetHan);
+        if (!(ngayHetHan instanceof LocalDate)) {
+            return "Ngày hết hạn không hợp lệ tại hàng " + (index + 1) + "!";
+        }
 
-            // Chuyển thành java.sql.Date (nếu cần)
-            Date sqlDate = new Date(parsedDate.getTime());
-        } catch (ParseException e) {
-            return "Ngày hết hạn không hợp lệ (Định dạng: yyyy-mm-dd)";
+        if (((LocalDate) ngayHetHan).isBefore(LocalDate.now()) || ((LocalDate) ngayHetHan).equals(LocalDate.now()))
+        {
+            return "Ngày hết hạn phải sau ngày hôm nay (tại hàng " + (index + 1) + ")!";
         }
 
         return null;
@@ -571,6 +795,8 @@ public class PhieuNhapDialog extends JDialog {
 
             HashSet<Integer> usedIdNL = new HashSet<>();
             List<Lo_NguyenLieuDTO> loNguyenLieuList = new ArrayList<>();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy" +
+                    "-MM-dd");
             for (int i = 0; i < tableModel.getRowCount(); i++) {
                 NguyenLieuDTO nl = (NguyenLieuDTO) tableModel.getValueAt(i, 0);
                 Object soLuongObj = tableModel.getValueAt(i, 1);
@@ -578,17 +804,15 @@ public class PhieuNhapDialog extends JDialog {
                 Object donGiaObj = tableModel.getValueAt(i, 3);
                 String donGiaStr = donGiaObj != null ? donGiaObj.toString().trim() : "";
                 Object ngayHetHanObj = tableModel.getValueAt(i, 4);
-                String ngayHetHanStr = ngayHetHanObj != null ? ngayHetHanObj.toString().trim() : "";
-                // System.out.println("Hàng " + i + ": Nguyên liệu = " + (nl != null ?
-                // nl.getTenNL() : "null") + ", Số lượng = " + soLuongStr + ", Đơn giá = " +
-                // donGiaStr + ", Ngày hết hạn = " + ngayHetHanStr);
+                LocalDate ngayHetHan = (LocalDate) ngayHetHanObj;
 
                 if (nl == null || nl.getIdNL() == 0) {
                     JOptionPane.showMessageDialog(this, "Vui lòng chọn nguyên liệu hợp lệ tại hàng " + (i + 1) + "!",
                             "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                String errorMsg = validateForm(soLuongStr, donGiaStr, ngayHetHanStr);
+                String errorMsg = validateForm(i, soLuongStr, donGiaStr,
+                        ngayHetHan);
                 if (errorMsg != null) {
                     JOptionPane.showMessageDialog(this, errorMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -617,8 +841,10 @@ public class PhieuNhapDialog extends JDialog {
                         return;
                     }
 
+                    // Mặc định số lượng tồn kho khi tạo phiếu nhập = 0
                     loNguyenLieuList
-                            .add(new Lo_NguyenLieuDTO(nl.getIdNL(), 0, soLuong, soLuong, donGia, ngayHetHanStr));
+                            .add(new Lo_NguyenLieuDTO(nl.getIdNL(), 0,
+                                    soLuong, 0, donGia, ngayHetHan));
 
                 } catch (NumberFormatException e) {
                     JOptionPane.showMessageDialog(this, "Số lượng phải là số hợp lệ tại hàng " + (i + 1) + "!", "Lỗi",
@@ -629,32 +855,38 @@ public class PhieuNhapDialog extends JDialog {
 
             String actionCommand = btnSubmit.getActionCommand();
             int beginIndex = actionCommand.indexOf('_') + 1;
+            LocalDate today = LocalDate.now();
+            // FIXME: sửa lại sau khi ráp code (đã đăng nhập)
+            int idTK = currentUser == null ? 1 : currentUser.getIdTK();
             try {
                 if (beginIndex == 0) { // Thêm một phiếu nhập mới
-                    String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                    // FIXME: sửa lại sau khi ráp code (đã đăng nhập)
-                    int idTK = currentUser == null ? 1 : currentUser.getIdTK();
                     PhieuNhapDTO pn = new PhieuNhapDTO(today, today, idTK, idNCC, trangthai);
-                    System.out.println(pn);
+
+                    //Thêm phiếu nhập vào cơ sở dữ liệu
                     int result = phieuNhapBUS.add(pn, loNguyenLieuList);
+
                     if (result != -1) {
                         JOptionPane.showMessageDialog(this, "Thêm phiếu nhập thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                        dispose();
                     }
                 } else {
-                    // int idCT = Integer.parseInt(actionCommand.substring(beginIndex));
-                    // CongThucDTO ct = new CongThucDTO(idCT, idSP, mota);
-                    // error = congThucBus.update(ct, chiTietList);
+                    int idPN = Integer.parseInt(actionCommand.substring(beginIndex));
+                    PhieuNhapDTO pn = new PhieuNhapDTO(idPN, "", today, idTK, idNCC, trangthai);
+                    String error = phieuNhapBUS.update(pn, loNguyenLieuList);
+                    if (error != "") {
+                        JOptionPane.showMessageDialog(this, "Cập nhật phiếu nhập thất bại!", "LỖI", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Cập nhật phiếu nhập thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                        dispose();
+                    }
                 }
             } catch (Exception e) {
-                // if (e.getCause() instanceof
-                // java.sql.SQLIntegrityConstraintViolationException) {
-                // JOptionPane.showMessageDialog(this, "Lỗi: Không thể thêm/cập nhật công thức
-                // do trùng khóa chính. Vui lòng kiểm tra cơ sở dữ liệu!", "Lỗi cơ sở dữ liệu",
-                // JOptionPane.ERROR_MESSAGE);
-                // } else {
-                // JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage(), "Lỗi",
-                // JOptionPane.ERROR_MESSAGE);
-                // }
+                 if (e.getCause() instanceof java.sql.SQLIntegrityConstraintViolationException) {
+                    JOptionPane.showMessageDialog(this, "Lỗi: Không thể " +
+                            "thêm/cập nhật phiếu nhập do trùng khóa chính. Vui lòng kiểm tra cơ sở dữ liệu!", "Lỗi cơ sở dữ liệu", JOptionPane.ERROR_MESSAGE);
+                 } else {
+                    JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                 }
                 e.printStackTrace();
                 return;
             }

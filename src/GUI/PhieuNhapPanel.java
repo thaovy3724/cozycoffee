@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -42,11 +43,11 @@ public class PhieuNhapPanel extends JPanel {
 
 		tableModel = new DefaultTableModel(
 		   new String[] {"ID", "Ngày tạo", "Ngày cập nhật", "Trạng thái"}, 0)
-		{                                                // (2) Mở đầu khai báo lớp vô danh (anonymous class)
+		{
 	        @Override
 	        public boolean isCellEditable(int row, int column) {
 	            return false; // Không cho phép sửa ô nào cả
-	        }                                                   // (3) Đóng method isCellEditable
+	        }
 	    };
 
 		// actionBox init
@@ -71,18 +72,18 @@ public class PhieuNhapPanel extends JPanel {
 
 		btnEdit = new JButton("Sửa");
 		btnEdit.setIcon(new ImageIcon(PhieuNhapPanel.class.getResource("/ASSET/Images/icons8_wrench_30px.png")));
-//		btnEdit.addActionListener(e->showEdit());
+		btnEdit.addActionListener(e->showEdit());
 		actionPanel.add(btnEdit);
 
 		btnDel = new JButton("Xóa");
 		btnDel.setIcon(new ImageIcon(PhieuNhapPanel.class.getResource("/ASSET/Images/icons8_cancel_30px_1.png")));
-//		btnDel.addActionListener(e->delete());
+		btnDel.addActionListener(e->delete());
 		actionPanel.add(btnDel);
 
 		btnDetail = new JButton("Chi tiết");
 		ImageHelper moreIcon = new ImageHelper(30, 30, PhieuNhapPanel.class.getResource("/ASSET/Images/icons8_more_20px.png"));
         btnDetail.setIcon(moreIcon.getScaledImage());
-        // btnDetail.addActionListener(e -> showDetail());
+         btnDetail.addActionListener(e -> showDetail());
         actionPanel.add(btnDetail);
 	}
 
@@ -135,36 +136,52 @@ public class PhieuNhapPanel extends JPanel {
 		            phieuNhap.getIdPN(),
 		            phieuNhap.getNgaytao(),
 		            phieuNhap.getNgaycapnhat(),
-		            phieuNhap.getIdTT() == 1 ? "Chưa hoàn tất" : (
-		            		phieuNhap.getIdTT() == 2 ? "Hoàn tất" : "Bị hủy"
-    				)
+		            phieuNhap.getIdTT() == 1 ? "Chưa hoàn tất" : "Hoàn tất"
 		        };
 		        tableModel.addRow(row);
 		    }
 		}
 	    table.setModel(tableModel);
 	}
-//
-//	private void showEdit() {
-//		int selectedRow = table.getSelectedRow();
-//		if (selectedRow == -1) {
-//			JOptionPane.showMessageDialog(this, "Bạn chưa chọn danh mục");
-//		}
-//		else {
-//			int idDM = (int) table.getValueAt(selectedRow, 0);
-//			DanhMucDialog danhMucDialog = new DanhMucDialog();
-//			danhMucDialog.showEdit(idDM);
-//			// sau khi đóng dialog, reload table
-//			loadTable(null);
-//		}
-//	}
-//
+
+	private void showEdit() {
+		int selectedRow = table.getSelectedRow();
+		if (selectedRow == -1) {
+			JOptionPane.showMessageDialog(this, "Bạn chưa chọn phiếu nhập!");
+		}
+		else {
+			String trangThai = table.getValueAt(selectedRow, 3).toString();
+			if (!trangThai.equals("Chưa hoàn tất")) {
+				JOptionPane.showMessageDialog(this, "Chỉ có thể chỉnh sửa phiếu nhập có trạng thái 'Chưa hoàn tất'!",
+						"Cảnh báo", JOptionPane.WARNING_MESSAGE);
+			} else {
+				int idPN = (int) table.getValueAt(selectedRow, 0);
+				PhieuNhapDialog phieuNhapDialog = new PhieuNhapDialog(currentUser);
+				phieuNhapDialog.showEdit(idPN);
+				// sau khi đóng dialog, reload table
+				loadTable(null);
+			}
+		}
+	}
+
 	private void showAdd() {
 		PhieuNhapDialog phieuNhapDialog = new PhieuNhapDialog(currentUser);
 		phieuNhapDialog.showAdd();
 		// sau khi đóng dialog, reload table
 		loadTable(null);
 	}
+
+	private void showDetail() {
+		int selectedRow = table.getSelectedRow();
+		if (selectedRow == -1) {
+			JOptionPane.showMessageDialog(this, "Bạn chưa chọn phiếu nhập!");
+		} else {
+			int idPN = (int) table.getValueAt(selectedRow, 0);
+			PhieuNhapDialog phieuNhapDialog = new PhieuNhapDialog(currentUser);
+			phieuNhapDialog.showDetail(idPN);
+		}
+	}
+
 //
 //	private void search() {
 //		// get keyword
@@ -182,24 +199,30 @@ public class PhieuNhapPanel extends JPanel {
 //		}
 //	}
 //
-//	private void delete() {
-//		int selectedRow = table.getSelectedRow();
-//		if (selectedRow == -1) {
-//			JOptionPane.showMessageDialog(this, "Bạn chưa chọn danh mục");
-//		}
-//		else {
-//			// tiến hành xóa
-//			int idDM = (int) table.getValueAt(selectedRow, 0);
-//			// cập nhật lại CSDL
-//			// kiểm tra có lỗi ko, nếu có thì xuât thông báo lỗi
-//			if(danhMucBus.delete(idDM)) {
-//				JOptionPane.showMessageDialog(this, "Xóa thành công");
-//				// reload table
-//				loadTable(null);
-//			}
-//			else {
-//				JOptionPane.showMessageDialog(this, "Bạn không thể xóa danh mục này!");
-//			}
-//		}
-//	}
+	private void delete() {
+		int selectedRow = table.getSelectedRow();
+		if (selectedRow == -1) {
+			JOptionPane.showMessageDialog(this, "Bạn chưa chọn phiếu nhập nào!");
+		} else {
+			String trangThai = table.getValueAt(selectedRow, 3).toString();
+			if (!trangThai.equals("Chưa hoàn tất")) {
+				JOptionPane.showMessageDialog(this, "Chỉ có thể xóa phiếu nhập có trạng thái 'Chưa hoàn tất'!",
+						"Cảnh báo", JOptionPane.WARNING_MESSAGE);
+			} else {
+				int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa phiếu nhập này?", "Xác nhận xóa",
+						JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					int idPN = (int) table.getValueAt(selectedRow, 0);
+					if (phieuNhapBus.delete(idPN)) {
+						JOptionPane.showMessageDialog(this, "Xóa thành công!");
+						// sau khi đóng dialog, reload table
+						loadTable(null);
+					} else {
+						JOptionPane.showMessageDialog(this, "Xóa phiếu nhập thất bại"
+								, "LỖI", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		}
+	}
 }

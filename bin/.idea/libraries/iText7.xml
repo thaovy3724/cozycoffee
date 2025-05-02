@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="iText7">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/iText7/slf4j-api-1.7.25.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/iText7/slf4j-simple-1.7.25.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/iText7/font-asian-7.1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/iText7/io-7.1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/iText7/layout-7.1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/iText7/kernel-7.1.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

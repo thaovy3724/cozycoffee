@@ -1,23 +1,29 @@
 package DTO;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 public class Lo_NguyenLieuDTO {
 	private int idNL;
     private int idPN;
     private float soluongnhap;
     private float tonkho;
     private int dongia;
-    private String hsd;
+    private LocalDate hsd;
 
     public Lo_NguyenLieuDTO() {
     }
 
-    public Lo_NguyenLieuDTO(int idNL, int idPN, float soluongnhap, float tonkho, int dongia, String hsd) {
+    //HUONGNGUYEN 1/5
+    //Đổi String thành LocalDate
+    public Lo_NguyenLieuDTO(int idNL, int idPN, float soluongnhap,
+                            float tonkho, int dongia, Object hsd) {
         this.idNL = idNL;
         this.idPN = idPN;
         this.soluongnhap = soluongnhap;
         this.tonkho = tonkho;
         this.dongia = dongia;
-        this.hsd = hsd;
+        setHsd(hsd);
     }
 
 
@@ -61,11 +67,21 @@ public class Lo_NguyenLieuDTO {
         this.dongia = dongia;
     }
 
-    public String getHsd() {
+    public LocalDate getHsd() {
         return hsd;
     }
 
-    public void setHsd(String hsd) {
-        this.hsd = hsd;
+    public void setHsd(Object hsd) {
+        if (hsd instanceof LocalDate) {
+            this.hsd = (LocalDate) hsd;
+        } else if (hsd instanceof java.sql.Date) {
+            this.hsd = ((java.sql.Date) hsd).toLocalDate();
+        } else if (hsd instanceof java.util.Date) {
+            this.hsd = ((java.sql.Date) hsd).toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+        } else {
+            this.hsd = null;
+        }
     }
 }

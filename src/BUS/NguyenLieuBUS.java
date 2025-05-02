@@ -22,9 +22,6 @@ public class NguyenLieuBUS {
         }
         return error;
     }
-    public List<NguyenLieuDTO> getAllActive(){
-        return nguyenLieuDao.getAllActive();
-    }
 
     public NguyenLieuDTO findByIdNL(int idNL) {
         return nguyenLieuDao.findByIdNL(idNL);

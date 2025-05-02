@@ -411,6 +411,7 @@ public class AdminFrame extends JFrame {
             case "nhacungcap":
                 selectedPanel = new NhaCungCapPanel();
                 break;
+            //    HUONGNGUYEN 28/4
             case "phieunhap":
                 selectedPanel = new PhieuNhapPanel(currentUser);
                 break;
