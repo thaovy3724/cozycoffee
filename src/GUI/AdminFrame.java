@@ -120,6 +120,9 @@ public class AdminFrame extends JFrame {
         btnThongKe.setIconTextGap(10);
         // set default
         btnThongKe.setSelected(true);
+        dynamicPanel.add(new ThongKePanel(), BorderLayout.CENTER);
+        dynamicPanel.revalidate();
+        dynamicPanel.repaint();
         toggleBtnInit(btnThongKe);
         menuPanel.add(btnThongKe, gbc);
         

@@ -47,8 +47,8 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 
 			sql = "INSERT INTO phieunhap (ngaytao, ngaycapnhat, idTK, idNCC, idTT) VALUES (?, ?, ?, ?, ?)";
 			pstmt = link.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			pstmt.setString(1, pn.getNgaytao());
-			pstmt.setString(2, pn.getNgaycapnhat());
+			pstmt.setDate(1, Date.valueOf(pn.getNgaytao()));
+			pstmt.setDate(2, Date.valueOf(pn.getNgaycapnhat()));
 			pstmt.setInt(3, pn.getIdTK());
 			pstmt.setInt(4, pn.getIdNCC());
 			pstmt.setInt(5, pn.getIdTT());

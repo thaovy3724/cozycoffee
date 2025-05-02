@@ -111,6 +111,7 @@ public class ThongKePanel extends JPanel {
 
 		JLabel lblYear = new JLabel("Năm:");
 		filterPanel.add(lblYear);
+		comboYear = new JComboBox<>();
 		comboYear.setPreferredSize(new Dimension(100, 25));
 		filterPanel.add(comboYear);
 
@@ -160,6 +161,7 @@ public class ThongKePanel extends JPanel {
 
 		// Gán sự kiện
 		setupEventListeners();
+		
 	}
 
 	// ===Các hàm setUp cho GUI===
@@ -331,6 +333,7 @@ public class ThongKePanel extends JPanel {
 				}
 			} catch (NumberFormatException e) {
 				// Không tô nếu parse lỗi
+				e.printStackTrace();
 			}
 
 			return cell;

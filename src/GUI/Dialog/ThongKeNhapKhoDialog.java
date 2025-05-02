@@ -69,9 +69,10 @@ public class ThongKeNhapKhoDialog extends JDialog {
 			float soLuong = lo.getSoluongnhap();
 			int donGia = lo.getDongia();
 			long tongtien = (long) (soLuong * donGia);
-			String ngayNhap = LocalDate.parse(
-                phieuNhapBUS.findByIdPN(lo.getIdPN()).getNgaycapnhat()
-            ).format(dateFormatter);
+			String ngayNhap = phieuNhapBUS.findByIdPN(lo.getIdPN())
+							.getNgaycapnhat()
+							.format(dateFormatter)
+							.toString();
 			detailModel.addRow(new Object[]{
 					"Lô "+ idLo,
 					soLuong,
