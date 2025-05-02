@@ -12,8 +12,8 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
         "nguyenlieu", 
         List.of(
          "tenNL",
-         "donvi",
-         "trangthai"
+         "donvi"
+       
         ));
     }
 
