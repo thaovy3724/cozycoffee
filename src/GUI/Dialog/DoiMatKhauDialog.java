@@ -157,9 +157,9 @@ public class DoiMatKhauDialog extends JDialog {
 		contentPanel.add(actionPanel, gbc_actionPanel);
 		actionPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		{
-			btnSubmit = new JButton("Thêm");
+			btnSubmit = new JButton("Cập nhật");
 			btnSubmit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			btnSubmit.setBackground(new Color(0, 128, 0));
+			btnSubmit.setBackground(new Color(30, 144, 255));
 			btnSubmit.setFont(new Font("Segoe UI", Font.BOLD, 14));
 			btnSubmit.setForeground(Color.WHITE);
 			btnSubmit.setContentAreaFilled(false);
@@ -170,7 +170,7 @@ public class DoiMatKhauDialog extends JDialog {
 		{
 			btnCancel = new JButton("Hủy");
 			btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			btnCancel.setBackground(new Color(255, 51, 102));
+			btnCancel.setBackground(new Color(255, 0, 0));
 			btnCancel.setForeground(new Color(255, 255, 255));
 			btnCancel.setFont(new Font("Segoe UI", Font.BOLD, 14));
 			btnCancel.setContentAreaFilled(false);

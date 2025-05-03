@@ -24,7 +24,11 @@ import javax.swing.ImageIcon;
 import java.awt.Cursor;
 
 public class DangNhapFrame extends JFrame {
-    private TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();
     private JTextField textTenTK;
     private JPasswordField passwordField;
     private JButton btnLogin;

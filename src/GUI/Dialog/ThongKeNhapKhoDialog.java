@@ -54,6 +54,8 @@ public class ThongKeNhapKhoDialog extends JDialog {
 		//detailTable.getColumnModel().getColumn(3).setPreferredWidth(100); // Tăng chiều rộng cột Ngày nhập
 		JScrollPane scrollPane = new JScrollPane(detailTable);
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
+		scrollPane.getViewport().setBackground(new Color(255, 255, 255));
+
 
 		// Thêm nút Đóng
 		JButton closeButton = new JButton("Đóng");

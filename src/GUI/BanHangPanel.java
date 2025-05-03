@@ -79,62 +79,83 @@ public class BanHangPanel extends JPanel {
 	}
 
 	private void leftPanelInit() {
-		JPanel leftPanel = new JPanel();
-		panel.add(leftPanel);
-		leftPanel.setLayout(new BorderLayout(0, 0));
+	    JPanel leftPanel = new JPanel();
+	    panel.add(leftPanel);
+	    leftPanel.setLayout(new BorderLayout(0, 0));
 
-		// === Action Panel ===
-		JPanel actionPanel = new JPanel();
-		actionPanel.setBackground(new Color(255, 240, 220));
-		leftPanel.add(actionPanel, BorderLayout.NORTH);
+	    // === Action Panel ===
+	    JPanel actionPanel = new JPanel();
+	    actionPanel.setBackground(new Color(255, 240, 220));
+	    GridBagLayout gbl_actionPanel = new GridBagLayout();
+	    gbl_actionPanel.columnWidths = new int[]{0, 0, 0, 0};
+	    gbl_actionPanel.rowHeights = new int[]{0};
+	    gbl_actionPanel.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0};
+	    gbl_actionPanel.rowWeights = new double[]{0.0};
+	    actionPanel.setLayout(gbl_actionPanel);
+	    leftPanel.add(actionPanel, BorderLayout.NORTH);
 
-		txtSearch = new JTextField();
-		txtSearch.setMinimumSize(new Dimension(7, 30));
-		txtSearch.setPreferredSize(new Dimension(7, 30));
-		txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		actionPanel.add(txtSearch);
-		txtSearch.setColumns(18);
-		cboDM.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+	    txtSearch = new JTextField();
+	    txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+	    txtSearch.setColumns(18);
+	    GridBagConstraints gbc_txtSearch = new GridBagConstraints();
+	    gbc_txtSearch.insets = new Insets(5, 5, 5, 5);
+	    gbc_txtSearch.fill = GridBagConstraints.HORIZONTAL;
+	    gbc_txtSearch.gridx = 0;
+	    gbc_txtSearch.gridy = 0;
+	    actionPanel.add(txtSearch, gbc_txtSearch);
 
-		cboDM.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-		List<DanhMucDTO> listDM = danhMucBus.getAllActiveF1(); // load danh muc F1
-		loadComboBoxDM(listDM);
-		actionPanel.add(cboDM);
+	    cboDM.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+	    cboDM.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+	    List<DanhMucDTO> listDM = danhMucBus.getAllActiveF1();
+	    loadComboBoxDM(listDM);
+	    GridBagConstraints gbc_cboDM = new GridBagConstraints();
+	    gbc_cboDM.insets = new Insets(5, 5, 5, 5);
+	    gbc_cboDM.gridx = 1;
+	    gbc_cboDM.gridy = 0;
+	    actionPanel.add(cboDM, gbc_cboDM);
 
-		btnSearch = new JButton("Tìm");
-		btnSearch.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		ImageHelper searchIcon = new ImageHelper(20, 20, BanHangPanel.class.getResource("/ASSET/Images/searchIcon.png"));
-		btnSearch.setIcon(searchIcon.getScaledImage());
-		btnSearch.setBackground(new Color(255, 255, 255));
-		btnSearch.setFont(new Font("Segoe UI", Font.BOLD, 13));
-		btnSearch.setContentAreaFilled(false);
-		btnSearch.setOpaque(true);
-		btnSearch.addActionListener(e -> search());
-		actionPanel.add(btnSearch);
-		
-		JButton btnReset = new JButton("Làm mới");
-		ImageHelper imgReset = new ImageHelper(20, 20, BanHangPanel.class.getResource("/ASSET/Images/icons8_replay_30px.png"));
-		btnReset.setIcon(imgReset.getScaledImage());
-		btnReset.setBackground(new Color(255, 255, 255));
-		btnReset.setFont(new Font("Segoe UI", Font.BOLD, 13));
-		btnReset.addActionListener(e -> {
-			// empty ô search
-			txtSearch.setText("");
-			cboDM.setSelectedIndex(0);
-            loadProduct(sanPhamBus.getAllActive());
-        });
-		actionPanel.add(btnReset);
+	    btnSearch = new JButton("Tìm");
+	    btnSearch.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+	    ImageHelper searchIcon = new ImageHelper(20, 20, BanHangPanel.class.getResource("/ASSET/Images/searchIcon.png"));
+	    btnSearch.setIcon(searchIcon.getScaledImage());
+	    btnSearch.setBackground(new Color(255, 255, 255));
+	    btnSearch.setFont(new Font("Segoe UI", Font.BOLD, 13));
+	    btnSearch.setContentAreaFilled(false);
+	    btnSearch.setOpaque(true);
+	    btnSearch.addActionListener(e -> search());
+	    GridBagConstraints gbc_btnSearch = new GridBagConstraints();
+	    gbc_btnSearch.insets = new Insets(5, 5, 5, 5);
+	    gbc_btnSearch.gridx = 2;
+	    gbc_btnSearch.gridy = 0;
+	    actionPanel.add(btnSearch, gbc_btnSearch);
 
-		productListPanel.setBackground(new Color(255, 240, 220));
-		productListPanel.setLayout(new GridLayout(0, 2, 5, 5)); // Sử dụng GridLayout với 2 cột
+	    JButton btnReset = new JButton("Làm mới");
+	    btnReset.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+	    ImageHelper imgReset = new ImageHelper(20, 20, BanHangPanel.class.getResource("/ASSET/Images/icons8_replay_30px.png"));
+	    btnReset.setIcon(imgReset.getScaledImage());
+	    btnReset.setBackground(new Color(255, 255, 255));
+	    btnReset.setFont(new Font("Segoe UI", Font.BOLD, 13));
+	    btnReset.addActionListener(e -> {
+	        txtSearch.setText("");
+	        cboDM.setSelectedIndex(0);
+	        loadProduct(sanPhamBus.getAllActive());
+	    });
+	    GridBagConstraints gbc_btnReset = new GridBagConstraints();
+	    gbc_btnReset.insets = new Insets(5, 5, 5, 5);
+	    gbc_btnReset.gridx = 3;
+	    gbc_btnReset.gridy = 0;
+	    actionPanel.add(btnReset, gbc_btnReset);
 
-		JScrollPane productListScrollPane = new JScrollPane(productListPanel,
-			ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-			ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		productListScrollPane.setPreferredSize(new Dimension(300, 500)); // Chiều rộng phù hợp với 2 cột
-		leftPanel.add(productListScrollPane, BorderLayout.CENTER);
+	    // Rest of the code remains unchanged
+	    productListPanel.setBackground(new Color(255, 240, 220));
+	    productListPanel.setLayout(new GridLayout(0, 3, 5, 5));
+	    JScrollPane productListScrollPane = new JScrollPane(productListPanel,
+	        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+	        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+	    productListScrollPane.setPreferredSize(new Dimension(300, 500));
+	    leftPanel.add(productListScrollPane, BorderLayout.CENTER);
 
-		loadProduct(sanPhamBus.getAllActive());
+	    loadProduct(sanPhamBus.getAllActive());
 	}
 
 	private void search() {
@@ -320,9 +341,8 @@ public class BanHangPanel extends JPanel {
 			ImageHelper addIcon = new ImageHelper(20, 20, BanHangPanel.class.getResource("/ASSET/Images/icons8_add_30px.png"));
 			for (SanPhamDTO sp : arr) {
 				JPanel productCard = new JPanel();
-				productCard.setBackground(new Color(245, 222, 179));
 				productCard.setLayout(new BoxLayout(productCard, BoxLayout.Y_AXIS));
-				productCard.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+				productCard.setBackground(new Color(255, 240, 220));
 				productCard.setPreferredSize(new Dimension(140, 165)); // Chiều rộng phù hợp với 2 cột
 				productCard.setMaximumSize(new Dimension(140, 165));
 	
