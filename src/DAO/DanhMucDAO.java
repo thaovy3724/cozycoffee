@@ -10,7 +10,6 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
 		super(
 		"danhmuc", 
 		List.of(
-		 "idDM",
 		 "tenDM",
 		 "trangthai",
 		 "idDMCha"
@@ -29,7 +28,6 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
 	
 	public boolean add(DanhMucDTO danhMuc) {
 		List<Object> params = new ArrayList<>();
-		params.add(danhMuc.getIdDM());
 		params.add(danhMuc.getTenDM());
 		params.add(danhMuc.getTrangthai());
 		params.add(danhMuc.getIdDMCha() == 0 ? null : danhMuc.getIdDMCha());
@@ -38,7 +36,6 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
 	
 	public boolean update(DanhMucDTO danhMuc) {
 		List<Object> params = new ArrayList<>();
-		params.add(danhMuc.getIdDM());
 		params.add(danhMuc.getTenDM());
 		params.add(danhMuc.getTrangthai());
 		params.add(danhMuc.getIdDMCha()== 0 ? null : danhMuc.getIdDMCha());
@@ -162,7 +159,7 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
         return isExist;
 	}
 	
-	public List<DanhMucDTO> getAllActiveEdit(int idDMCon, int idDMCha){
+	public List<DanhMucDTO> getAllActiveF0Edit(int idDMCha){
 		Connection link = null;
 		PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -170,11 +167,10 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
         try {
             String sql = "SELECT * FROM " + table
             		+ " WHERE idDM = ? "
-            		+ " OR(idDM != ? AND trangthai = 1)";
+            		+ " OR(idDMCha IS NULL AND trangthai = 1)";
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1, idDMCha);
-            pstmt.setInt(2, idDMCon);
             rs = pstmt.executeQuery();
             while (rs.next()) result.add(mapResultSetToDTO(rs));
         } catch (ClassNotFoundException | SQLException e) {
@@ -185,13 +181,13 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
         return result;
 	}
 	
-	public List<DanhMucDTO> getAllActive(){
+	public List<DanhMucDTO> getAllActiveF0(){
 		Connection link = null;
 		PreparedStatement pstmt = null;
         ResultSet rs = null;
 		List<DanhMucDTO> result = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM " + table + " WHERE trangthai = 1";
+            String sql = "SELECT * FROM " + table + " WHERE idDMCha IS NULL AND trangthai = 1";
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
             rs = pstmt.executeQuery();
@@ -204,14 +200,33 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
         return result;
 	}
 
-    public List<DanhMucDTO> getAllActiveExcept(int idDM){
+    public List<DanhMucDTO> getAllActiveF1(){
+		Connection link = null;
+		PreparedStatement pstmt = null;
+        ResultSet rs = null;
+		List<DanhMucDTO> result = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM " + table + " WHERE idDMCha IS NOT NULL AND trangthai = 1";
+            link = db.connectDB();
+            pstmt = link.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            while (rs.next()) result.add(mapResultSetToDTO(rs));
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }finally {
+            db.close(link);
+        }
+        return result;
+	}
+
+    public List<DanhMucDTO> getAllActiveF1Except(int idDM){
 		Connection link = null;
 		PreparedStatement pstmt = null;
         ResultSet rs = null;
 		List<DanhMucDTO> result = new ArrayList<>();
         try {
             String sql = "SELECT * FROM " + table
-            		+ " WHERE idDM = ? OR trangthai = 1";
+            		+ " WHERE idDM = ? OR (idDMCha IS NOT NULL AND trangthai = 1)";
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1, idDM);

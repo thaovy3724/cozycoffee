@@ -11,7 +11,6 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
 		super(
 		"sanpham", 
 		List.of(
-		 "idSP",
 		 "tenSP",
          "giaban",
          "hinhanh",
@@ -53,7 +52,6 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
 	
 	public boolean add(SanPhamDTO sp) {
 		List<Object> params = new ArrayList<>();
-		params.add(sp.getIdSP());
 		params.add(sp.getTenSP());
 		params.add(sp.getGiaban());
 		params.add(sp.getHinhanh());
@@ -64,7 +62,6 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
 	
 	public boolean update(SanPhamDTO sp) {
 		List<Object> params = new ArrayList<>();
-		params.add(sp.getIdSP());
 		params.add(sp.getTenSP());
 		params.add(sp.getGiaban());
 		params.add(sp.getHinhanh());

@@ -70,6 +70,7 @@ public class DoiMatKhauDialog extends JDialog {
 
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setVisible(true);
 		setModal(true);
 	}
 	

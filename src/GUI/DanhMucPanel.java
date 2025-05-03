@@ -88,6 +88,7 @@ public class DanhMucPanel extends JPanel {
 		searchPanel.setBackground(new Color(255, 240, 220));
 		
 		txtSearch = new JTextField();
+		txtSearch.setPreferredSize(new Dimension(7, 30));
 		txtSearch.setMinimumSize(new Dimension(7, 30));
 		txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		searchPanel.add(txtSearch);
@@ -183,8 +184,6 @@ public class DanhMucPanel extends JPanel {
 			List<DanhMucDTO> result = danhMucBus.search(keyWord.trim());
 			// hiển thị
 			loadTable(result);
-			// empty ô search
-			txtSearch.setText("");
 		}
 	}
 		

@@ -137,6 +137,10 @@ public class HoaDonPanel extends JPanel {
 		ImageHelper imgReset = new ImageHelper(20, 20, HoaDonPanel.class.getResource("/ASSET/Images/icons8_replay_30px.png"));
 		btnReset.setIcon(imgReset.getScaledImage());
 		btnReset.addActionListener(e->{
+			dateChooserStart.setDate(null);
+			dateChooserEnd.setDate(null);
+			txtMinTongTien.setText("");
+			txtMaxTongTien.setText("");
 			loadHoaDon(hoaDonBus.getAll());
 			ctHoaDonTableModel.setRowCount(0);
 		});
@@ -215,7 +219,7 @@ public class HoaDonPanel extends JPanel {
 				hoaDon.getIdHD(),
 				hoaDon.getNgaytao(),
 				hoaDon.getIdTK(),
-				tongtien
+				formatCurrency(tongtien)
 			};
 			hoaDonTableModel.addRow(row);
 		}
@@ -245,33 +249,31 @@ public class HoaDonPanel extends JPanel {
 	private void search() {
 		// validate
 		// nếu chưa nhập thông tin tìm kiếm (khoảng ngày && khoảng giá)
-		Date dateStart = (Date) dateChooserStart.getDate();
-		Date dateEnd = (Date) dateChooserEnd.getDate();
+		java.util.Date dateStartUtil = dateChooserStart.getDate();
+		java.util.Date dateEndUtil = dateChooserEnd.getDate();
 
 		String txtMinPrice = txtMinTongTien.getText().trim();
 		String txtMaxPrice = txtMaxTongTien.getText().trim();
 
 		List<HoaDonDTO> result = new ArrayList<>();
-		if(dateStart == null && dateEnd == null &&
-		 	txtMinPrice.isEmpty()&& txtMaxPrice.isEmpty()){
+		if(dateStartUtil == null && dateEndUtil == null &&
+		 	txtMinPrice.isEmpty() && txtMaxPrice.isEmpty()){
 			JOptionPane.showMessageDialog(this, "Bạn chưa nhập từ khóa tìm kiếm", "Lỗi", JOptionPane.ERROR_MESSAGE);
 		 } else{
+			java.sql.Date dateStartSQL = null, dateEndSQL = null;
+			if(dateStartUtil != null) dateStartSQL = new java.sql.Date(dateStartUtil.getTime());
+			if(dateEndUtil != null) dateEndSQL = new java.sql.Date(dateEndUtil.getTime());
 			try{
 				Integer minPrice = null, maxPrice = null;
 				if(!txtMinPrice.isEmpty()) minPrice = Integer.parseInt(txtMinPrice);
 				if(!txtMaxPrice.isEmpty()) maxPrice = Integer.parseInt(txtMaxPrice);
-				result = hoaDonBus.search(dateStart, dateEnd, minPrice, maxPrice);
+				result = hoaDonBus.search(dateStartSQL, dateEndSQL, minPrice, maxPrice);
 			}catch(NumberFormatException e){
 				JOptionPane.showMessageDialog(this, "Khoảng giá không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
 			}
 		 }
 		// hiển thị
 		loadHoaDon(result);
-		// empty ô search
-		dateChooserStart.setDate(null);
-		dateChooserEnd.setDate(null);
-		txtMinTongTien.setText("");
-		txtMaxTongTien.setText("");
 	}
 
 	private String formatCurrency(int giaban){

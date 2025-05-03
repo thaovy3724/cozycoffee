@@ -41,9 +41,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -161,7 +158,7 @@ public class PhieuNhapDialog extends JDialog {
             NguyenLieuDTO defaultNguyenLieu = nguyenLieuList != null && !nguyenLieuList.isEmpty()
                     ? nguyenLieuList.get(0)
                     : new NguyenLieuDTO(0, "---Chọn nguyên liệu---");
-            tableModel.addRow(new Object[] { defaultNguyenLieu, "", "", "", "", "Xóa" });
+            tableModel.addRow(new Object[] { defaultNguyenLieu, "", "", "", LocalDate.now(), "Xóa" });
             tableLoNguyenLieu.revalidate();
             tableLoNguyenLieu.repaint();
         });
@@ -196,7 +193,6 @@ public class PhieuNhapDialog extends JDialog {
         gbc_cboTrangThai.gridy = 2;
         cboTrangThai.addItem("Chưa hoàn tất");
         cboTrangThai.addItem("Hoàn tất");
-        cboTrangThai.addItem("Bị hủy");
         contentPanel.add(cboTrangThai, gbc_cboTrangThai);
 
         GridBagConstraints gbc_btnAdd = new GridBagConstraints();
@@ -210,8 +206,8 @@ public class PhieuNhapDialog extends JDialog {
 
     private void initTable() {
         tableModel = new DefaultTableModel(
-                new Object[] { "Nguyên liệu", "Số lượng nhập", "Đơn vị tính", "Đơn giá nhập", "Ngày hết hạn",
-                        "Thao tác" },
+                new Object[] { "Nguyên liệu", "Số lượng nhập", "Đơn vị tính",
+                        "Đơn giá nhập", "Ngày hết hạn", "Thao tác" },
                 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -236,7 +232,7 @@ public class PhieuNhapDialog extends JDialog {
 
             @Override
             public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
-                    int column) {
+                                                         int column) {
                 cboBox = new JComboBox<>();
                 cboBox.addItem(new NguyenLieuDTO(0, "---Chọn nguyên liệu---"));
                 for (NguyenLieuDTO nguyenLieu : nguyenLieuList) {
@@ -279,7 +275,7 @@ public class PhieuNhapDialog extends JDialog {
         tableLoNguyenLieu.getColumnModel().getColumn(0).setCellRenderer(new TableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                    boolean hasFocus, int row, int column) {
+                                                           boolean hasFocus, int row, int column) {
                 JComboBox<NguyenLieuDTO> cboBox = new JComboBox<>();
                 cboBox.addItem(new NguyenLieuDTO(0, "---Chọn nguyên liệu---"));
                 for (NguyenLieuDTO nguyenLieu : nguyenLieuList) {
@@ -320,12 +316,8 @@ public class PhieuNhapDialog extends JDialog {
             }
         }));
 
-        tableLoNguyenLieu.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new JTextField() {
-            {
-                setFont(new Font("Segoe UI", Font.PLAIN, 13));
-                setBorder(new LineBorder(new Color(189, 189, 189), 1));
-            }
-        }));
+        tableLoNguyenLieu.getColumnModel().getColumn(4).setCellRenderer(new DateChooserRenderer());
+        tableLoNguyenLieu.getColumnModel().getColumn(4).setCellEditor(new DateChooserEditor());
 
         tableLoNguyenLieu.getColumnModel().getColumn(5).setCellRenderer((new ButtonRenderer()));
         tableLoNguyenLieu.getColumnModel().getColumn(5).setCellEditor((new ButtonEditor()));

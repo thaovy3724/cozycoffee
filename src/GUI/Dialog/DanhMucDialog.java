@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 
 import BUS.DanhMucBUS;
 import DTO.DanhMucDTO;
+import DTO.NhaCungCapDTO;
 
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
@@ -223,7 +224,7 @@ public class DanhMucDialog extends JDialog {
 
 	public void showAdd() {
 		// load tất cả danh mục đang hoạt động 
-		List<DanhMucDTO> listDMCha = danhMucBus.getAllActive();
+		List<DanhMucDTO> listDMCha = danhMucBus.getAllActiveF0(); // load F0
 		loadComboBoxDMCha(listDMCha);
 		cboTrangThai.setEnabled(false);
 		
@@ -241,13 +242,18 @@ public class DanhMucDialog extends JDialog {
 		cboTrangThai.setSelectedItem(danhMuc.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
 		
 		// load tất cả danh mục đang hoạt động và danh mục cha của danh mục được chọn (nếu có) và trừ danh mục được chọn
-		List<DanhMucDTO> listDMCha = danhMucBus.getAllActiveEdit(idDM, danhMuc.getIdDMCha());
+		List<DanhMucDTO> listDMCha = danhMucBus.getAllActiveF0Edit(danhMuc.getIdDMCha()); // F0
 		loadComboBoxDMCha(listDMCha);
 		
 		// set default
 		if(danhMuc.getIdDMCha() != 0) {
-			DanhMucDTO dmucCha = danhMucBus.findByIdDM(danhMuc.getIdDMCha());
-			cboDMCha.setSelectedItem(dmucCha);
+			for (int i = 0; i < cboDMCha.getItemCount(); i++) {
+                DanhMucDTO dmuc = cboDMCha.getItemAt(i);
+                if (dmuc.getIdDM() == danhMuc.getIdDMCha()) {
+                    cboDMCha.setSelectedIndex(i);
+                    break;
+                }
+            }
 		}
 		
 		setTitle("Sửa danh mục");

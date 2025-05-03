@@ -139,16 +139,6 @@ public class NguyenLieuDialog extends JDialog {
             gbc_errDonVi.gridy = 4;
             contentPanel.add(errDonVi, gbc_errDonVi);
         }
-        {
-            JLabel lblTrangThai = new JLabel("Trạng thái");
-            lblTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-            GridBagConstraints gbc_lblTrangThai = new GridBagConstraints();
-            gbc_lblTrangThai.anchor = GridBagConstraints.EAST;
-            gbc_lblTrangThai.insets = new Insets(0, 10, 5, 5);
-            gbc_lblTrangThai.gridx = 0;
-            gbc_lblTrangThai.gridy = 5;
-            contentPanel.add(lblTrangThai, gbc_lblTrangThai);
-        }
     }
 
     private void actionInit() {

@@ -55,7 +55,8 @@ public class NhaCungCapPanel extends JPanel {
 		actionPanel = new JPanel();
 		container.add(actionPanel);
 		actionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		
+		actionPanel.setBackground(new Color(255, 240, 220));
+
 		btnAdd = new JButton("Thêm");
 		btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnAdd.setBackground(new Color(173, 255, 47));
@@ -85,8 +86,10 @@ public class NhaCungCapPanel extends JPanel {
 		searchPanel = new JPanel();
 		container.add(searchPanel);
 		searchPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
+		searchPanel.setBackground(new Color(255, 240, 220));
+
 		txtSearch = new JTextField();
+		txtSearch.setPreferredSize(new Dimension(7, 30));
 		txtSearch.setMinimumSize(new Dimension(7, 30));
 		txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		searchPanel.add(txtSearch);
@@ -183,9 +186,7 @@ public class NhaCungCapPanel extends JPanel {
 			// tìm kiếm: nếu không tìm thấy thì trả về null
 			List<NhaCungCapDTO> result = nhaCungCapBus.search(keyWord.trim());
 			// hiển thị
-			loadTable(result);
-			// empty ô search
-			txtSearch.setText("");
+			loadTable(result);;
 		}
 	}
 		

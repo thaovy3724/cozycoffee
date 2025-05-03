@@ -6,6 +6,7 @@ import java.util.List;
 
 import DTO.Lo_NguyenLieuDTO;
 import DTO.PhieuNhapDTO;
+import DTO.TrangThai_PnDTO;
 
 public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 	public PhieuNhapDAO() {
@@ -102,12 +103,13 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 			link = db.connectDB();
 			link.setAutoCommit(false);
 
-			sql = "UPDATE " + table + " SET ngaycapnhat = ?, idTK = ?, idNCC = ?, idTT = ?";
+			sql = "UPDATE " + table + " SET ngaycapnhat = ?, idTK = ?, idNCC = ?, idTT = ? WHERE idPN = ?";
 			pstmt = link.prepareStatement(sql);
 			pstmt.setDate(1, Date.valueOf(pn.getNgaycapnhat()));
 			pstmt.setInt(2, pn.getIdTK());
 			pstmt.setInt(3, pn.getIdNCC());
 			pstmt.setInt(4, pn.getIdTT());
+			pstmt.setInt(5, pn.getIdPN());
 			pstmt.executeUpdate();
 
 			if (danhSachChiTiet != null && !danhSachChiTiet.isEmpty()) {
@@ -263,5 +265,49 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 		}
 
 		return tongtien;
+	}
+
+//	HUONGNGUYEN 2/5
+	public List<PhieuNhapDTO> search(Date dateStart, Date dateEnd,
+									 TrangThai_PnDTO ttpn) {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<PhieuNhapDTO> result = new ArrayList<>();
+		try {
+			link = db.connectDB();
+			String sql = "SELECT " + table + ".* FROM " + table + " WHERE 1 = 1";
+			List<Object> params = new ArrayList<>();
+			if (ttpn.getIdTT() != 0) {
+				sql += " AND idTT = ?";
+				params.add(ttpn.getIdTT());
+			}
+			if (dateStart != null && dateEnd != null) {
+				sql += " AND ngaytao BETWEEN ? AND ?";
+				params.add(dateStart);
+				params.add(dateEnd);
+			}
+
+			pstmt = link.prepareStatement(sql);
+			// Gán tham số động
+			for (int i = 0; i < params.size(); i++) {
+				Object param = params.get(i);
+
+				if (param instanceof Integer) {
+					pstmt.setInt(i + 1, (Integer) param);
+				} else if (param instanceof Date) {
+					pstmt.setDate(i + 1, (Date) param);
+				}
+			}
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.close(link);
+		}
+		return result;
 	}
 }

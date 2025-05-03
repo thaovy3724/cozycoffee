@@ -60,6 +60,7 @@ public class CongThucPanel extends JPanel {
         container.add(actionPanel);
         actionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         actionPanel.setBackground(new Color(255, 240, 220));
+        
         if(currentUser.getIdNQ() == 1){
             // Nếu là admin thì hiển thị đủ quyền
             btnAdd = new JButton("Thêm");
@@ -107,6 +108,7 @@ public class CongThucPanel extends JPanel {
         searchPanel.setBackground(new Color(255, 240, 220));
         
         txtSearch = new JTextField();
+        txtSearch.setMinimumSize(new Dimension(7, 30));
         txtSearch.setPreferredSize(new Dimension(7, 30));
         txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         searchPanel.add(txtSearch);
@@ -210,7 +212,6 @@ public class CongThucPanel extends JPanel {
         } else {
             List<CongThucDTO> result = congThucBus.search(keyWord.trim());
             loadTable(result);
-            txtSearch.setText("");
         }
     }
 

@@ -11,7 +11,6 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
 		super(
 		"nhacungcap", 
 		List.of(
-		 "idNCC",
 		 "tenNCC",
          "diachi",
          "sdt",
@@ -34,7 +33,6 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
 	
 	public boolean add(NhaCungCapDTO ncc) {
 		List<Object> params = new ArrayList<>();
-		params.add(ncc.getIdNCC());
 		params.add(ncc.getTenNCC());
 		params.add(ncc.getDiachi());
 		params.add(ncc.getSdt());
@@ -45,7 +43,6 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
 	
 	public boolean update(NhaCungCapDTO ncc) {
 		List<Object> params = new ArrayList<>();
-		params.add(ncc.getIdNCC());
 		params.add(ncc.getTenNCC());
 		params.add(ncc.getDiachi());
 		params.add(ncc.getSdt());
@@ -63,9 +60,9 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
         try {
 			StringBuilder sql = new StringBuilder("SELECT * FROM ");
 			sql.append(table);
-			sql.append(" WHERE tenNCC LIKE ?");
+			sql.append(" WHERE (tenNCC LIKE ?");
 			sql.append(" OR email = ?");
-			sql.append(" OR sdt = ?");
+			sql.append(" OR sdt = ?)");
 			if(ncc.getIdNCC() != 0) 
 				sql.append(" AND idNCC != ?");
            

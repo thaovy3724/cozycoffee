@@ -17,7 +17,6 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
 		super(
 		"hoadon", 
 		List.of(
-		 "idHD",
 		 "ngaytao",
 		 "idTK"
 		));

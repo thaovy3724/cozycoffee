@@ -13,6 +13,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
 import BUS.CT_HoaDonBUS;
 import BUS.HoaDonBUS;
@@ -74,7 +76,7 @@ public class ThongKePanel extends JPanel {
 	 * Create the panel.
 	 */
 	public ThongKePanel() {
-		setBackground(new Color(255, 255, 255));
+		setBackground(new Color(255, 240, 220));
 		setLayout(new BorderLayout());
 
 		// Label chức năng (NORTH)
@@ -86,18 +88,18 @@ public class ThongKePanel extends JPanel {
 		// BodyPanel (CENTER) with BoxLayout Y_AXIS
 		JPanel bodyPanel = new JPanel();
 		bodyPanel.setLayout(new BoxLayout(bodyPanel, BoxLayout.Y_AXIS));
-		bodyPanel.setBackground(new Color(255, 255, 255));
+		bodyPanel.setBackground(new Color(255, 240, 220));
 		add(bodyPanel, BorderLayout.CENTER);
 
 		// OptionPanel with BoxLayout Y_AXIS
 		JPanel optionPanel = new JPanel();
 		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
-		optionPanel.setBackground(new Color(255, 255, 255));
+		optionPanel.setBackground(new Color(255, 240, 220));
 		bodyPanel.add(optionPanel);
 
 		// FilterPanel with FlowLayout
 		JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		filterPanel.setBackground(new Color(255, 255, 255));
+		filterPanel.setBackground(new Color(255, 240, 220));
 		optionPanel.add(filterPanel);
 
 		// Filter options in FilterPanel
@@ -127,7 +129,7 @@ public class ThongKePanel extends JPanel {
 
 		// optionButtonsPanel with FlowLayout
 		JPanel optionButtonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		optionButtonsPanel.setBackground(new Color(255, 255, 255));
+		optionButtonsPanel.setBackground(new Color(255, 240, 220));
 		optionPanel.add(optionButtonsPanel);
 
 		// Buttons in optionButtonsPanel
@@ -156,12 +158,13 @@ public class ThongKePanel extends JPanel {
 
 		// TablePanel for the table
 		JPanel tablePanel = new JPanel(new BorderLayout());
-		tablePanel.setBackground(new Color(255, 255, 255));
+		tablePanel.setBackground(new Color(255, 240, 220));
 		tablePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		bodyPanel.add(tablePanel);
 
 		// Initialize table scroll pane (will be populated dynamically)
 		tableThongKeScrollPane = new JScrollPane();
+		tableThongKeScrollPane.getViewport().setBackground(new Color(255, 240, 220));
 		tablePanel.add(tableThongKeScrollPane, BorderLayout.CENTER);
 
 		// Ẩn lựa chọn tháng trước
@@ -293,6 +296,7 @@ public class ThongKePanel extends JPanel {
 		thongKeJTableHeaders.toArray(new String[0]);
 		thongKeJTableModel = new DefaultTableModel(new Object[][]{}, thongKeJTableHeaders.toArray());
 		tableThongKe = new JTable(thongKeJTableModel);
+		tableThongKe.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		tableThongKe.setEnabled(true);
 		tableThongKe.setDefaultEditor(Object.class, null);
 	}
@@ -308,6 +312,7 @@ public class ThongKePanel extends JPanel {
 		thongKeJTableHeaders.toArray(new String[0]);
 		thongKeJTableModel = new DefaultTableModel(new Object[][]{}, thongKeJTableHeaders.toArray());
 		tableThongKe = new JTable(thongKeJTableModel);
+		tableThongKe.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		tableThongKe.setEnabled(true);
 		tableThongKe.setDefaultEditor(Object.class, null);
 	}

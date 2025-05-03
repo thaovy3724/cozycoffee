@@ -8,6 +8,7 @@ import DAO.NhaCungCapDAO;
 import DAO.PhieuNhapDAO;
 import DTO.Lo_NguyenLieuDTO;
 import DTO.PhieuNhapDTO;
+import DTO.TrangThai_PnDTO;
 
 public class PhieuNhapBUS {
 	private final PhieuNhapDAO phieuNhapDao = new PhieuNhapDAO();
@@ -25,7 +26,6 @@ public class PhieuNhapBUS {
         return phieuNhapDao.findByIdPN(idPN);
     }
 
-    // Hương
     public String update(PhieuNhapDTO pn, List<Lo_NguyenLieuDTO> loNguyenLieuList) {
         if (pn.getIdPN() <= 0 || phieuNhapDao.findByIdPN(pn.getIdPN()) == null) {
             return "Phiếu nhập không tồn tại";
@@ -56,5 +56,11 @@ public class PhieuNhapBUS {
         }
 
         return tongtien;
+    }
+
+//    HUONGNGUYEN 2/5
+    public List<PhieuNhapDTO> search(Date dateStart, Date dateEnd,
+                                     TrangThai_PnDTO ttpn) {
+        return phieuNhapDao.search(dateStart, dateEnd, ttpn);
     }
 }

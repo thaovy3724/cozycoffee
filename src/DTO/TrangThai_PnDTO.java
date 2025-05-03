@@ -27,4 +27,10 @@ public class TrangThai_PnDTO {
     public void setTenTT(String tenTT) {
         this.tenTT = tenTT;
     }
+
+//    HUONGNGUYEN 2/5
+    @Override
+    public String toString() {
+        return this.tenTT;
+    }
 }

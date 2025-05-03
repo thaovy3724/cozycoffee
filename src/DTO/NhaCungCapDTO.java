@@ -75,4 +75,9 @@ public class NhaCungCapDTO {
     public void setTrangthai(int trangthai) {
         this.trangthai = trangthai;
     }
+
+    @Override
+    public String toString() {
+        return this.tenNCC;
+    }
 }

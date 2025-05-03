@@ -12,7 +12,6 @@ public class CongThucDAO extends BaseDAO<CongThucDTO> {
         super(
             "congthuc", 
             List.of(
-                "idCT",
                 "mota",
                 "idSP"
             ));

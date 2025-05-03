@@ -54,7 +54,8 @@ public class SanPhamPanel extends JPanel {
 		JPanel actionPanel = new JPanel();
 		container.add(actionPanel);
 		actionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		
+		actionPanel.setBackground(new Color(255, 240, 220));
+
 		btnAdd = new JButton("Thêm");
 		btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -84,8 +85,10 @@ public class SanPhamPanel extends JPanel {
 		JPanel searchPanel = new JPanel();
 		container.add(searchPanel);
 		searchPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
+        searchPanel.setBackground(new Color(255, 240, 220));
+
 		txtSearch = new JTextField();
+		txtSearch.setPreferredSize(new Dimension(7, 30));
 		txtSearch.setMinimumSize(new Dimension(7, 30));
 		txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		searchPanel.add(txtSearch);
@@ -182,8 +185,6 @@ public class SanPhamPanel extends JPanel {
 			List<SanPhamDTO> result = sanPhamBus.search(keyWord.trim());
 			// hiển thị
 			loadTable(result);
-			// empty ô search
-			txtSearch.setText("");
 		}
 	}
 	

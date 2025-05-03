@@ -118,9 +118,10 @@ public class SanPhamDialog extends JDialog {
 		}
 		{
 			JButton btnUpload = new JButton("Tải ảnh");
+			btnUpload.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			btnUpload.setAlignmentX(Component.CENTER_ALIGNMENT);
-			btnUpload.setBackground(Color.BLACK);
-			btnUpload.setForeground(new Color(255, 255, 255));
+			btnUpload.setBackground(Color.ORANGE);
+			btnUpload.setForeground(Color.BLACK);
 			btnUpload.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 			btnUpload.setContentAreaFilled(false);
 			btnUpload.setOpaque(true);
@@ -186,7 +187,7 @@ public class SanPhamDialog extends JDialog {
 			txtPanel.add(lblDM, gbc_lblDM);
 		}
 		{
-			cboDM.setBackground(new Color(192, 192, 192));
+			cboDM.setBackground(new Color(255, 255, 255));
 			cboDM.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 			GridBagConstraints gbc_cboDM = new GridBagConstraints();
 			gbc_cboDM.fill = GridBagConstraints.HORIZONTAL;
@@ -235,7 +236,7 @@ public class SanPhamDialog extends JDialog {
 			txtPanel.add(errGia, gbc_errGia);
 		}
 		{
-			cboTrangThai.setBackground(new Color(192, 192, 192));
+			cboTrangThai.setBackground(new Color(255, 255, 255));
 			cboTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 			cboTrangThai.addItem("Bị khóa");
 			cboTrangThai.addItem("Hoạt động");
@@ -304,7 +305,7 @@ public class SanPhamDialog extends JDialog {
 
 	public void showAdd() {
 		// load tất cả danh mục đang hoạt động 
-		List<DanhMucDTO> listDM = danhMucBus.getAllActive();
+		List<DanhMucDTO> listDM = danhMucBus.getAllActiveF1(); // load F1
 		loadComboBoxDM(listDM);
 		cboTrangThai.setEnabled(false);
 		
@@ -325,12 +326,19 @@ public class SanPhamDialog extends JDialog {
 		cboTrangThai.setSelectedItem(sanPham.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
 		
 		// load tất cả danh mục đang hoạt động 
-		List<DanhMucDTO> listDM = danhMucBus.getAllActiveExcept(sanPham.getIdDM());
+		List<DanhMucDTO> listDM = danhMucBus.getAllActiveF1Except(sanPham.getIdDM());
 		loadComboBoxDM(listDM);
 		
 		// set default
-		DanhMucDTO dmuc = danhMucBus.findByIdDM(sanPham.getIdDM());
-		cboDM.setSelectedItem(dmuc);
+		if(sanPham.getIdDM() != 0) {
+			for (int i = 0; i < cboDM.getItemCount(); i++) {
+                DanhMucDTO dmuc = cboDM.getItemAt(i);
+                if (dmuc.getIdDM() == sanPham.getIdDM()) {
+                    cboDM.setSelectedIndex(i);
+                    break;
+                }
+            }
+		}
 		
 		setTitle("Sửa sản phẩm");
 		lblTitle.setText("Sửa sản phẩm");

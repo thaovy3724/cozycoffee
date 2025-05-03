@@ -209,7 +209,6 @@ public class HoaDonBUS {
 
         // Đóng tài liệu
         document.close();
-        System.out.println("Hóa đơn đã được tạo: " + outputPath);
 
         // Hiển thị file PDF
         File pdfFile = new File(outputPath);

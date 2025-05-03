@@ -10,16 +10,20 @@ public class DanhMucBUS {
 		return danhMucDao.getAll();
 	}
 	
-	public List<DanhMucDTO> getAllActiveEdit(int idDMCon, int idDMCha){
-		return danhMucDao.getAllActiveEdit(idDMCon, idDMCha);
+	public List<DanhMucDTO> getAllActiveF0Edit(int idDMCha){
+		return danhMucDao.getAllActiveF0Edit(idDMCha);
 	}
 
-	public List<DanhMucDTO> getAllActiveExcept(int idDM){
-		return danhMucDao.getAllActiveExcept(idDM);
+	public List<DanhMucDTO> getAllActiveF0(){
+		return danhMucDao.getAllActiveF0();
 	}
-	
-	public List<DanhMucDTO> getAllActive(){
-		return danhMucDao.getAllActive();
+
+	public List<DanhMucDTO> getAllActiveF1(){
+		return danhMucDao.getAllActiveF1();
+	}
+
+	public List<DanhMucDTO> getAllActiveF1Except(int idDM){
+		return danhMucDao.getAllActiveF1Except(idDM);
 	}
 
 	public String add(DanhMucDTO danhMuc) {

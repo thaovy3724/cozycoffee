@@ -17,7 +17,7 @@ public class TaiKhoanBUS {
 		// kiểm tra email đã tồn tại chưa nếu có trả về thông báo lỗi
 		String error = "";
 		if(taiKhoanDAO.isExist(taiKhoan))
-			error = "Email đã tồn tại";
+			error = "Tên tài khoản hoặc email đã tồn tại";
 		else if(!taiKhoanDAO.add(taiKhoan)) { 		// thêm mới vào CSDL
 			error = "Xảy ra lỗi trong quá trình thêm mới";
 		}
@@ -32,7 +32,7 @@ public class TaiKhoanBUS {
 		// kiểm tra email đã tồn tại chưa nếu có trả về thông báo lỗi
 		String error = "";
 		if(taiKhoanDAO.isExist(taiKhoan))
-			error = "Email đã tồn tại";
+			error = "Tên tài khoản hoặc email đã tồn tại";
 		else if(!taiKhoanDAO.updateInfo(taiKhoan))
 			error = "Xảy ra lỗi trong quá trình cập nhật";
 		
@@ -116,7 +116,9 @@ public class TaiKhoanBUS {
 		TaiKhoanDTO taiKhoan = taiKhoanDAO.findByTenTK(tenTK);
 		if (taiKhoan == null) {
 			result.setMessage("Tài khoản không tồn tại");
-		} else {
+		} else if(taiKhoan.getTrangthai() == 0){
+				result.setMessage("Tài khoản đã bị khóa");
+		}else{
 			try {
 				if (checkPassword(matkhau, taiKhoan.getMatkhau())) {
 					result.setTaiKhoan(taiKhoan);

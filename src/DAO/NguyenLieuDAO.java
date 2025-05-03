@@ -11,7 +11,6 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
         super(
         "nguyenlieu", 
         List.of(
-         "idNL",
          "tenNL",
          "donvi"
         ));
@@ -35,7 +34,6 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
     
     public boolean update(NguyenLieuDTO nl) {
         List<Object> params = new ArrayList<>();
-//      params.add(nl.getIdNL());
         params.add(nl.getTenNL());
         params.add(nl.getDonvi());
         String condition = "idNL = "+nl.getIdNL();
