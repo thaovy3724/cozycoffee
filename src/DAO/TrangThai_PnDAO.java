@@ -1,11 +1,10 @@
 package DAO;
 
-import DTO.PhieuNhapDTO;
-import DTO.TrangThai_PnDTO;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
+import DTO.TrangThai_PnDTO;
 
 /**
  * @author: huonglamcoder

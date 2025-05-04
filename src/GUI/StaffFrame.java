@@ -1,33 +1,35 @@
 package GUI;
 
-import DTO.TaiKhoanDTO;
-import GUI.Dialog.DoiMatKhauDialog;
-
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
+
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JToggleButton;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Cursor;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
+
+import DTO.TaiKhoanDTO;
+import GUI.Dialog.DoiMatKhauDialog;
 
 public class StaffFrame extends JFrame {
 
@@ -62,11 +64,11 @@ public class StaffFrame extends JFrame {
 
     public void init() {
         setBackground(new Color(255, 255, 255));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(1200, 700));
         setMinimumSize(new Dimension(800, 400));
         getContentPane().setLayout(new BorderLayout());
-                
+
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.add(navbarInit(), BorderLayout.NORTH);
 
@@ -75,7 +77,7 @@ public class StaffFrame extends JFrame {
         dynamicPanel.setLayout(new BorderLayout());
         centerPanel.add(dynamicPanel, BorderLayout.CENTER);
         getContentPane().add(centerPanel, BorderLayout.CENTER);
-        
+
         getContentPane().add(menuInit(), BorderLayout.WEST);
         pack();
         setLocationRelativeTo(null);
@@ -139,7 +141,7 @@ public class StaffFrame extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.weightx = 1.0;
-        
+
         JToggleButton btnHoaDon = new JToggleButton("Hóa đơn");
         btnHoaDon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnHoaDon.setFont(new Font("Segoe UI", Font.BOLD, 15));
@@ -173,7 +175,7 @@ public class StaffFrame extends JFrame {
         ImageHelper iconCongThuc = new ImageHelper(28, 28, StaffFrame.class.getResource("/ASSET/Images/6.png"));
         btnCongThuc.setIcon(iconCongThuc.getScaledImage());
         btnCongThuc.setIconTextGap(12);
-  
+
         toggleBtnInit(btnCongThuc);
         menuPanel.add(btnCongThuc, gbc);
 
@@ -186,7 +188,7 @@ public class StaffFrame extends JFrame {
 
         return menuPanel;
     }
-    
+
 
     public JPanel navbarInit() {
         navbarPanel = new JPanel();
@@ -286,13 +288,13 @@ public class StaffFrame extends JFrame {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                 	 btn.setForeground(Color.BLACK);
                     if (lastSelectedButton != null && lastSelectedButton != btn) {
-                    	  lastSelectedButton.setSelected(false); 
+                    	  lastSelectedButton.setSelected(false);
                     }
-                    
+
                     lastSelectedButton = btn;
                     replaceDynamicPanel(btn.getActionCommand());
                 } else {
-         
+
                     btn.setForeground(Color.BLACK);
                 }
             }
@@ -307,7 +309,7 @@ public class StaffFrame extends JFrame {
             case "hoadon":
                 selectedPanel = new HoaDonPanel();
                 break;
-            
+
             case "congthuc":
                 selectedPanel = new CongThucPanel(currentUser);
                 break;
@@ -315,7 +317,7 @@ public class StaffFrame extends JFrame {
             case "banhang":
                 selectedPanel = new BanHangPanel(currentUser);
                 break;
-            
+
         }
 
         dynamicPanel.add(selectedPanel, BorderLayout.CENTER);

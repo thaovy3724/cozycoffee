@@ -3,8 +3,25 @@ package GUI.Dialog;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.DefaultCellEditor;
@@ -12,10 +29,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
@@ -34,30 +55,6 @@ import DTO.NhaCungCapDTO;
 import DTO.PhieuNhapDTO;
 import DTO.TaiKhoanDTO;
 
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.GridBagConstraints;
-import java.awt.Font;
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
-import java.awt.Cursor;
-
 public class PhieuNhapDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
@@ -69,16 +66,16 @@ public class PhieuNhapDialog extends JDialog {
     Lo_NguyenLieuBUS lo_NguyenLieuBus = new Lo_NguyenLieuBUS();
 
     private JButton btnSubmit, btnAdd, btnCancel;
-    private JLabel lblTitle;
+    private final JLabel lblTitle;
     private JComboBox<NhaCungCapDTO> cboNCC;
-    private JComboBox<String> cboTrangThai = new JComboBox<>();
+    private final JComboBox<String> cboTrangThai = new JComboBox<>();
     private JTable tableLoNguyenLieu;
     private DefaultTableModel tableModel;
     private JScrollPane scrollPane;
 
     private List<NguyenLieuDTO> nguyenLieuList;
 
-    private TaiKhoanDTO currentUser;
+    private final TaiKhoanDTO currentUser;
 
     /**
      * Create the dialog.
@@ -596,7 +593,7 @@ public class PhieuNhapDialog extends JDialog {
     }
 
     class ButtonEditor extends AbstractCellEditor implements TableCellEditor {
-        private JButton button;
+        private final JButton button;
         private int row;
         private boolean isPushed;
 
@@ -680,7 +677,7 @@ public class PhieuNhapDialog extends JDialog {
     }
 
     class DateChooserEditor extends AbstractCellEditor implements TableCellEditor {
-        private JDateChooser dateChooser;
+        private final JDateChooser dateChooser;
 
         public DateChooserEditor() {
             dateChooser = new JDateChooser();
@@ -761,7 +758,7 @@ public class PhieuNhapDialog extends JDialog {
             return "Ngày hết hạn không hợp lệ tại hàng " + (index + 1) + "!";
         }
 
-        if (((LocalDate) ngayHetHan).isBefore(LocalDate.now()) || ((LocalDate) ngayHetHan).equals(LocalDate.now()))
+        if (((LocalDate) ngayHetHan).isBefore(LocalDate.now()) || ngayHetHan.equals(LocalDate.now()))
         {
             return "Ngày hết hạn phải sau ngày hôm nay (tại hàng " + (index + 1) + ")!";
         }
@@ -810,7 +807,6 @@ public class PhieuNhapDialog extends JDialog {
                     JOptionPane.showMessageDialog(this, errorMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                ;
 
                 if (usedIdNL.contains(nl.getIdNL())) {
                     JOptionPane.showMessageDialog(this, "Nguyên liệu '" + nl.getTenNL() + "' đã được chọn!", "Lỗi",
@@ -818,7 +814,7 @@ public class PhieuNhapDialog extends JDialog {
                     return;
                 }
                 usedIdNL.add(nl.getIdNL());
-                
+
                 try {
                     float soLuong = Float.parseFloat(soLuongStr);
                     int donGia = Integer.parseInt(donGiaStr);
@@ -881,7 +877,6 @@ public class PhieuNhapDialog extends JDialog {
                     JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
                  }
                 e.printStackTrace();
-                return;
             }
         }
     }

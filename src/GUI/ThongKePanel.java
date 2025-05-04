@@ -1,6 +1,24 @@
 package GUI;
 
-import GUI.Dialog.ThongKeNhapKhoDialog;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.sql.Date;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -27,54 +45,44 @@ import DTO.Lo_NguyenLieuDTO;
 import DTO.NguyenLieuDTO;
 import DTO.PhieuNhapDTO;
 import DTO.SanPhamDTO;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.sql.Date;
-import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import GUI.Dialog.ThongKeNhapKhoDialog;
+import GUI.ThongKe.ThongKe;
 
 public class ThongKePanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private HoaDonBUS hoaDonBus = new HoaDonBUS();
-	private CT_HoaDonBUS ct_HoaDonBus = new CT_HoaDonBUS();
-	private PhieuNhapBUS phieuNhapBus = new PhieuNhapBUS();
-	private Lo_NguyenLieuBUS lo_NguyenLieuBus = new Lo_NguyenLieuBUS();
-	private NguyenLieuBUS nguyenLieuBus = new NguyenLieuBUS();
-	private SanPhamBUS sanPhamBus = new SanPhamBUS();
+	private final HoaDonBUS hoaDonBus = new HoaDonBUS();
+	private final CT_HoaDonBUS ct_HoaDonBus = new CT_HoaDonBUS();
+	private final PhieuNhapBUS phieuNhapBus = new PhieuNhapBUS();
+	private final Lo_NguyenLieuBUS lo_NguyenLieuBus = new Lo_NguyenLieuBUS();
+	private final NguyenLieuBUS nguyenLieuBus = new NguyenLieuBUS();
+	private final SanPhamBUS sanPhamBus = new SanPhamBUS();
 	private JTable tableThongKe;
-	private JLabel lblStatics, lblMonth;
-	private JComboBox<ComboItem> comboYear, comboMonth, comboFilterOption;
-	private JButton btnXemLoiNhuan, btnXemNhapKho, btnXemSanPham;
+	private final JLabel lblStatics;
+    private final JLabel lblMonth;
+	private final JComboBox<ComboItem> comboYear;
+    private final JComboBox<ComboItem> comboMonth;
+    private final JComboBox<ComboItem> comboFilterOption;
+	private final JButton btnXemLoiNhuan;
+    private final JButton btnXemNhapKho;
+    private final JButton btnXemSanPham;
 
 	private List<String> thongKeJTableHeaders;
 	private DefaultTableModel thongKeJTableModel;
-	private JScrollPane tableThongKeScrollPane;
-	private Map<String, Integer> tenNLToIdMap = new HashMap<>(); // Map để lưu tenNL -> idNL
+	private final JScrollPane tableThongKeScrollPane;
+	private final Map<String, Integer> tenNLToIdMap = new HashMap<>(); // Map để lưu tenNL -> idNL
 
 	private int clickedRow = -1;
 	private int clickedColumn = -1;
+
+	// HUONGNGUYEN 4/5
+	private final JScrollPane chartPanel;
 
 	/**
 	 * Create the panel.
 	 */
 	public ThongKePanel() {
-		setBackground(new Color(255, 255, 255));
+		setBackground(new Color(255, 240, 220));
 		setLayout(new BorderLayout());
 
 		// Label chức năng (NORTH)
@@ -86,18 +94,18 @@ public class ThongKePanel extends JPanel {
 		// BodyPanel (CENTER) with BoxLayout Y_AXIS
 		JPanel bodyPanel = new JPanel();
 		bodyPanel.setLayout(new BoxLayout(bodyPanel, BoxLayout.Y_AXIS));
-		bodyPanel.setBackground(new Color(255, 255, 255));
+		bodyPanel.setBackground(new Color(255, 240, 220));
 		add(bodyPanel, BorderLayout.CENTER);
 
 		// OptionPanel with BoxLayout Y_AXIS
 		JPanel optionPanel = new JPanel();
 		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
-		optionPanel.setBackground(new Color(255, 255, 255));
+		optionPanel.setBackground(new Color(255, 240, 220));
 		bodyPanel.add(optionPanel);
 
 		// FilterPanel with FlowLayout
 		JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		filterPanel.setBackground(new Color(255, 255, 255));
+		filterPanel.setBackground(new Color(255, 240, 220));
 		optionPanel.add(filterPanel);
 
 		// Filter options in FilterPanel
@@ -127,7 +135,7 @@ public class ThongKePanel extends JPanel {
 
 		// optionButtonsPanel with FlowLayout
 		JPanel optionButtonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		optionButtonsPanel.setBackground(new Color(255, 255, 255));
+		optionButtonsPanel.setBackground(new Color(255, 240, 220));
 		optionPanel.add(optionButtonsPanel);
 
 		// Buttons in optionButtonsPanel
@@ -154,14 +162,20 @@ public class ThongKePanel extends JPanel {
 		btnXemSanPham.setPreferredSize(new Dimension(150, 27));
 		optionButtonsPanel.add(btnXemSanPham);
 
+		// HUONGNGUYEN 4/5
+		chartPanel = new ThongKe();
+		chartPanel.getViewport().setBackground(new Color(255, 240, 220));
+		bodyPanel.add(chartPanel);
+
 		// TablePanel for the table
 		JPanel tablePanel = new JPanel(new BorderLayout());
-		tablePanel.setBackground(new Color(255, 255, 255));
+		tablePanel.setBackground(new Color(255, 240, 220));
 		tablePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		bodyPanel.add(tablePanel);
 
 		// Initialize table scroll pane (will be populated dynamically)
 		tableThongKeScrollPane = new JScrollPane();
+		tableThongKeScrollPane.getViewport().setBackground(new Color(255, 240, 220));
 		tablePanel.add(tableThongKeScrollPane, BorderLayout.CENTER);
 
 		// Ẩn lựa chọn tháng trước
@@ -174,7 +188,7 @@ public class ThongKePanel extends JPanel {
 
 		// Gán sự kiện
 		setupEventListeners();
-		
+
 	}
 
 	// ===Các hàm setUp cho GUI===
@@ -219,7 +233,9 @@ public class ThongKePanel extends JPanel {
 				e -> {
 					setupComboYear();
 					ComboItem option = (ComboItem) comboFilterOption.getSelectedItem();
-					if (option == null) return;
+					if (option == null) {
+						return;
+					}
 					lblMonth.setVisible(option.getKey() == 1);
 					comboMonth.setVisible(option.getKey() == 1);
 				}
@@ -228,7 +244,9 @@ public class ThongKePanel extends JPanel {
 		comboYear.addActionListener(e -> {
 			ComboItem selectedFilterOption = (ComboItem) comboFilterOption.getSelectedItem();
 			ComboItem selectedYear = (ComboItem) comboYear.getSelectedItem();
-			if (selectedFilterOption == null || selectedYear == null) return;
+			if (selectedFilterOption == null || selectedYear == null) {
+				return;
+			}
 			if (selectedFilterOption.getKey() == 1 && selectedYear.getKey() > 0) {
 				setupComboMonth();
 			}
@@ -236,6 +254,7 @@ public class ThongKePanel extends JPanel {
 
 		btnXemLoiNhuan.addActionListener(
 				e -> {
+					loadThongKe();
 					loadLoiNhuanTable();
 					setupTableCellRenderer();
 				}
@@ -276,7 +295,9 @@ public class ThongKePanel extends JPanel {
 	}
 
 	private void setupThongKeByMonthTableHeaders(int year, int month) {
-		if (tableThongKe != null) tableThongKe.removeAll();
+		if (tableThongKe != null) {
+			tableThongKe.removeAll();
+		}
 		thongKeJTableHeaders = new ArrayList<>();
 		thongKeJTableHeaders.add("");
 		LocalDate startOfMonth = LocalDate.of(year, month, 1);
@@ -293,12 +314,15 @@ public class ThongKePanel extends JPanel {
 		thongKeJTableHeaders.toArray(new String[0]);
 		thongKeJTableModel = new DefaultTableModel(new Object[][]{}, thongKeJTableHeaders.toArray());
 		tableThongKe = new JTable(thongKeJTableModel);
+		tableThongKe.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		tableThongKe.setEnabled(true);
 		tableThongKe.setDefaultEditor(Object.class, null);
 	}
 
 	private void setupThongKeByYearTableHeaders(int year) {
-		if (tableThongKe != null) tableThongKe.removeAll();
+		if (tableThongKe != null) {
+			tableThongKe.removeAll();
+		}
 		thongKeJTableHeaders = new ArrayList<>();
 		thongKeJTableHeaders.add("");
 		for (int i = 1; i <= 12; i++) {
@@ -308,6 +332,7 @@ public class ThongKePanel extends JPanel {
 		thongKeJTableHeaders.toArray(new String[0]);
 		thongKeJTableModel = new DefaultTableModel(new Object[][]{}, thongKeJTableHeaders.toArray());
 		tableThongKe = new JTable(thongKeJTableModel);
+		tableThongKe.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		tableThongKe.setEnabled(true);
 		tableThongKe.setDefaultEditor(Object.class, null);
 	}
@@ -441,9 +466,13 @@ public class ThongKePanel extends JPanel {
 	private void showNhapKhoDetailDialog(int row, LocalDate start, LocalDate end) {
 		String tenNguyenLieu = (String) tableThongKe.getValueAt(row, 0);
 		Integer idNL = tenNLToIdMap.get(tenNguyenLieu);
-		if (idNL == null) return;
+		if (idNL == null) {
+			return;
+		}
 		NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(idNL);
-		if (nl == null) return;
+		if (nl == null) {
+			return;
+		}
 
 		List<PhieuNhapDTO> danhSachPN = phieuNhapBus.searchCompleteByDate(Date.valueOf(start), Date.valueOf(end));
 		List<Lo_NguyenLieuDTO> danhSachLo = new ArrayList<>();
@@ -847,4 +876,33 @@ public class ThongKePanel extends JPanel {
 		}
 	}
 	// ===END: Các hàm tiện ích===
+
+	// HUONGNGUYEN 4/5
+	public void loadThongKe() {
+		ComboItem filterOption =
+				(ComboItem) comboFilterOption.getSelectedItem();
+		ComboItem yearItem = (ComboItem) comboYear.getSelectedItem();
+		ComboItem monthItem = (ComboItem) comboMonth.getSelectedItem();
+
+		if (yearItem == null || yearItem.getKey() == 0) {
+			JOptionPane.showMessageDialog(this, "Vui lòng chọn năm!", "LỖI", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		int year = yearItem.getKey();
+		int month =
+				filterOption.getKey() == 1 && monthItem != null && monthItem.getKey() > 0 ? monthItem.getKey() : -1;
+		ThongKe thongKe = (ThongKe) chartPanel;
+		if (filterOption.getKey() == 0) {
+			// Chọn xem theo năm
+			thongKe.updateChartByYear(year);
+		} else {
+			if (month == -1) {
+				JOptionPane.showMessageDialog(this, "Vui lòng chọn tháng!",
+						"LỖI", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			thongKe.updateChartByMonth(year, month);
+		}
+	}
 }

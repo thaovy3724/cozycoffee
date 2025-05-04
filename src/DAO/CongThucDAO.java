@@ -1,18 +1,21 @@
 package DAO;
 
-import DTO.CT_CongThucDTO;
-import DTO.CongThucDTO;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.*;
+
+import DTO.CT_CongThucDTO;
+import DTO.CongThucDTO;
 
 public class CongThucDAO extends BaseDAO<CongThucDTO> {
     public CongThucDAO() {
         super(
-            "congthuc", 
+            "congthuc",
             List.of(
-                "idCT",
                 "mota",
                 "idSP"
             ));
@@ -47,8 +50,9 @@ public class CongThucDAO extends BaseDAO<CongThucDTO> {
 
 			// Thêm chi tiết hóa đơn
 			generatedKeys = pstmt.getGeneratedKeys();
-			if(generatedKeys.next()) 
+			if(generatedKeys.next()) {
 				newIdHD = generatedKeys.getInt(1);
+			}
 			sql = "INSERT INTO ct_congthuc (idCT, idNL, soluong) VALUES (?, ?, ?)";
 			pstmt = link.prepareStatement(sql);
 			for(CT_CongThucDTO chitiet : danhSachChiTiet){
@@ -72,7 +76,7 @@ public class CongThucDAO extends BaseDAO<CongThucDTO> {
         }
 		return newIdHD;
 	}
-    
+
     public boolean update(CongThucDTO ct) {
         List<Object> params = new ArrayList<>();
         params.add(ct.getMota());
@@ -92,7 +96,9 @@ public class CongThucDAO extends BaseDAO<CongThucDTO> {
             e.printStackTrace();
             return false;
         } finally {
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (pstmt != null) {
+				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
             db.close(link);
         }
     }
@@ -112,18 +118,22 @@ public class CongThucDAO extends BaseDAO<CongThucDTO> {
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (rs != null) {
+				try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
+            if (pstmt != null) {
+				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
             db.close(link);
         }
         return hasProduct;
     }
-    
+
     public boolean delete(int idCT) {
         String col = "idCT";
         return super.delete(col, idCT);
     }
-    
+
     public List<CongThucDTO> search(String keyWord) {
         Connection link = null;
         PreparedStatement pstmt = null;
@@ -135,17 +145,23 @@ public class CongThucDAO extends BaseDAO<CongThucDTO> {
             pstmt = link.prepareStatement(sql);
             pstmt.setString(1, "%" + keyWord + "%");
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (rs != null) {
+				try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
+            if (pstmt != null) {
+				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
             db.close(link);
         }
         return result;
     }
-    
+
     public CongThucDTO findByIdCT(int idCT) {
         Connection link = null;
         PreparedStatement pstmt = null;
@@ -157,12 +173,18 @@ public class CongThucDAO extends BaseDAO<CongThucDTO> {
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1, idCT);
             rs = pstmt.executeQuery();
-            if (rs.next()) result = mapResultSetToDTO(rs);
+            if (rs.next()) {
+				result = mapResultSetToDTO(rs);
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (rs != null) {
+				try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
+            if (pstmt != null) {
+				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
             db.close(link);
         }
         return result;
@@ -179,12 +201,18 @@ public class CongThucDAO extends BaseDAO<CongThucDTO> {
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1, idSP);
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (rs != null) {
+				try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
+            if (pstmt != null) {
+				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
             db.close(link);
         }
         return result;
@@ -213,13 +241,17 @@ public class CongThucDAO extends BaseDAO<CongThucDTO> {
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (rs != null) {
+				try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
+            if (pstmt != null) {
+				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
             db.close(link);
         }
         return isExist;
     }
-    
+
     public List<CongThucDTO> getAllActiveEdit(int idCT, int idSP) {
         Connection link = null;
         PreparedStatement pstmt = null;
@@ -232,17 +264,23 @@ public class CongThucDAO extends BaseDAO<CongThucDTO> {
             pstmt.setInt(1, idCT);
             pstmt.setInt(2, idSP);
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (rs != null) {
+				try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
+            if (pstmt != null) {
+				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
             db.close(link);
         }
         return result;
     }
-    
+
     public List<CongThucDTO> getAllActive() {
         Connection link = null;
         PreparedStatement pstmt = null;
@@ -253,12 +291,18 @@ public class CongThucDAO extends BaseDAO<CongThucDTO> {
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (rs != null) {
+				try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
+            if (pstmt != null) {
+				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
             db.close(link);
         }
         return result;

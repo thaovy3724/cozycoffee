@@ -15,9 +15,8 @@ import DTO.HoaDonDTO;
 public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
     public HoaDonDAO() {
 		super(
-		"hoadon", 
+		"hoadon",
 		List.of(
-		 "idHD",
 		 "ngaytao",
 		 "idTK"
 		));
@@ -31,7 +30,7 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
                 rs.getInt("idTK")
         );
     }
-	
+
 	public int add(HoaDonDTO hoaDon, List<CT_HoaDonDTO> danhSachChiTiet) {
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -52,8 +51,9 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
 
 			// Thêm chi tiết hóa đơn
 			generatedKeys = pstmt.getGeneratedKeys();
-			if(generatedKeys.next()) 
+			if(generatedKeys.next()) {
 				newIdHD = generatedKeys.getInt(1);
+			}
 			sql = "INSERT INTO ct_hoadon (idHD, idSP, soluong, gialucdat) VALUES (?, ?, ?, ?)";
 			pstmt = link.prepareStatement(sql);
 			for(CT_HoaDonDTO chitiet : danhSachChiTiet){
@@ -102,13 +102,15 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
         int result = 0;
         try {
             String sql = "SELECT SUM(soluong * gialucdat) AS tongtien"+
-			" FROM ct_hoadon"+ 
+			" FROM ct_hoadon"+
 			" WHERE idHD = ?";
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1,idHD);
             rs = pstmt.executeQuery();
-            if (rs.next()) result = rs.getInt("tongtien");
+            if (rs.next()) {
+				result = rs.getInt("tongtien");
+			}
         }catch(ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {
@@ -128,32 +130,32 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
 						 "INNER JOIN ct_hoadon ct ON hd.idHD = ct.idHD " +
 						 "WHERE 1=1";
 			List<Object> params = new ArrayList<>();
-	
+
 			if (dateStart != null) {
 				sql += " AND ngaytao >= ?";
 				params.add(new java.sql.Date(dateStart.getTime()));
 			}
-	
+
 			if (dateEnd != null) {
 				sql += " AND ngaytao <= ?";
 				params.add(new java.sql.Date(dateEnd.getTime()));
 			}
-	
+
 			sql += " GROUP BY hd.idHD, ngaytao, idTK HAVING 1=1";
-	
+
 			if (minPrice != null) {
 				sql += " AND SUM(soluong * gialucdat) >= ?";
 				params.add(minPrice);
 			}
-	
+
 			if (maxPrice != null) {
 				sql += " AND SUM(soluong * gialucdat) <= ?";
 				params.add(maxPrice);
 			}
-	
+
 			link = db.connectDB();
 			pstmt = link.prepareStatement(sql);
-	
+
 			// Gán tham số động
 			for (int i = 0; i < params.size(); i++) {
 				Object param = params.get(i);
@@ -163,7 +165,7 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
 					pstmt.setDate(i + 1, (Date) param);
 				}
 			}
-	
+
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				result.add(new HoaDonDTO(
@@ -172,7 +174,7 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
 					rs.getInt("idTK")
 				));
 			}
-	
+
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
@@ -192,7 +194,9 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1,idHD);
             rs = pstmt.executeQuery();
-            if (rs.next()) result = mapResultSetToDTO(rs);
+            if (rs.next()) {
+				result = mapResultSetToDTO(rs);
+			}
         }catch(ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {

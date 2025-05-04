@@ -4,7 +4,7 @@ public class NguyenLieuDTO {
     private int idNL;
     private String donvi;
     private String tenNL;
-    
+
     public NguyenLieuDTO(int idNL, String tenNL) {
         this.idNL = idNL;
         this.tenNL = tenNL;
@@ -48,14 +48,18 @@ public class NguyenLieuDTO {
 
     @Override
     public String toString() {
-        
+
         return tenNL; // Hiển thị tên nguyên liệu trong JComboBox
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj) {
+			return true;
+		}
+        if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
         NguyenLieuDTO that = (NguyenLieuDTO) obj;
         return idNL == that.idNL;
     }

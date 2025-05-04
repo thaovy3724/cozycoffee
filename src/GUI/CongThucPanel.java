@@ -1,6 +1,24 @@
 package GUI;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.util.List;
+
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+
 import BUS.CongThucBUS;
 import BUS.SanPhamBUS;
 import DTO.CongThucDTO;
@@ -8,32 +26,15 @@ import DTO.SanPhamDTO;
 import DTO.TaiKhoanDTO;
 import GUI.Dialog.CongThucDialog;
 
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import javax.swing.BoxLayout;
-import java.awt.FlowLayout;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.ImageIcon;
-import java.awt.Font;
-import java.util.List;
-import java.awt.Dimension;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Component;
-
 public class CongThucPanel extends JPanel {
-    private CongThucBUS congThucBus = new CongThucBUS();
-    private SanPhamBUS sanPhamBus = new SanPhamBUS(); // Vẫn giữ để lấy tên sản phẩm
-    private TaiKhoanDTO currentUser;
+    private final CongThucBUS congThucBus = new CongThucBUS();
+    private final SanPhamBUS sanPhamBus = new SanPhamBUS(); // Vẫn giữ để lấy tên sản phẩm
+    private final TaiKhoanDTO currentUser;
 
     private static final long serialVersionUID = 1L;
     private JButton btnEdit, btnDel, btnSearch, btnReset, btnDetail;
     private JTable table;
-    private JPanel container = new JPanel();
+    private final JPanel container = new JPanel();
     private JTextField txtSearch;
     private DefaultTableModel tableModel;
     private JButton btnAdd;
@@ -60,6 +61,7 @@ public class CongThucPanel extends JPanel {
         container.add(actionPanel);
         actionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         actionPanel.setBackground(new Color(255, 240, 220));
+
         if(currentUser.getIdNQ() == 1){
             // Nếu là admin thì hiển thị đủ quyền
             btnAdd = new JButton("Thêm");
@@ -87,7 +89,7 @@ public class CongThucPanel extends JPanel {
             btnDel.addActionListener(e -> delete());
             actionPanel.add(btnDel);
         }
-            
+
             btnDetail = new JButton("Xem");
             btnDetail.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             btnDetail.setBackground(new Color(255, 192, 203));
@@ -105,8 +107,9 @@ public class CongThucPanel extends JPanel {
         container.add(searchPanel);
         searchPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         searchPanel.setBackground(new Color(255, 240, 220));
-        
+
         txtSearch = new JTextField();
+        txtSearch.setMinimumSize(new Dimension(7, 30));
         txtSearch.setPreferredSize(new Dimension(7, 30));
         txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         searchPanel.add(txtSearch);
@@ -137,7 +140,7 @@ public class CongThucPanel extends JPanel {
     private void tableInit() {
         tableModel = new DefaultTableModel(
             new String[] {"Mã công thức", "Tên sản phẩm"}, 0) { // Chỉ giữ 3 cột
-            
+
                 @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Không cho phép sửa ô nào cả
@@ -158,8 +161,8 @@ public class CongThucPanel extends JPanel {
 
     private void loadTable(List<CongThucDTO> arr) {
         tableModel.setRowCount(0); // Xóa tất cả các dòng hiện tại
-        if (arr != null)
-            for (CongThucDTO ct : arr) {
+        if (arr != null) {
+			for (CongThucDTO ct : arr) {
                 // Lấy thông tin sản phẩm từ idSP
                 SanPhamDTO sp = sanPhamBus.findByIdSP(ct.getIdSP());
 
@@ -169,6 +172,7 @@ public class CongThucPanel extends JPanel {
                 };
                 tableModel.addRow(row);
             }
+		}
         table.setModel(tableModel);
     }
 
@@ -210,7 +214,6 @@ public class CongThucPanel extends JPanel {
         } else {
             List<CongThucDTO> result = congThucBus.search(keyWord.trim());
             loadTable(result);
-            txtSearch.setText("");
         }
     }
 

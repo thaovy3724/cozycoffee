@@ -1,6 +1,11 @@
 package DAO;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,8 +87,9 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 			link.commit();
 		} catch (ClassNotFoundException | SQLException e) {
 			try {
-				if (link != null)
+				if (link != null) {
 					link.rollback();
+				}
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
@@ -103,12 +109,13 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 			link = db.connectDB();
 			link.setAutoCommit(false);
 
-			sql = "UPDATE " + table + " SET ngaycapnhat = ?, idTK = ?, idNCC = ?, idTT = ?";
+			sql = "UPDATE " + table + " SET ngaycapnhat = ?, idTK = ?, idNCC = ?, idTT = ? WHERE idPN = ?";
 			pstmt = link.prepareStatement(sql);
 			pstmt.setDate(1, Date.valueOf(pn.getNgaycapnhat()));
 			pstmt.setInt(2, pn.getIdTK());
 			pstmt.setInt(3, pn.getIdNCC());
 			pstmt.setInt(4, pn.getIdTT());
+			pstmt.setInt(5, pn.getIdPN());
 			pstmt.executeUpdate();
 
 			if (danhSachChiTiet != null && !danhSachChiTiet.isEmpty()) {
@@ -148,8 +155,9 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 			return true;
 		} catch (ClassNotFoundException | SQLException e) {
 			try {
-				if (link != null)
+				if (link != null) {
 					link.rollback();
+				}
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
@@ -256,7 +264,9 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 			pstmt = link.prepareStatement(sql);
 			pstmt.setInt(1, idPN);
 			rs = pstmt.executeQuery();
-			if (rs.next()) tongtien = rs.getLong("tongtien");
+			if (rs.next()) {
+				tongtien = rs.getLong("tongtien");
+			}
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new RuntimeException(e);
 		} finally {

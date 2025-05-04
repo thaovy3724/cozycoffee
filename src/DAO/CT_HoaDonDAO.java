@@ -1,14 +1,18 @@
 package DAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import DTO.CT_HoaDonDTO;
 import java.util.List;
-import java.sql.*;
+
+import DTO.CT_HoaDonDTO;
 
 public class CT_HoaDonDAO extends BaseDAO<CT_HoaDonDTO>{
 	public CT_HoaDonDAO() {
 		super(
-		"ct_hoadon", 
+		"ct_hoadon",
 		List.of(
 		 "idSP",
 		 "idHD",
@@ -26,7 +30,7 @@ public class CT_HoaDonDAO extends BaseDAO<CT_HoaDonDTO>{
                 rs.getInt("gialucdat")
         );
     }
-	
+
 	public List<CT_HoaDonDTO> getAllByIdHD(int idHD) {
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -38,7 +42,9 @@ public class CT_HoaDonDAO extends BaseDAO<CT_HoaDonDTO>{
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1,idHD);
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         }catch(ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {
@@ -55,7 +61,7 @@ public class CT_HoaDonDAO extends BaseDAO<CT_HoaDonDTO>{
         try {
             // Tính tổng tồn kho khả dụng cho từng idNL
             // Tính số sản phẩm tối đa cho từng nguyên liệu
-            String sql = 
+            String sql =
             "WITH TonKhoTheoHSD AS (" +
             " SELECT lo.idNL, SUM(lo.tonkho) AS tonkho_kha_dung" +
             " FROM lo_nguyenlieu lo" +
@@ -81,7 +87,9 @@ public class CT_HoaDonDAO extends BaseDAO<CT_HoaDonDTO>{
             pstmt.setInt(1,ct.getSoluong());
             pstmt.setInt(2,ct.getIdSP());
             rs = pstmt.executeQuery();
-            while (rs.next()) quantityAvailable = rs.getInt("so_luong_san_pham_available");
+            while (rs.next()) {
+				quantityAvailable = rs.getInt("so_luong_san_pham_available");
+			}
         }catch(ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {

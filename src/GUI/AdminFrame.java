@@ -1,31 +1,33 @@
 package GUI;
 
-import DTO.TaiKhoanDTO;
-import GUI.Dialog.DoiMatKhauDialog;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JToggleButton;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Cursor;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
+
+import DTO.TaiKhoanDTO;
+import GUI.Dialog.DoiMatKhauDialog;
 
 public class AdminFrame extends JFrame {
 
@@ -62,7 +64,7 @@ public class AdminFrame extends JFrame {
 
     public void init() {
         setBackground(new Color(255, 255, 255));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(1200, 700));
         setMinimumSize(new Dimension(800, 400));
         getContentPane().setLayout(new BorderLayout());
@@ -100,8 +102,8 @@ public class AdminFrame extends JFrame {
         JLabel logoLB = new JLabel("logo");
         logoLB.setHorizontalAlignment(SwingConstants.CENTER);
         logoLB.setIcon(logoIcon.getScaledImage());
-        menuPanel.add(logoLB, gbc);    
-                               
+        menuPanel.add(logoLB, gbc);
+
         // Button 1: Thống kê
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(2, 10, 5, 10);
@@ -116,7 +118,7 @@ public class AdminFrame extends JFrame {
         btnThongKe.setIcon(iconThongKe.getScaledImage());
         btnThongKe.setActionCommand("thongke");
         btnThongKe.setPreferredSize(new Dimension(200, 50));
-        
+
         btnThongKe.setIconTextGap(10);
         // set default
         dynamicPanel.add(new ThongKePanel(), BorderLayout.CENTER);
@@ -124,7 +126,7 @@ public class AdminFrame extends JFrame {
         dynamicPanel.repaint();
         toggleBtnInit(btnThongKe);
         menuPanel.add(btnThongKe, gbc);
-        
+
         // Button 2: Hóa đơn
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(2, 10, 5, 10);
@@ -215,7 +217,7 @@ public class AdminFrame extends JFrame {
         btnDanhMuc.setPreferredSize(new Dimension(200, 50));
         ImageHelper iconDanhMuc = new ImageHelper(30, 30, AdminFrame.class.getResource("/ASSET/Images/7.png"));
         btnDanhMuc.setIcon(iconDanhMuc.getScaledImage());
-        btnDanhMuc.setIconTextGap(10); 
+        btnDanhMuc.setIconTextGap(10);
         toggleBtnInit(btnDanhMuc);
         menuPanel.add(btnDanhMuc, gbc);
 
@@ -252,11 +254,11 @@ public class AdminFrame extends JFrame {
         btnPhieuNhap.setActionCommand("phieunhap");
         btnPhieuNhap.setPreferredSize(new Dimension(200, 50));
         ImageHelper iconPhieuNhap = new ImageHelper(30, 30, AdminFrame.class.getResource("/ASSET/Images/9.png"));
-        btnPhieuNhap.setIcon(iconPhieuNhap.getScaledImage()); 
+        btnPhieuNhap.setIcon(iconPhieuNhap.getScaledImage());
         btnPhieuNhap.setIconTextGap(10);
         toggleBtnInit(btnPhieuNhap);
         menuPanel.add(btnPhieuNhap, gbc);
-        
+
         // Button 10: Tài khoản
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(2, 10, 0, 10);
@@ -377,13 +379,13 @@ public class AdminFrame extends JFrame {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                 	 btn.setForeground(Color.BLACK);
                     if (lastSelectedButton != null && lastSelectedButton != btn) {
-                    	  lastSelectedButton.setSelected(false);	  
+                    	  lastSelectedButton.setSelected(false);
                     }
-                    
+
                     lastSelectedButton = btn;
                     replaceDynamicPanel(btn.getActionCommand());
                 } else {
-         
+
                     btn.setForeground(Color.BLACK);
                 }
             }

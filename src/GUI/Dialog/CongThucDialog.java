@@ -1,37 +1,67 @@
 package GUI.Dialog;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
-
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.swing.AbstractCellEditor;
+import javax.swing.DefaultCellEditor;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+
 import BUS.CT_CongThucBUS;
 import BUS.CongThucBUS;
-import BUS.SanPhamBUS;
 import BUS.NguyenLieuBUS;
-import DTO.CongThucDTO;
+import BUS.SanPhamBUS;
 import DTO.CT_CongThucDTO;
+import DTO.CongThucDTO;
 import DTO.NguyenLieuDTO;
 import DTO.SanPhamDTO;
 
 public class CongThucDialog extends JDialog {
-    private CongThucBUS congThucBus = new CongThucBUS();
-    private SanPhamBUS sanPhamBus = new SanPhamBUS();
-    private NguyenLieuBUS nguyenLieuBus = new NguyenLieuBUS();
-    private CT_CongThucBUS ctCongThucBus = new CT_CongThucBUS();
+    private final CongThucBUS congThucBus = new CongThucBUS();
+    private final SanPhamBUS sanPhamBus = new SanPhamBUS();
+    private final NguyenLieuBUS nguyenLieuBus = new NguyenLieuBUS();
+    private final CT_CongThucBUS ctCongThucBus = new CT_CongThucBUS();
 
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
 
     private JLabel errTenSP, errMoTa, errChiTiet;
-    private JLabel lblTitle;
+    private final JLabel lblTitle;
     private JButton btnSubmit, btnAdd, btnCancel;
-    private JComboBox<SanPhamDTO> cboSP = new JComboBox<>();
+    private final JComboBox<SanPhamDTO> cboSP = new JComboBox<>();
     private JTextArea txtMoTa;
     private JTable tableNguyenLieu;
     private DefaultTableModel tableModel;
@@ -70,7 +100,7 @@ public class CongThucDialog extends JDialog {
         actionInit();
 
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setModal(true);
     }
 
@@ -158,7 +188,7 @@ public class CongThucDialog extends JDialog {
                 btnAdd.setBackground(new Color(76, 175, 80));
             }
         });
-        
+
                 errMoTa = new JLabel();
                 errMoTa.setForeground(new Color(211, 47, 47));
                 errMoTa.setFont(new Font("Segoe UI", Font.ITALIC, 12));
@@ -199,7 +229,7 @@ public class CongThucDialog extends JDialog {
         // setCellEditor
         // --> dùng khi người dùng chỉnh sửa ô
         // --> Component để chỉnh sửa (có tương tác)
-        tableNguyenLieu.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<NguyenLieuDTO>()) {
+        tableNguyenLieu.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<>()) {
             private JComboBox<NguyenLieuDTO> cboNguyenLieu = new JComboBox<>();
 
             // Phương thức được gọi khi người dùng bắt đầu chỉnh sửa ô
@@ -280,7 +310,7 @@ public class CongThucDialog extends JDialog {
         tableNguyenLieu.getColumnModel().getColumn(1).setPreferredWidth(100);
         tableNguyenLieu.getColumnModel().getColumn(2).setPreferredWidth(80);
         tableNguyenLieu.getColumnModel().getColumn(3).setPreferredWidth(80);
-        
+
         errChiTiet = new JLabel();
         errChiTiet.setForeground(new Color(211, 47, 47));
         errChiTiet.setFont(new Font("Segoe UI", Font.ITALIC, 12));
@@ -379,7 +409,7 @@ public class CongThucDialog extends JDialog {
     }
 
     class ButtonEditor extends AbstractCellEditor implements TableCellEditor {
-        private JButton button;
+        private final JButton button;
         private int row;
         private boolean isPushed;
 
@@ -429,8 +459,9 @@ public class CongThucDialog extends JDialog {
 
     private void loadComboBoxSP(List<SanPhamDTO> arr) {
         cboSP.removeAllItems();
-		for(SanPhamDTO item : arr) 
+		for(SanPhamDTO item : arr) {
 			cboSP.addItem(item);
+		}
     }
 
     public void showAdd() {
@@ -479,7 +510,7 @@ public class CongThucDialog extends JDialog {
                 tableModel.addRow(new Object[] { nl, ctDetail.getSoluong(), nl.getDonvi(), "Xóa" });
             }
         }
-        
+
         // if (tableModel.getRowCount() == 0 && nguyenLieuList != null && !nguyenLieuList.isEmpty()) {
         //     tableModel.addRow(new Object[] { nguyenLieuList.get(0), "", "Xóa" });
         // } else if (tableModel.getRowCount() == 0) {
@@ -537,7 +568,7 @@ public class CongThucDialog extends JDialog {
             NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(ctDetail.getIdNL());
             tableModel.addRow(new Object[] { nl, ctDetail.getSoluong(), nl.getDonvi()});
         }
-        
+
         tableNguyenLieu.setEnabled(false);
         tableNguyenLieu.getColumnModel().getColumn(0).setPreferredWidth(250);
         tableNguyenLieu.getColumnModel().getColumn(1).setPreferredWidth(100);
@@ -624,7 +655,7 @@ public class CongThucDialog extends JDialog {
             String mota = txtMoTa.getText();
             List<CT_CongThucDTO> chiTietList = new ArrayList<>();
             int rowCount = tableModel.getRowCount();
-            
+
             for(int i =0; i < rowCount; i++){
                 NguyenLieuDTO nl = (NguyenLieuDTO) tableModel.getValueAt(i, 0);
                 float soLuong = Float.parseFloat(tableModel.getValueAt(i, 1).toString().trim());

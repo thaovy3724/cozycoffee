@@ -1,10 +1,11 @@
 package BUS;
 
-import DAO.TaiKhoanDAO;
-import DTO.TaiKhoanDTO;
+import java.util.List;
+
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.util.List;
+import DAO.TaiKhoanDAO;
+import DTO.TaiKhoanDTO;
 
 public class TaiKhoanBUS {
     private final TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
@@ -16,9 +17,9 @@ public class TaiKhoanBUS {
     public String add(TaiKhoanDTO taiKhoan) {
 		// kiểm tra email đã tồn tại chưa nếu có trả về thông báo lỗi
 		String error = "";
-		if(taiKhoanDAO.isExist(taiKhoan))
-			error = "Email đã tồn tại";
-		else if(!taiKhoanDAO.add(taiKhoan)) { 		// thêm mới vào CSDL
+		if(taiKhoanDAO.isExist(taiKhoan)) {
+			error = "Tên tài khoản hoặc email đã tồn tại";
+		} else if(!taiKhoanDAO.add(taiKhoan)) { 		// thêm mới vào CSDL
 			error = "Xảy ra lỗi trong quá trình thêm mới";
 		}
 		return error;
@@ -27,15 +28,16 @@ public class TaiKhoanBUS {
     public TaiKhoanDTO findByIdTK(int idTK) {
 		return taiKhoanDAO.findByIdTK(idTK);
 	}
-	
+
 	public String updateInfo(TaiKhoanDTO taiKhoan) {
 		// kiểm tra email đã tồn tại chưa nếu có trả về thông báo lỗi
 		String error = "";
-		if(taiKhoanDAO.isExist(taiKhoan))
-			error = "Email đã tồn tại";
-		else if(!taiKhoanDAO.updateInfo(taiKhoan))
+		if(taiKhoanDAO.isExist(taiKhoan)) {
+			error = "Tên tài khoản hoặc email đã tồn tại";
+		} else if(!taiKhoanDAO.updateInfo(taiKhoan)) {
 			error = "Xảy ra lỗi trong quá trình cập nhật";
-		
+		}
+
 		return error;
 	}
 
@@ -50,16 +52,17 @@ public class TaiKhoanBUS {
 
 	public boolean delete(int idTK) {
 		boolean success = false;
-		// kiểm tra nếu tài khoản của nhân viên đã tồn tại 
+		// kiểm tra nếu tài khoản của nhân viên đã tồn tại
 		// trong hóa đơn bất kì (có khóa ngoại)
 		// -> ko xóa được
 		if(!taiKhoanDAO.isEmployeeInReceipt(idTK)) {
-			if(taiKhoanDAO.delete(idTK))
+			if(taiKhoanDAO.delete(idTK)) {
 				success = true;
+			}
 		}
 		return success;
 	}
-	
+
 	public List<TaiKhoanDTO> search(String keyWord){
 		return taiKhoanDAO.search(keyWord);
 	}
@@ -116,13 +119,16 @@ public class TaiKhoanBUS {
 		TaiKhoanDTO taiKhoan = taiKhoanDAO.findByTenTK(tenTK);
 		if (taiKhoan == null) {
 			result.setMessage("Tài khoản không tồn tại");
-		} else {
+		} else if(taiKhoan.getTrangthai() == 0){
+				result.setMessage("Tài khoản đã bị khóa");
+		}else{
 			try {
 				if (checkPassword(matkhau, taiKhoan.getMatkhau())) {
 					result.setTaiKhoan(taiKhoan);
 					result.setMessage("Đăng nhập thành công");
+				} else {
+					result.setMessage("Mật khẩu không chính xác");
 				}
-				else result.setMessage("Mật khẩu không chính xác");
 			} catch (IllegalArgumentException e) {
 				//Nếu như tài khoản có password chưa được hash thì sẽ có lỗi "Invalid salt version
 				result.setMessage("Mật khẩu không chính xác");

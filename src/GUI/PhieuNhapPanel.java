@@ -1,16 +1,28 @@
 package GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+
+import com.toedter.calendar.JDateChooser;
 
 import BUS.PhieuNhapBUS;
 import BUS.TrangThai_PnBUS;
@@ -18,26 +30,21 @@ import DTO.PhieuNhapDTO;
 import DTO.TaiKhoanDTO;
 import DTO.TrangThai_PnDTO;
 import GUI.Dialog.PhieuNhapDialog;
-import com.toedter.calendar.JDateChooser;
-
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Cursor;
 
 public class PhieuNhapPanel extends JPanel {
-	private PhieuNhapBUS phieuNhapBus = new PhieuNhapBUS();
+	private final PhieuNhapBUS phieuNhapBus = new PhieuNhapBUS();
 	//HUONGNGUYEN 2/5
-	private TrangThai_PnBUS ttpnBus = new TrangThai_PnBUS();
+	private final TrangThai_PnBUS ttpnBus = new TrangThai_PnBUS();
 
 	//HUONGNGUYEN 2/5
 	private static final long serialVersionUID = 1L;
 	private JButton btnAdd, btnEdit, btnDel, btnDetail, btnSearch, btnReset;
 	private JTable table;
-	private JPanel container = new JPanel();
+	private final JPanel container = new JPanel();
 	private JDateChooser dateChooserStart, dateChooserEnd;
 	private JComboBox<TrangThai_PnDTO> cboTrangThai;
-	private DefaultTableModel tableModel;
-	private TaiKhoanDTO currentUser;
+	private final DefaultTableModel tableModel;
+	private final TaiKhoanDTO currentUser;
 
 	/**
 	 * Create the panel.
@@ -72,6 +79,7 @@ public class PhieuNhapPanel extends JPanel {
 		JPanel actionPanel = new JPanel();
 		container.add(actionPanel);
 		actionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		actionPanel.setBackground(new Color(255, 240, 220));
 
 		btnAdd = new JButton("Thêm");
 		btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -112,13 +120,14 @@ public class PhieuNhapPanel extends JPanel {
 		JPanel searchPanel = new JPanel();
 		container.add(searchPanel);
 		searchPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		searchPanel.setBackground(new Color(255, 240, 220));
 
-		JPanel searchContentPanel = new JPanel();
-		searchPanel.add(searchContentPanel);
-		searchContentPanel.setLayout(new BoxLayout(searchContentPanel, BoxLayout.Y_AXIS));
+//		JPanel searchContentPanel = new JPanel();
+//		searchPanel.add(searchContentPanel);
+//		searchContentPanel.setLayout(new BoxLayout(searchContentPanel, BoxLayout.Y_AXIS));
 
 		JPanel searchContentPanel1 = new JPanel();
-		searchContentPanel.add(searchContentPanel1);
+		searchPanel.add(searchContentPanel1);
 		searchContentPanel1.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		searchContentPanel1.setBackground(new Color(255, 240, 220));
 
@@ -127,6 +136,7 @@ public class PhieuNhapPanel extends JPanel {
 		searchContentPanel1.add(lblDateStart);
 
 		dateChooserStart = new JDateChooser();
+		dateChooserStart.setBackground(new Color(255, 255, 255));
 		dateChooserStart.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		searchContentPanel1.add(dateChooserStart);
 		dateChooserStart.setDateFormatString("yyyy-MM-dd");
@@ -137,13 +147,14 @@ public class PhieuNhapPanel extends JPanel {
 		searchContentPanel1.add(lblDateEnd);
 
 		dateChooserEnd = new JDateChooser();
+		dateChooserEnd.setBackground(new Color(255, 255, 255));
 		dateChooserEnd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		searchContentPanel1.add(dateChooserEnd);
 		dateChooserEnd.setDateFormatString("yyyy-MM-dd");
 		((JTextField) dateChooserEnd.getDateEditor().getUiComponent()).setEditable(false); // Tắt editor
 
 		JPanel searchContentPanel2 = new JPanel();
-		searchContentPanel.add(searchContentPanel2);
+		searchPanel.add(searchContentPanel2);
 		searchContentPanel2.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		searchContentPanel2.setBackground(new Color(255, 240, 220));
 
@@ -176,6 +187,7 @@ public class PhieuNhapPanel extends JPanel {
 		searchPanel.add(btnSearch);
 
 		btnReset = new JButton("Làm mới");
+		btnReset.setBackground(new Color(255, 255, 255));
 		btnReset.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnReset.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		ImageHelper imgReset = new ImageHelper(20, 20, PhieuNhapPanel.class.getResource("/ASSET/Images/icons8_replay_30px.png"));

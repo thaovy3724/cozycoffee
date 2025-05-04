@@ -1,24 +1,28 @@
 package GUI.Dialog;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.sql.Date;
+import java.text.DecimalFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
 import BUS.NguyenLieuBUS;
 import BUS.PhieuNhapBUS;
 import DTO.Lo_NguyenLieuDTO;
 import DTO.NguyenLieuDTO;
 
-import java.awt.*;
-import java.sql.Date;
-import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-
 public class ThongKeNhapKhoDialog extends JDialog {
-	private PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
-	private NguyenLieuBUS nguyenLieuBUS = new NguyenLieuBUS();
+	private final PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+	private final NguyenLieuBUS nguyenLieuBUS = new NguyenLieuBUS();
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
@@ -71,7 +75,7 @@ public class ThongKeNhapKhoDialog extends JDialog {
 			float soLuong = lo.getSoluongnhap();
 			int donGia = lo.getDongia();
 			long tongtien = (long) (soLuong * donGia);
-			
+
 			String ngayNhap = phieuNhapBUS.findByIdPN(lo.getIdPN()).getNgaycapnhat().format(dateFormatter);
 			detailModel.addRow(new Object[]{
 					"Lô "+ idLo,

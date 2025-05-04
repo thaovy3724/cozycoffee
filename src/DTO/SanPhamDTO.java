@@ -73,7 +73,7 @@ public class SanPhamDTO {
         this.idDM = idDM;
     }
 
-    @Override 
+    @Override
     public String toString(){
         return tenSP;
     }

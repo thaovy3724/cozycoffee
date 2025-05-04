@@ -1,17 +1,19 @@
 package DAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import DTO.NhaCungCapDTO;
-import java.util.List;
-import java.sql.*;
 
 public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
 	public NhaCungCapDAO() {
 		super(
-		"nhacungcap", 
+		"nhacungcap",
 		List.of(
-		 "idNCC",
 		 "tenNCC",
          "diachi",
          "sdt",
@@ -31,10 +33,9 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
                 rs.getInt("trangthai")
         );
     }
-	
+
 	public boolean add(NhaCungCapDTO ncc) {
 		List<Object> params = new ArrayList<>();
-		params.add(ncc.getIdNCC());
 		params.add(ncc.getTenNCC());
 		params.add(ncc.getDiachi());
 		params.add(ncc.getSdt());
@@ -42,10 +43,9 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
 		params.add(ncc.getTrangthai());
 		return super.add(params);
 	}
-	
+
 	public boolean update(NhaCungCapDTO ncc) {
 		List<Object> params = new ArrayList<>();
-		params.add(ncc.getIdNCC());
 		params.add(ncc.getTenNCC());
 		params.add(ncc.getDiachi());
 		params.add(ncc.getSdt());
@@ -54,7 +54,7 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
 		String condition = "idNCC = "+ncc.getIdNCC();
 		return super.update(params, condition);
 	}
-	
+
     public boolean isExist(NhaCungCapDTO ncc) {
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -63,21 +63,23 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
         try {
 			StringBuilder sql = new StringBuilder("SELECT * FROM ");
 			sql.append(table);
-			sql.append(" WHERE tenNCC LIKE ?");
+			sql.append(" WHERE (tenNCC LIKE ?");
 			sql.append(" OR email = ?");
-			sql.append(" OR sdt = ?");
-			if(ncc.getIdNCC() != 0) 
+			sql.append(" OR sdt = ?)");
+			if(ncc.getIdNCC() != 0) {
 				sql.append(" AND idNCC != ?");
-           
+			}
+
             // noi param
             link = db.connectDB();
             pstmt = link.prepareStatement(sql.toString());
             pstmt.setString(1, ncc.getTenNCC());
             pstmt.setString(2, ncc.getEmail());
             pstmt.setString(3, ncc.getSdt());
-			if(ncc.getIdNCC() != 0) 
-	            pstmt.setInt(4, ncc.getIdNCC());
-			
+			if(ncc.getIdNCC() != 0) {
+				pstmt.setInt(4, ncc.getIdNCC());
+			}
+
 			// thuc thi
             rs = pstmt.executeQuery();
             isExist = rs.next();
@@ -108,12 +110,12 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
         }
         return inInvoice;
     }
-	
+
 	public boolean delete(int idNCC) {
 		String col = "idNCC";
 		return super.delete(col, idNCC);
     }
-	
+
 	public List<NhaCungCapDTO> search(String keyWord){
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -126,7 +128,9 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
             pstmt.setString(1, "%" + keyWord + "%");
             pstmt.setString(2, "%" + keyWord + "%");
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {
@@ -134,7 +138,7 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
         }
         return result;
 	}
-	
+
 	public NhaCungCapDTO findByIdNCC(int idNCC) {
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -146,7 +150,9 @@ public class NhaCungCapDAO extends BaseDAO<NhaCungCapDTO>{
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1,idNCC);
             rs = pstmt.executeQuery();
-            if (rs.next()) result = mapResultSetToDTO(rs);
+            if (rs.next()) {
+				result = mapResultSetToDTO(rs);
+			}
         }catch(ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {

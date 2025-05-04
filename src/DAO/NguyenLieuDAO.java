@@ -1,17 +1,19 @@
 package DAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import DTO.NguyenLieuDTO;
-import java.util.List;
-import java.sql.*;
 
 public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
     public NguyenLieuDAO() {
         super(
-        "nguyenlieu", 
+        "nguyenlieu",
         List.of(
-         "idNL",
          "tenNL",
          "donvi"
         ));
@@ -25,23 +27,22 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
                 rs.getString("donvi")
         );
     }
-    
+
     public boolean add(NguyenLieuDTO nl) {
         List<Object> params = new ArrayList<>();
         params.add(nl.getTenNL());
         params.add(nl.getDonvi());
         return super.add(params);
     }
-    
+
     public boolean update(NguyenLieuDTO nl) {
         List<Object> params = new ArrayList<>();
-//      params.add(nl.getIdNL());
         params.add(nl.getTenNL());
         params.add(nl.getDonvi());
         String condition = "idNL = "+nl.getIdNL();
         return super.update(params, condition);
     }
-    
+
     public boolean isInRecipe(int idNL) {
         Connection link = null;
         PreparedStatement pstmt = null;
@@ -61,7 +62,7 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
         }
         return isValue;
     }
-    
+
     public boolean isInInvoice(int idNL) {
         Connection link = null;
         PreparedStatement pstmt = null;
@@ -81,12 +82,12 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
         }
         return hasNL;
     }
-    
+
     public boolean delete(int idNL) {
         String col = "idNL";
         return super.delete(col, idNL);
     }
-    
+
     public List<NguyenLieuDTO> search(String keyWord){
         Connection link = null;
         PreparedStatement pstmt = null;
@@ -99,7 +100,9 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
             pstmt.setString(1, "%" + keyWord + "%");
             pstmt.setString(2, "%" + keyWord + "%");
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {
@@ -107,7 +110,7 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
         }
         return result;
     }
-    
+
     public NguyenLieuDTO findByIdNL(int idNL) {
         Connection link = null;
         PreparedStatement pstmt = null;
@@ -119,7 +122,9 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1,idNL);
             rs = pstmt.executeQuery();
-            if (rs.next()) result = mapResultSetToDTO(rs);
+            if (rs.next()) {
+				result = mapResultSetToDTO(rs);
+			}
         }catch(ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {
@@ -127,7 +132,7 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
         }
         return result;
     }
-    
+
     public boolean isExist(NguyenLieuDTO nl) {
         Connection link = null;
         PreparedStatement pstmt = null;
@@ -137,16 +142,18 @@ public class NguyenLieuDAO extends BaseDAO<NguyenLieuDTO>{
             StringBuilder sql = new StringBuilder("SELECT * FROM ");
             sql.append(table);
             sql.append(" WHERE tenNL LIKE ?");
-            if(nl.getIdNL() != 0) 
-                sql.append(" AND idNL != ?");
-           
+            if(nl.getIdNL() != 0) {
+				sql.append(" AND idNL != ?");
+			}
+
             // noi param
             link = db.connectDB();
             pstmt = link.prepareStatement(sql.toString());
             pstmt.setString(1, nl.getTenNL().trim()); // Loại bỏ khoảng trắng thừa
-            if(nl.getIdNL() != 0) 
-                pstmt.setInt(2, nl.getIdNL());
-            
+            if(nl.getIdNL() != 0) {
+				pstmt.setInt(2, nl.getIdNL());
+			}
+
             // thuc thi
             rs = pstmt.executeQuery();
             isExist = rs.next();

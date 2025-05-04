@@ -1,0 +1,23 @@
+WITH RECURSIVE days(day) AS (
+    SELECT 1
+    UNION ALL
+    SELECT day + 1
+    FROM days
+    WHERE day < DAY(LAST_DAY(CONCAT(@year, '-', @month, '-01')))
+)
+SELECT
+    DATE(CONCAT(@year, '-', @month, '-', days.day)) AS ngay,
+    COALESCE(SUM(cthd.soluong * cthd.gialucdat), 0) AS doanhthu,
+    COALESCE(SUM(lnl.soluongnhap * lnl.dongia), 0) AS chiphi
+FROM days
+LEFT JOIN phieunhap pn 
+    ON DATE(pn.ngaytao) = DATE(CONCAT(@year, '-', @month, '-', days.day)) 
+    AND pn.idTT = 2
+LEFT JOIN lo_nguyenlieu lnl 
+    ON lnl.idPN = pn.idPN
+LEFT JOIN hoadon hd 
+    ON DATE(hd.ngaytao) = DATE(CONCAT(@year, '-', @month, '-', days.day))
+LEFT JOIN ct_hoadon cthd 
+    ON cthd.idHD = hd.idHD
+GROUP BY days.day
+ORDER BY days.day ASC;

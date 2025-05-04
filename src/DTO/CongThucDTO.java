@@ -12,12 +12,12 @@ public class CongThucDTO {
     }
 
     public CongThucDTO(int idCT, int idSP,String mota) {
-        this.idCT = idCT; 
+        this.idCT = idCT;
         this.idSP = idSP;
         this.mota = mota;
     }
     public CongThucDTO( int idSP, String mota) {
- 
+
         this.idSP = idSP;
         this.mota = mota;
     }
@@ -40,7 +40,7 @@ public class CongThucDTO {
         this.mota = mota;
     }
 
-   
+
     // Getter và Setter cho idSP
     public int getIdSP() {
         return idSP;

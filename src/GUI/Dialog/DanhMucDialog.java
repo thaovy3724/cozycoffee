@@ -1,40 +1,38 @@
 package GUI.Dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import BUS.DanhMucBUS;
 import DTO.DanhMucDTO;
 
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.GridBagConstraints;
-import java.awt.Font;
-import java.awt.Insets;
-import java.util.List;
-
-import javax.swing.JTextField;
-import java.awt.Color;
-import javax.swing.JComboBox;
-import java.awt.Cursor;
-
 public class DanhMucDialog extends JDialog {
-	private DanhMucBUS danhMucBus = new DanhMucBUS();
+	private final DanhMucBUS danhMucBus = new DanhMucBUS();
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtTenDM;
-	private JComboBox<DanhMucDTO> cboDMCha = new JComboBox<>();
-	private JComboBox<String> cboTrangThai = new JComboBox<>();
+	private final JComboBox<DanhMucDTO> cboDMCha = new JComboBox<>();
+	private final JComboBox<String> cboTrangThai = new JComboBox<>();
 	private JLabel errTenDM, errDMCha, errTrangThai;
-	private JLabel lblTitle;
+	private final JLabel lblTitle;
 	private JButton btnSubmit, btnCancel;
 
 	/**
@@ -47,7 +45,7 @@ public class DanhMucDialog extends JDialog {
 		contentPanel.setBackground(Color.WHITE);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		
+
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
 		gbl_contentPanel.columnWidths = new int[]{0, 0, 0, 0};
 		gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -71,10 +69,10 @@ public class DanhMucDialog extends JDialog {
 		actionInit();
 
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setModal(true);
 	}
-	
+
 	private void textFieldInit() {
 		{
 			JLabel lblTenDM = new JLabel("Tên danh mục");
@@ -217,16 +215,17 @@ public class DanhMucDialog extends JDialog {
 		DanhMucDTO danhMucDefault = new DanhMucDTO();
 		danhMucDefault.setTenDM("---Chọn danh mục---");
 		cboDMCha.addItem(danhMucDefault);
-		for(DanhMucDTO item : arr) 
+		for(DanhMucDTO item : arr) {
 			cboDMCha.addItem(item);
+		}
 	}
 
 	public void showAdd() {
-		// load tất cả danh mục đang hoạt động 
-		List<DanhMucDTO> listDMCha = danhMucBus.getAllActive();
+		// load tất cả danh mục đang hoạt động
+		List<DanhMucDTO> listDMCha = danhMucBus.getAllActiveF0(); // load F0
 		loadComboBoxDMCha(listDMCha);
 		cboTrangThai.setEnabled(false);
-		
+
 		setTitle("Thêm danh mục");
 		lblTitle.setText("Thêm danh mục");
 		// reset action button
@@ -239,17 +238,22 @@ public class DanhMucDialog extends JDialog {
 		DanhMucDTO danhMuc = danhMucBus.findByIdDM(idDM);
 		txtTenDM.setText(danhMuc.getTenDM());
 		cboTrangThai.setSelectedItem(danhMuc.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
-		
+
 		// load tất cả danh mục đang hoạt động và danh mục cha của danh mục được chọn (nếu có) và trừ danh mục được chọn
-		List<DanhMucDTO> listDMCha = danhMucBus.getAllActiveEdit(idDM, danhMuc.getIdDMCha());
+		List<DanhMucDTO> listDMCha = danhMucBus.getAllActiveF0Edit(danhMuc.getIdDMCha()); // F0
 		loadComboBoxDMCha(listDMCha);
-		
+
 		// set default
 		if(danhMuc.getIdDMCha() != 0) {
-			DanhMucDTO dmucCha = danhMucBus.findByIdDM(danhMuc.getIdDMCha());
-			cboDMCha.setSelectedItem(dmucCha);
+			for (int i = 0; i < cboDMCha.getItemCount(); i++) {
+                DanhMucDTO dmuc = cboDMCha.getItemAt(i);
+                if (dmuc.getIdDM() == danhMuc.getIdDMCha()) {
+                    cboDMCha.setSelectedIndex(i);
+                    break;
+                }
+            }
 		}
-		
+
 		setTitle("Sửa danh mục");
 		lblTitle.setText("Sửa danh mục");
 		// reset action button
@@ -264,13 +268,13 @@ public class DanhMucDialog extends JDialog {
 		errDMCha.setText("");
 
 		boolean isError = false;
-		
+
 		// tenDM
 		if(txtTenDM.getText().trim().equals("")) {
 			errTenDM.setText("Tên danh mục không được để trống");
 			isError = true;
 		}
-		
+
 		return isError;
 	}
 
@@ -295,7 +299,7 @@ public class DanhMucDialog extends JDialog {
 				int idDM = Integer.parseInt(actionCommand.substring(beginIndex));
 				error = danhMucBus.update(new DanhMucDTO(idDM, tenDM, trangthai, idDMCha));
 			}
-			
+
 			// show message
 			if(error != "") {
 				// fail
@@ -303,10 +307,11 @@ public class DanhMucDialog extends JDialog {
 			}
 			else {
 				// success
-				if(beginIndex == 0) 
+				if(beginIndex == 0) {
 					JOptionPane.showMessageDialog(this, "Thêm thành công ");
-				else 
+				} else {
 					JOptionPane.showMessageDialog(this, "Cập nhật thành công ");
+				}
 			}
 		}
 	}

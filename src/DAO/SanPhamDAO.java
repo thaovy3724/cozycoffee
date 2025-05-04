@@ -1,17 +1,19 @@
 package DAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import DTO.SanPhamDTO;
-import java.util.List;
-import java.sql.*;
 
 public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
 	public SanPhamDAO() {
 		super(
-		"sanpham", 
+		"sanpham",
 		List.of(
-		 "idSP",
 		 "tenSP",
          "giaban",
          "hinhanh",
@@ -42,7 +44,9 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
@@ -50,10 +54,9 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
         }
         return result;
     }
-	
+
 	public boolean add(SanPhamDTO sp) {
 		List<Object> params = new ArrayList<>();
-		params.add(sp.getIdSP());
 		params.add(sp.getTenSP());
 		params.add(sp.getGiaban());
 		params.add(sp.getHinhanh());
@@ -61,10 +64,9 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
 		params.add(sp.getIdDM());
 		return super.add(params);
 	}
-	
+
 	public boolean update(SanPhamDTO sp) {
 		List<Object> params = new ArrayList<>();
-		params.add(sp.getIdSP());
 		params.add(sp.getTenSP());
 		params.add(sp.getGiaban());
 		params.add(sp.getHinhanh());
@@ -80,29 +82,28 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
 		boolean success = false;
 		try {
 			// tao sql
-            StringBuilder sql = new StringBuilder("UPDATE ");
-            
+
             //Tên table
-            sql.append(table);
-            sql.append(" SET");
-            sql.append(" tenSP = ?,");
-            sql.append(" giaban = ?,");
-            sql.append(" trangthai = ?,");
-            sql.append(" idDM = ?");		        
-            sql.append(" WHERE idSP = ?");
-            
+            String sql = "UPDATE " + table +
+                    " SET" +
+                    " tenSP = ?," +
+                    " giaban = ?," +
+                    " trangthai = ?," +
+                    " idDM = ?" +
+                    " WHERE idSP = ?";
+
             // noi param
             link = db.connectDB();
-            pstmt = link.prepareStatement(sql.toString());
-            
+            pstmt = link.prepareStatement(sql);
+
             pstmt.setString(1, sp.getTenSP());
             pstmt.setInt(2, sp.getGiaban());
             pstmt.setInt(3, sp.getTrangthai());
             pstmt.setInt(4, sp.getIdDM());
             pstmt.setInt(5, sp.getIdSP());
-            
+
             // thuc thi
-            success = pstmt.executeUpdate() > 0 ? true : false;
+            success = pstmt.executeUpdate() > 0;
 
 		}catch(ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
@@ -111,7 +112,7 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
 		}
 		return success;
     }
-	
+
     public boolean isExist(SanPhamDTO sp) {
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -121,16 +122,18 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
 			StringBuilder sql = new StringBuilder("SELECT * FROM ");
 			sql.append(table);
 			sql.append(" WHERE tenSP LIKE ?");
-			if(sp.getIdSP() != 0) 
+			if(sp.getIdSP() != 0) {
 				sql.append(" AND idSP != ?");
-           
+			}
+
             // noi param
             link = db.connectDB();
             pstmt = link.prepareStatement(sql.toString());
             pstmt.setString(1, sp.getTenSP());
-			if(sp.getIdSP() != 0) 
-	            pstmt.setInt(2, sp.getIdSP());
-			
+			if(sp.getIdSP() != 0) {
+				pstmt.setInt(2, sp.getIdSP());
+			}
+
 			// thuc thi
             rs = pstmt.executeQuery();
             isExist = rs.next();
@@ -181,12 +184,12 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
         }
         return inRecipe;
     }
-	
+
 	public boolean delete(int idSP) {
 		String col = "idSP";
 		return super.delete(col, idSP);
     }
-	
+
 	public List<SanPhamDTO> search(String keyWord){
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -199,7 +202,9 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
             pstmt.setString(1, "%" + keyWord + "%");
             pstmt.setString(2, "%" + keyWord + "%");
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {
@@ -220,7 +225,9 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
             pstmt.setString(1, "%" + keyWord + "%");
             pstmt.setString(2, "%" + keyWord + "%");
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {
@@ -240,7 +247,9 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1, idDM);
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {
@@ -262,7 +271,9 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
             pstmt.setString(2, "%" + keyWord + "%");
             pstmt.setInt(3, idDM);
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {
@@ -270,7 +281,7 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
         }
         return result;
 	}
-	
+
 	public SanPhamDTO findByIdSP(int idSP) {
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -282,7 +293,9 @@ public class SanPhamDAO extends BaseDAO<SanPhamDTO>{
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1,idSP);
             rs = pstmt.executeQuery();
-            if (rs.next()) result = mapResultSetToDTO(rs);
+            if (rs.next()) {
+				result = mapResultSetToDTO(rs);
+			}
         }catch(ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {

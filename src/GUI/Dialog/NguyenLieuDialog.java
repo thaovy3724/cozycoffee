@@ -1,36 +1,34 @@
 package GUI.Dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import BUS.NguyenLieuBUS;
 import DTO.NguyenLieuDTO;
 
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.GridBagConstraints;
-import java.awt.Font;
-import java.awt.Insets;
-
-import javax.swing.JTextField;
-import java.awt.Color;
-import java.awt.Cursor;
-
 public class NguyenLieuDialog extends JDialog {
-    private NguyenLieuBUS nguyenLieuBus = new NguyenLieuBUS();
+    private final NguyenLieuBUS nguyenLieuBus = new NguyenLieuBUS();
 
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
     private JTextField txtTenNL;
     private JLabel errTenNL, errDonVi;
-    private JLabel lblTitle;
+    private final JLabel lblTitle;
     private JButton btnSubmit, btnCancel;
     private JTextField txtDonVi;
 
@@ -66,10 +64,10 @@ public class NguyenLieuDialog extends JDialog {
         actionInit();
 
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setModal(true);
     }
-    
+
     private void textFieldInit() {
         {
             JLabel lblTenNL = new JLabel("Tên nguyên liệu");
@@ -139,16 +137,6 @@ public class NguyenLieuDialog extends JDialog {
             gbc_errDonVi.gridy = 4;
             contentPanel.add(errDonVi, gbc_errDonVi);
         }
-        {
-            JLabel lblTrangThai = new JLabel("Trạng thái");
-            lblTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-            GridBagConstraints gbc_lblTrangThai = new GridBagConstraints();
-            gbc_lblTrangThai.anchor = GridBagConstraints.EAST;
-            gbc_lblTrangThai.insets = new Insets(0, 10, 5, 5);
-            gbc_lblTrangThai.gridx = 0;
-            gbc_lblTrangThai.gridy = 5;
-            contentPanel.add(lblTrangThai, gbc_lblTrangThai);
-        }
     }
 
     private void actionInit() {
@@ -199,7 +187,7 @@ public class NguyenLieuDialog extends JDialog {
         NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(idNL);
         txtTenNL.setText(nl.getTenNL());
         txtDonVi.setText(nl.getDonvi());
-        
+
         setTitle("Sửa nguyên liệu");
         lblTitle.setText("Sửa nguyên liệu");
         // reset action button
@@ -214,7 +202,7 @@ public class NguyenLieuDialog extends JDialog {
         errDonVi.setText("");
 
         boolean isError = false;
-        
+
         // tenNL
         if(txtTenNL.getText().trim().equals("")) {
             errTenNL.setText("Tên không được để trống");
@@ -224,7 +212,7 @@ public class NguyenLieuDialog extends JDialog {
             errDonVi.setText("Đơn vị không được để trống");
             isError = true;
         }
-        
+
         return isError;
     }
 
@@ -247,7 +235,7 @@ public class NguyenLieuDialog extends JDialog {
                 int idNL = Integer.parseInt(actionCommand.substring(beginIndex));
                 error = nguyenLieuBus.update(new NguyenLieuDTO(idNL, tenNL, donvi));
             }
-            
+
             // show message
             if(error != "") {
                 // fail
@@ -255,10 +243,11 @@ public class NguyenLieuDialog extends JDialog {
             }
             else {
                 // success
-                if(beginIndex == 0) 
-                    JOptionPane.showMessageDialog(this, "Thêm thành công ");
-                else 
-                    JOptionPane.showMessageDialog(this, "Cập nhật thành công ");
+                if(beginIndex == 0) {
+					JOptionPane.showMessageDialog(this, "Thêm thành công ");
+				} else {
+					JOptionPane.showMessageDialog(this, "Cập nhật thành công ");
+				}
                 dispose();
             }
         }

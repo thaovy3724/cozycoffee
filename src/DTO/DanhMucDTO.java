@@ -25,7 +25,7 @@ public class DanhMucDTO {
     	this.trangthai = trangthai;
         this.idDMCha = idDMCha;
     }
-    
+
     public int getIdDM() {
         return idDM;
     }

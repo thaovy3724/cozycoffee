@@ -12,13 +12,13 @@ public abstract class BaseDAO<T>{
     protected String table;
     protected List<String> tableColumns;
 	protected DatabaseConnect db;
-	
+
     public BaseDAO(String table, List<String> tableColumns) {
     	this.table = table;
     	this.tableColumns = tableColumns;
     	db = new DatabaseConnect();
     }
-    
+
     public List<T> getAll() {
 		List<T> list = new ArrayList<>();
 		Connection link = null;
@@ -29,7 +29,9 @@ public abstract class BaseDAO<T>{
 			String sql = "SELECT * FROM " + table;
 			pstmt = link.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-            while (rs.next()) list.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				list.add(mapResultSetToDTO(rs));
+			}
 		}catch(ClassNotFoundException | SQLException e){
 			e.printStackTrace();
 		}finally {
@@ -46,11 +48,13 @@ public abstract class BaseDAO<T>{
 		try {
 			link = db.connectDB();
 			String sql = "SELECT AUTO_INCREMENT as newID FROM information_schema.TABLES " +
-	                "WHERE TABLE_SCHEMA = '" + db.getDBName() + "' " + 
+	                "WHERE TABLE_SCHEMA = '" + db.getDBName() + "' " +
 	                "AND TABLE_NAME = '" + table + "'";
 			pstmt = link.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-            if(rs.next()) newID = rs.getInt("newID");
+            if(rs.next()) {
+				newID = rs.getInt("newID");
+			}
 		}catch(ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -58,7 +62,7 @@ public abstract class BaseDAO<T>{
 		}
 		return newID;
     }
-    
+
     public boolean add(List<Object> params) {
     	Connection link = null;
 		PreparedStatement pstmt = null;
@@ -66,27 +70,27 @@ public abstract class BaseDAO<T>{
 		try {
 			if (params != null && params.size() == tableColumns.size()) {
 				// tao sql
-				StringBuilder sql = new StringBuilder("INSERT INTO ");
-				
-		        //Tên table
-		        sql.append(table);
-		        sql.append(" (");
-		        //Danh sách cột của table
-		        sql.append(String.join(",", tableColumns));
-		        sql.append(") VALUES (");
-		        //Với mỗi tham số, thêm một character "?"
-		        sql.append(String.join(",", Collections.nCopies(params.size(), "?")));
-		        sql.append(")");
-		        
+
+                //Tên table
+                String sql = "INSERT INTO " + table +
+                        " (" +
+                        //Danh sách cột của table
+                        String.join(",", tableColumns) +
+                        ") VALUES (" +
+                        //Với mỗi tham số, thêm một character "?"
+                        String.join(",", Collections.nCopies(params.size(), "?")) +
+                        ")";
+
 		        // noi param
 		        link = db.connectDB();
-		        pstmt = link.prepareStatement(sql.toString());
-		        
-	            for (int i = 0; i < params.size(); i++) 
-	                pstmt.setObject(i + 1, params.get(i));
-		        
+		        pstmt = link.prepareStatement(sql);
+
+	            for (int i = 0; i < params.size(); i++) {
+					pstmt.setObject(i + 1, params.get(i));
+				}
+
 		        // thuc thi
-		        success = pstmt.executeUpdate() > 0 ? true : false;
+		        success = pstmt.executeUpdate() > 0;
 			}
 		}catch(ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
@@ -104,11 +108,11 @@ public abstract class BaseDAO<T>{
 			if (params != null && params.size() == tableColumns.size()) {
 			// tao sql
 				StringBuilder sql = new StringBuilder("UPDATE ");
-				
+
 		        //Tên table
 		        sql.append(table);
 		        sql.append(" SET ");
-		        
+
 		        // Generate SET clause with column names
 		        for (int i = 0; i < tableColumns.size(); i++) {
 		            sql.append(tableColumns.get(i)).append(" = ?");
@@ -118,16 +122,17 @@ public abstract class BaseDAO<T>{
 		        }
 		        // Add condition (WHERE clause) -> where id = ...
 		        sql.append(" WHERE ").append(condition);
-		        
+
 		        // noi param
 		        link = db.connectDB();
 		        pstmt = link.prepareStatement(sql.toString());
-		        
-	            for (int i = 0; i < params.size(); i++) 
-	                pstmt.setObject(i + 1, params.get(i));
-		        
+
+	            for (int i = 0; i < params.size(); i++) {
+					pstmt.setObject(i + 1, params.get(i));
+				}
+
 		        // thuc thi
-		        success = pstmt.executeUpdate() > 0 ? true : false;
+		        success = pstmt.executeUpdate() > 0;
 			}
 		}catch(ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
@@ -136,30 +141,30 @@ public abstract class BaseDAO<T>{
 		}
 		return success;
     }
-		
+
 	public boolean delete(String column, Object value) {
     	Connection link = null;
 		PreparedStatement pstmt = null;
 		boolean success = false;
 		try {
 			// tao sql
-				StringBuilder sql = new StringBuilder("DELETE FROM ");
-				
-		        //Tên table
-		        sql.append(table);
-		        
-		        // Add condition (WHERE clause) -> where id = ...
-		        sql.append(" WHERE ");
-		        sql.append(column);
-		        sql.append(" = ?");
-		        
+
+            //Tên table
+
+            String sql = "DELETE FROM " + table +
+
+                    // Add condition (WHERE clause) -> where id = ...
+                    " WHERE " +
+                    column +
+                    " = ?";
+
 		        // noi param
 		        link = db.connectDB();
-		        pstmt = link.prepareStatement(sql.toString());
+		        pstmt = link.prepareStatement(sql);
 		        pstmt.setObject(1, value);
-		        
+
 		        // thuc thi
-		        success = pstmt.executeUpdate() > 0 ? true : false;
+		        success = pstmt.executeUpdate() > 0;
 		}catch(ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -170,5 +175,5 @@ public abstract class BaseDAO<T>{
 
     // *** Các phương thức trừu tượng mà lớp con phải triển khai
     protected abstract T mapResultSetToDTO(ResultSet rs) throws SQLException;
-    // ***
+	// ***
 }

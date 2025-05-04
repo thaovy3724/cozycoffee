@@ -1,15 +1,18 @@
 package DAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import DTO.Lo_NguyenLieuDTO;
-
 import java.util.List;
-import java.sql.*;
+
+import DTO.Lo_NguyenLieuDTO;
 
 public class Lo_NguyenLieuDAO extends BaseDAO<Lo_NguyenLieuDTO>{
 	public Lo_NguyenLieuDAO() {
 		super(
-		"lo_nguyenlieu", 
+		"lo_nguyenlieu",
 		List.of(
 		 "idNL",
 		 "idPN",
@@ -31,7 +34,7 @@ public class Lo_NguyenLieuDAO extends BaseDAO<Lo_NguyenLieuDTO>{
                 rs.getDate("hsd")
         );
     }
-	
+
 	public List<Lo_NguyenLieuDTO> getAllByIdPN(int idPN) {
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -43,7 +46,9 @@ public class Lo_NguyenLieuDAO extends BaseDAO<Lo_NguyenLieuDTO>{
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1,idPN);
             rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
+            while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
         }catch(ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }finally {

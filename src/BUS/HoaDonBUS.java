@@ -32,7 +32,7 @@ public class HoaDonBUS {
     private final TaiKhoanDAO taiKhoanDao = new TaiKhoanDAO();
     private final CT_HoaDonDAO ct_HoaDonDao = new CT_HoaDonDAO();
     private final SanPhamDAO sanPhamDao = new SanPhamDAO();
-    
+
     public List<HoaDonDTO> getAll(){
 	return hoaDonDao.getAll();
 }
@@ -51,9 +51,9 @@ public class HoaDonBUS {
         // nếu tất cả sản phẩm đều available thì tiến hàng tạo hóa đơn
         if(error.isEmpty()){
             int newIdHD = hoaDonDao.add(hoaDon, dsChiTiet);
-            if(newIdHD == -1)
-                error = "Đã xảy ra lỗi trong quá trình thêm hóa đơn";
-            else{
+            if(newIdHD == -1) {
+				error = "Đã xảy ra lỗi trong quá trình thêm hóa đơn";
+			} else{
                 // cập nhật tồn kho
                 hoaDonDao.updateInventory(newIdHD);
                 error = String.valueOf(newIdHD);
@@ -209,7 +209,6 @@ public class HoaDonBUS {
 
         // Đóng tài liệu
         document.close();
-        System.out.println("Hóa đơn đã được tạo: " + outputPath);
 
         // Hiển thị file PDF
         File pdfFile = new File(outputPath);

@@ -1,29 +1,14 @@
 package GUI.Dialog;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-
-import BUS.SanPhamBUS;
-import BUS.DanhMucBUS;
-import DTO.DanhMucDTO;
-import DTO.SanPhamDTO;
-import GUI.ImageHelper;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import java.awt.Component;
-import java.awt.Font;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -34,24 +19,38 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import javax.imageio.ImageIO;
 import javax.swing.Box;
-import java.awt.Cursor;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
+
+import BUS.DanhMucBUS;
+import BUS.SanPhamBUS;
+import DTO.DanhMucDTO;
+import DTO.SanPhamDTO;
+import GUI.ImageHelper;
 
 public class SanPhamDialog extends JDialog {
-	private SanPhamBUS sanPhamBus = new SanPhamBUS();
-	private DanhMucBUS danhMucBus = new DanhMucBUS();
+	private final SanPhamBUS sanPhamBus = new SanPhamBUS();
+	private final DanhMucBUS danhMucBus = new DanhMucBUS();
 
 	private static final long serialVersionUID = 1L;
-	private JPanel txtPanel = new JPanel();
+	private final JPanel txtPanel = new JPanel();
 	private JTextField txtTenSP, txtGia;
-	private JComboBox<DanhMucDTO> cboDM = new JComboBox<>();
-	private JComboBox<String> cboTrangThai = new JComboBox<>();
+	private final JComboBox<DanhMucDTO> cboDM = new JComboBox<>();
+	private final JComboBox<String> cboTrangThai = new JComboBox<>();
 	private JLabel errTenSP, errGia, errHinh;
 	private JLabel lblImage;
-	private JLabel lblTitle;
+	private final JLabel lblTitle;
 	private JButton btnSubmit, btnCancel;
 	private File uploadFile;
 
@@ -81,7 +80,7 @@ public class SanPhamDialog extends JDialog {
 		actionInit();
 
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setModal(true);
 	}
 
@@ -118,9 +117,10 @@ public class SanPhamDialog extends JDialog {
 		}
 		{
 			JButton btnUpload = new JButton("Tải ảnh");
+			btnUpload.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			btnUpload.setAlignmentX(Component.CENTER_ALIGNMENT);
-			btnUpload.setBackground(Color.BLACK);
-			btnUpload.setForeground(new Color(255, 255, 255));
+			btnUpload.setBackground(Color.ORANGE);
+			btnUpload.setForeground(Color.BLACK);
 			btnUpload.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 			btnUpload.setContentAreaFilled(false);
 			btnUpload.setOpaque(true);
@@ -186,7 +186,7 @@ public class SanPhamDialog extends JDialog {
 			txtPanel.add(lblDM, gbc_lblDM);
 		}
 		{
-			cboDM.setBackground(new Color(192, 192, 192));
+			cboDM.setBackground(new Color(255, 255, 255));
 			cboDM.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 			GridBagConstraints gbc_cboDM = new GridBagConstraints();
 			gbc_cboDM.fill = GridBagConstraints.HORIZONTAL;
@@ -235,7 +235,7 @@ public class SanPhamDialog extends JDialog {
 			txtPanel.add(errGia, gbc_errGia);
 		}
 		{
-			cboTrangThai.setBackground(new Color(192, 192, 192));
+			cboTrangThai.setBackground(new Color(255, 255, 255));
 			cboTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 			cboTrangThai.addItem("Bị khóa");
 			cboTrangThai.addItem("Hoạt động");
@@ -298,16 +298,17 @@ public class SanPhamDialog extends JDialog {
 
 	private void loadComboBoxDM(List<DanhMucDTO> arr) {
 		cboDM.removeAllItems();
-		for(DanhMucDTO item : arr) 
+		for(DanhMucDTO item : arr) {
 			cboDM.addItem(item);
+		}
 	}
 
 	public void showAdd() {
-		// load tất cả danh mục đang hoạt động 
-		List<DanhMucDTO> listDM = danhMucBus.getAllActive();
+		// load tất cả danh mục đang hoạt động
+		List<DanhMucDTO> listDM = danhMucBus.getAllActiveF1(); // load F1
 		loadComboBoxDM(listDM);
 		cboTrangThai.setEnabled(false);
-		
+
 		setTitle("Thêm sản phẩm");
 		lblTitle.setText("Thêm sản phẩm");
 		// reset action button
@@ -323,15 +324,22 @@ public class SanPhamDialog extends JDialog {
 		ImageHelper img = new ImageHelper(200, 200, SanPhamDialog.class.getResource("/ASSET/Uploads/"+sanPham.getHinhanh()));
 		lblImage.setIcon(img.getScaledImage());
 		cboTrangThai.setSelectedItem(sanPham.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
-		
-		// load tất cả danh mục đang hoạt động 
-		List<DanhMucDTO> listDM = danhMucBus.getAllActiveExcept(sanPham.getIdDM());
+
+		// load tất cả danh mục đang hoạt động
+		List<DanhMucDTO> listDM = danhMucBus.getAllActiveF1Except(sanPham.getIdDM());
 		loadComboBoxDM(listDM);
-		
+
 		// set default
-		DanhMucDTO dmuc = danhMucBus.findByIdDM(sanPham.getIdDM());
-		cboDM.setSelectedItem(dmuc);
-		
+		if(sanPham.getIdDM() != 0) {
+			for (int i = 0; i < cboDM.getItemCount(); i++) {
+                DanhMucDTO dmuc = cboDM.getItemAt(i);
+                if (dmuc.getIdDM() == sanPham.getIdDM()) {
+                    cboDM.setSelectedIndex(i);
+                    break;
+                }
+            }
+		}
+
 		setTitle("Sửa sản phẩm");
 		lblTitle.setText("Sửa sản phẩm");
 		// reset action button
@@ -343,23 +351,24 @@ public class SanPhamDialog extends JDialog {
 	private boolean isError(boolean isEdit) {
 		// remove existed errors
 		JLabel[] errors = {errTenSP, errGia, errHinh};
-		for (JLabel error : errors)
+		for (JLabel error : errors) {
 			error.setText("");
+		}
 
 		boolean isError = false;
-		
+
 		// hinhanh
 		if(!isEdit && uploadFile == null) {
 			errHinh.setText("Hình sản phẩm không được để trống");
 			isError = true;
 		}
-		
+
 		// tenSP
 		if(txtTenSP.getText().trim().equals("")) {
 			errTenSP.setText("Tên sản phẩm không được để trống");
 			isError = true;
 		}
-		
+
 		// gia ban
 		String giaban = txtGia.getText();
 		if(giaban.trim().equals("")){
@@ -367,7 +376,7 @@ public class SanPhamDialog extends JDialog {
 			isError = true;
 		}else{
 			try {
-				int gia = Integer.parseInt(giaban); 
+				int gia = Integer.parseInt(giaban);
 				if (gia <= 0) {
 					errGia.setText("Giá bán phải lớn hơn 0");
 					isError = true;
@@ -387,11 +396,11 @@ public class SanPhamDialog extends JDialog {
 		if(!isError(beginIndex != 0)) {
 			// collect data
 			String tenSP = txtTenSP.getText();
-			int giaban = Integer.parseInt(txtGia.getText()); 
+			int giaban = Integer.parseInt(txtGia.getText());
 			DanhMucDTO dmucSelected = (DanhMucDTO) cboDM.getSelectedItem();
 			int idDM = dmucSelected.getIdDM();
 			int trangthai = cboTrangThai.getSelectedItem() == "Hoạt động" ? 1 : 0;
-			
+
 			// image
 			String imageName = null;
 			if(uploadFile != null) {
@@ -399,7 +408,7 @@ public class SanPhamDialog extends JDialog {
 	            String destinationFolder = "src/ASSET/Uploads/";
 	            String originalFileName = uploadFile.getName();
 	            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-	            imageName = UUID.randomUUID().toString() + fileExtension;
+	            imageName = UUID.randomUUID() + fileExtension;
 	            String destinationPath = destinationFolder + imageName;
 
 	            try {
@@ -409,7 +418,7 @@ public class SanPhamDialog extends JDialog {
 	                JOptionPane.showMessageDialog(this, "Lỗi khi tải ảnh: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
 	            }
 			}
-			
+
 			// action
 			String error = "";
 			if(beginIndex == 0) {
@@ -420,7 +429,7 @@ public class SanPhamDialog extends JDialog {
 				int idSP = Integer.parseInt(actionCommand.substring(beginIndex));
 				error = sanPhamBus.update(new SanPhamDTO(idSP, tenSP, giaban, imageName, trangthai, idDM));
 			}
-			
+
 			// show message
 			if(error != "") {
 				// fail
@@ -428,10 +437,11 @@ public class SanPhamDialog extends JDialog {
 			}
 			else {
 				// success
-				if(beginIndex == 0) 
+				if(beginIndex == 0) {
 					JOptionPane.showMessageDialog(this, "Thêm thành công ");
-				else 
+				} else {
 					JOptionPane.showMessageDialog(this, "Cập nhật thành công ");
+				}
 			}
 		}
 	}
@@ -444,7 +454,7 @@ public class SanPhamDialog extends JDialog {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image files", "jpg", "png", "jpeg"));
         int result = chooser.showOpenDialog(null);
-        
+
         // Chọn ảnh từ máy
         try {
 	        if (result == JFileChooser.APPROVE_OPTION) {
@@ -454,8 +464,9 @@ public class SanPhamDialog extends JDialog {
 	            Image img = buff.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 	            ImageIcon icon = new ImageIcon(img);
 	            lblImage.setIcon(icon);
-	        }
-	        else uploadFile = null;
+	        } else {
+				uploadFile = null;
+			}
         }catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, "Lỗi khi tải ảnh: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }

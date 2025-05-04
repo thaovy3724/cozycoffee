@@ -1,32 +1,30 @@
 package GUI.Dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import BUS.TaiKhoanBUS;
 import DTO.TaiKhoanDTO;
 
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.GridBagConstraints;
-import java.awt.Font;
-import java.awt.Insets;
-
-import java.awt.Color;
-import java.awt.Cursor;
-
 public class DoiMatKhauDialog extends JDialog {
 
-    private TaiKhoanDTO currentUser;
-    
+    private final TaiKhoanDTO currentUser;
+
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JPasswordField txtNewPwd, txtConfirmPwd;
@@ -45,7 +43,7 @@ public class DoiMatKhauDialog extends JDialog {
 		contentPanel.setBackground(Color.WHITE);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		
+
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
 		gbl_contentPanel.columnWidths = new int[]{0, 0, 0, 0};
 		gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -69,10 +67,11 @@ public class DoiMatKhauDialog extends JDialog {
 		actionInit();
 
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setVisible(true);
 		setModal(true);
 	}
-	
+
 	private void textFieldInit() {
 		{
 			JLabel lblNewPwd = new JLabel("Mật khẩu mới");

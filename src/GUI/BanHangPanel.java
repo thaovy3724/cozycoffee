@@ -1,26 +1,35 @@
 package GUI;
 
-import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.GridBagConstraints;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.Color;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultCellEditor;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
@@ -36,32 +45,22 @@ import DTO.HoaDonDTO;
 import DTO.SanPhamDTO;
 import DTO.TaiKhoanDTO;
 
-import javax.swing.JComboBox;
-import java.awt.Component;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.ImageIcon;
-import java.awt.FlowLayout;
-import java.awt.Dimension;
-import java.awt.Cursor;
-
 public class BanHangPanel extends JPanel {
-	private SanPhamBUS sanPhamBus = new SanPhamBUS();
-	private HoaDonBUS hoaDonBus = new HoaDonBUS();
-	private DanhMucBUS danhMucBus = new DanhMucBUS();
+	private final SanPhamBUS sanPhamBus = new SanPhamBUS();
+	private final HoaDonBUS hoaDonBus = new HoaDonBUS();
+	private final DanhMucBUS danhMucBus = new DanhMucBUS();
 
 	private static final long serialVersionUID = 1L;
-	private JPanel panel = new JPanel();
-	private JPanel rightPanel = new JPanel();
-	private JPanel productListPanel = new JPanel();
+	private final JPanel panel = new JPanel();
+	private final JPanel rightPanel = new JPanel();
+	private final JPanel productListPanel = new JPanel();
 	private JTextField txtSearch;
 	private JLabel lblTotalQuantity, lblTotalAmount;
-	private	JComboBox<DanhMucDTO> cboDM = new JComboBox<>();
+	private final JComboBox<DanhMucDTO> cboDM = new JComboBox<>();
 	private JButton btnSearch, btnDel;
-	private JTable table = new JTable();
+	private final JTable table = new JTable();
 	private DefaultTableModel tableModel;
-	private TaiKhoanDTO currentUser;
+	private final TaiKhoanDTO currentUser;
 
 	/**
 	 * Create the panel.
@@ -69,35 +68,37 @@ public class BanHangPanel extends JPanel {
 	public BanHangPanel(TaiKhoanDTO currentUser) {
 		this.currentUser = currentUser;
 		setLayout(new BorderLayout(0, 0));
-		
+
 		add(panel, BorderLayout.CENTER);
 		panel.setLayout(new GridLayout(1, 0, 0, 0));
-	
+
 		leftPanelInit();
 		rightPanelInit();
 	}
 
-	private void leftPanelInit(){
+	private void leftPanelInit() {
 		JPanel leftPanel = new JPanel();
 		panel.add(leftPanel);
 		leftPanel.setLayout(new BorderLayout(0, 0));
-		
+
 		// === Action Panel ===
 		JPanel actionPanel = new JPanel();
 		actionPanel.setBackground(new Color(255, 240, 220));
 		leftPanel.add(actionPanel, BorderLayout.NORTH);
-		
+
 		txtSearch = new JTextField();
+		txtSearch.setMinimumSize(new Dimension(7, 30));
+		txtSearch.setPreferredSize(new Dimension(7, 30));
 		txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		actionPanel.add(txtSearch);
 		txtSearch.setColumns(18);
 		cboDM.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		
+
 		cboDM.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-		List<DanhMucDTO> listDM = danhMucBus.getAllActive();
+		List<DanhMucDTO> listDM = danhMucBus.getAllActiveF1(); // load danh muc F1
 		loadComboBoxDM(listDM);
 		actionPanel.add(cboDM);
-		
+
 		btnSearch = new JButton("Tìm");
 		btnSearch.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		ImageHelper searchIcon = new ImageHelper(20, 20, BanHangPanel.class.getResource("/ASSET/Images/searchIcon.png"));
@@ -106,41 +107,57 @@ public class BanHangPanel extends JPanel {
 		btnSearch.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		btnSearch.setContentAreaFilled(false);
 		btnSearch.setOpaque(true);
-		btnSearch.addActionListener(e->search());
+		btnSearch.addActionListener(e -> search());
 		actionPanel.add(btnSearch);
+
+		JButton btnReset = new JButton("Làm mới");
+		ImageHelper imgReset = new ImageHelper(20, 20, BanHangPanel.class.getResource("/ASSET/Images/icons8_replay_30px.png"));
+		btnReset.setIcon(imgReset.getScaledImage());
+		btnReset.setBackground(new Color(255, 255, 255));
+		btnReset.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnReset.addActionListener(e -> {
+			// empty ô search
+			txtSearch.setText("");
+			cboDM.setSelectedIndex(0);
+            loadProduct(sanPhamBus.getAllActive());
+        });
+		actionPanel.add(btnReset);
+
 		productListPanel.setBackground(new Color(255, 240, 220));
-		
-		JScrollPane productListScrollPane = new JScrollPane(productListPanel);
-		productListPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		loadProduct(sanPhamBus.getAllActive());
+		productListPanel.setLayout(new GridLayout(0, 2, 5, 5)); // Sử dụng GridLayout với 2 cột
+
+		JScrollPane productListScrollPane = new JScrollPane(productListPanel,
+			ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+			ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		productListScrollPane.setPreferredSize(new Dimension(300, 500)); // Chiều rộng phù hợp với 2 cột
 		leftPanel.add(productListScrollPane, BorderLayout.CENTER);
-		// === Product Panel ===
+
+		loadProduct(sanPhamBus.getAllActive());
 	}
 
 	private void search() {
 		// get keyword & danhmuc
-		String keyWord = txtSearch.getText();		
+		String keyWord = txtSearch.getText();
 		// tìm kiếm: nếu không tìm thấy thì trả về null
 		List<SanPhamDTO> result = sanPhamBus.search(keyWord.trim(), (DanhMucDTO) cboDM.getSelectedItem());
 		// hiển thị
 		loadProduct(result);
-		// empty ô search
-		txtSearch.setText("");
 	}
 
 	private void loadComboBoxDM(List<DanhMucDTO> arr) {
 		cboDM.removeAllItems();
 		DanhMucDTO danhMuc = new DanhMucDTO();
 		danhMuc.setTenDM("--Tất cả--");
-		arr.add(danhMuc);
-		for(DanhMucDTO item : arr) 
+		cboDM.addItem(danhMuc);
+		for(DanhMucDTO item : arr) {
 			cboDM.addItem(item);
+		}
 	}
-	
+
 	private void rightPanelInit(){
 		panel.add(rightPanel);
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-		
+
 		orderDetailInit();
 		paymentTotalInit();
 	}
@@ -156,7 +173,7 @@ public class BanHangPanel extends JPanel {
 		gbl_paymentPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_paymentPanel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 		paymentPanel.setLayout(gbl_paymentPanel);
-		
+
 		JLabel lblTotalProduct = new JLabel("Tổng sản phẩm");
 		lblTotalProduct.setFont(new Font("Segoe UI", Font.BOLD, 17));
 		GridBagConstraints gbc_lblTotalProduct = new GridBagConstraints();
@@ -165,7 +182,7 @@ public class BanHangPanel extends JPanel {
 		gbc_lblTotalProduct.gridx = 0;
 		gbc_lblTotalProduct.gridy = 0;
 		paymentPanel.add(lblTotalProduct, gbc_lblTotalProduct);
-		
+
 		lblTotalQuantity = new JLabel();
 		lblTotalQuantity.setFont(new Font("Segoe UI", Font.PLAIN, 17));
 		GridBagConstraints gbc_lblTotalQuantity = new GridBagConstraints();
@@ -175,7 +192,7 @@ public class BanHangPanel extends JPanel {
 		gbc_lblTotalQuantity.gridx = 1;
 		gbc_lblTotalQuantity.gridy = 0;
 		paymentPanel.add(lblTotalQuantity, gbc_lblTotalQuantity);
-		
+
 		JButton btnPay = new JButton("Thanh toán");
 		btnPay.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnPay.setForeground(Color.WHITE);
@@ -192,7 +209,7 @@ public class BanHangPanel extends JPanel {
 		gbc_btnPay.gridx = 7;
 		gbc_btnPay.gridy = 0;
 		paymentPanel.add(btnPay, gbc_btnPay);
-		
+
 		JLabel lblTongTien = new JLabel("Tổng tiền");
 		lblTongTien.setFont(new Font("Segoe UI", Font.BOLD, 17));
 		GridBagConstraints gbc_lblTongTien = new GridBagConstraints();
@@ -201,7 +218,7 @@ public class BanHangPanel extends JPanel {
 		gbc_lblTongTien.gridx = 0;
 		gbc_lblTongTien.gridy = 1;
 		paymentPanel.add(lblTongTien, gbc_lblTongTien);
-		
+
 		lblTotalAmount = new JLabel();
 		lblTotalAmount.setForeground(Color.BLACK);
 		lblTotalAmount.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -212,7 +229,7 @@ public class BanHangPanel extends JPanel {
 		gbc_lblTotalAmount.gridx = 1;
 		gbc_lblTotalAmount.gridy = 1;
 		paymentPanel.add(lblTotalAmount, gbc_lblTotalAmount);
-		
+
 		// ==== Payment total ====
 	}
 
@@ -221,7 +238,7 @@ public class BanHangPanel extends JPanel {
 		deletePanel.setBackground(new Color(255, 240, 220));
 		rightPanel.add(deletePanel);
 		deletePanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
-		
+
 		btnDel = new JButton("Xóa");
 		btnDel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnDel.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -237,22 +254,26 @@ public class BanHangPanel extends JPanel {
 			public boolean isCellEditable(int row, int column) {
 				return column == 2; //Chỉ cho sửa Số lượng
 			}
-	    };   
+	    };
 
 		//Format số lượng chỉ cho nhập số
 		JTextField numericField = new JTextField();
 		((AbstractDocument) numericField.getDocument()).setDocumentFilter(new DocumentFilter() {
 			@Override
 			public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-				if (string.matches("\\d+")) super.insertString(fb, offset, string, attr);
+				if (string.matches("\\d+")) {
+					super.insertString(fb, offset, string, attr);
+				}
 			}
 
 			@Override
 			public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-				if (text.matches("\\d*")) super.replace(fb, offset, length, text, attrs);
+				if (text.matches("\\d*")) {
+					super.replace(fb, offset, length, text, attrs);
+				}
 			}
 		});
-		
+
 		tableModel.addTableModelListener(e->{
 			// === Cập nhật giá tiền khi thay đổi số lượng ===
 			int row = e.getFirstRow();
@@ -262,7 +283,9 @@ public class BanHangPanel extends JPanel {
 				try{
 					String soLuongValue = tableModel.getValueAt(row, 2).toString();
 					int soLuong = 0;
-					if(soLuongValue != "") soLuong = Integer.parseInt(soLuongValue);
+					if(soLuongValue != "") {
+						soLuong = Integer.parseInt(soLuongValue);
+					}
 					int donGia = parseCurrency(tableModel.getValueAt(row, 3).toString());
 					int thanhTien = soLuong * donGia;
 					tableModel.setValueAt(formatCurrency(thanhTien), row, 4);
@@ -272,7 +295,7 @@ public class BanHangPanel extends JPanel {
 			}
 			// === Cập nhật giá tiền khi thay đổi số lượng ===
 
-			// Khi có bất kì sự thay đổi nào trong bảng chi tiết, 
+			// Khi có bất kì sự thay đổi nào trong bảng chi tiết,
 			// cập nhật lại tổng sản phẩm và tổng tiền
 			int rowCount = tableModel.getRowCount();
 			int totalQuantity = 0;
@@ -288,7 +311,7 @@ public class BanHangPanel extends JPanel {
 
 		table.setModel(tableModel);
 		table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(numericField));
-		
+
 		JScrollPane orderDetailPanel = new JScrollPane();
 		orderDetailPanel.getViewport().setBackground(new Color(255, 240, 220));
 		orderDetailPanel.setViewportView(table);
@@ -297,75 +320,55 @@ public class BanHangPanel extends JPanel {
 	}
 
 	private void loadProduct(List<SanPhamDTO> arr) {
-	    // Remove all items inside productListPanel
-	    productListPanel.removeAll();
-	    productListPanel.revalidate();
-	    productListPanel.repaint();
-
-	    // Load san pham
-	    if (arr != null){
+		productListPanel.removeAll();
+		if (arr != null) {
 			ImageHelper addIcon = new ImageHelper(20, 20, BanHangPanel.class.getResource("/ASSET/Images/icons8_add_30px.png"));
-
 			for (SanPhamDTO sp : arr) {
-				// Hiển thị các card chứa thông tin sản phẩm
-				// ==== Card ====
 				JPanel productCard = new JPanel();
 				productCard.setBackground(new Color(245, 222, 179));
-				productListPanel.add(productCard);
 				productCard.setLayout(new BoxLayout(productCard, BoxLayout.Y_AXIS));
 				productCard.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+				productCard.setPreferredSize(new Dimension(140, 165)); // Chiều rộng phù hợp với 2 cột
+				productCard.setMaximumSize(new Dimension(140, 165));
 
-				// Giới hạn kích thước của productCard
-				productCard.setPreferredSize(new Dimension(120, 165)); // Điều chỉnh chiều cao và chiều rộng
-				productCard.setMaximumSize(new Dimension(120, 165));   // Đảm bảo không vượt quá kích thước này
-
-				// Hình ảnh sản phẩm
 				JLabel lblProductImage = new JLabel("");
-				lblProductImage.setAlignmentX(Component.CENTER_ALIGNMENT);
-	//	        ImageHelper productImg = new ImageHelper(80, 80, BanHangPanel.class.getResource("/ASSET/Uploads/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg"));
 				ImageHelper productImg = new ImageHelper(80, 80, BanHangPanel.class.getResource("/ASSET/Uploads/" + sp.getHinhanh()));
 				lblProductImage.setIcon(productImg.getScaledImage());
+				lblProductImage.setAlignmentX(Component.CENTER_ALIGNMENT);
 				productCard.add(lblProductImage);
 
-				// Khoảng cách nhỏ hơn
-				Component verticalStrut = Box.createVerticalStrut(5); // Giảm từ 5 xuống 3
-				productCard.add(verticalStrut);
+				productCard.add(Box.createVerticalStrut(5));
 
-				// Tên sản phẩm
-	//	        JLabel lblTenSP = new JLabel("Cafe");
 				JLabel lblTenSP = new JLabel(sp.getTenSP());
 				lblTenSP.setAlignmentX(Component.CENTER_ALIGNMENT);
-				lblTenSP.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Giảm font size từ 15 xuống 14
+				lblTenSP.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 				productCard.add(lblTenSP);
 
-				Component verticalStrut_1 = Box.createVerticalStrut(3); // Giảm từ 5 xuống 3
-				productCard.add(verticalStrut_1);
+				productCard.add(Box.createVerticalStrut(3));
 
-				// Giá bán
-	//	        JLabel lblGiaban = new JLabel(formatCurrency(100000));
 				JLabel lblGiaban = new JLabel(formatCurrency(sp.getGiaban()));
-				lblGiaban.setFont(new Font("Segoe UI", Font.BOLD, 12)); // Giảm font size từ 13 xuống 12
+				lblGiaban.setFont(new Font("Segoe UI", Font.BOLD, 12));
 				lblGiaban.setAlignmentX(Component.CENTER_ALIGNMENT);
 				productCard.add(lblGiaban);
 
-				// Nút "Thêm"
+				productCard.add(Box.createVerticalStrut(4));
+
 				JButton btnAdd = new JButton("Thêm");
-				btnAdd.setForeground(new Color(255, 255, 255));
+				btnAdd.setForeground(Color.WHITE);
 				btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 				btnAdd.setBackground(new Color(0, 128, 0));
 				btnAdd.setAlignmentX(Component.CENTER_ALIGNMENT);
-				btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 12)); // Giảm font size từ 13 xuống 12
+				btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 12));
 				btnAdd.setIcon(addIcon.getScaledImage());
 				btnAdd.addActionListener(e -> addDetail(sp));
-				
-				Component verticalStrut_2 = Box.createVerticalStrut(4);
-				productCard.add(verticalStrut_2);
 				productCard.add(btnAdd);
-				// ==== Card ====
+
+				productListPanel.add(productCard);
 			}
 		}
+		productListPanel.revalidate();
+		productListPanel.repaint();
 	}
-
 	private String formatCurrency(int giaban){
 		DecimalFormat formatter = new DecimalFormat("#, ###");
 		String formatted  = formatter.format(giaban).replace(",", ".");
@@ -387,7 +390,7 @@ public class BanHangPanel extends JPanel {
 				isExist = true;
 				// kiểm tra nếu ô só lượng bị rỗng, gán số lượng bằng 0 và cộng thêm 1
 				try{
-					quantityTmp = (int) tableModel.getValueAt(i, 2);
+					quantityTmp = Integer.parseInt(tableModel.getValueAt(i, 2).toString());
 					tableModel.setValueAt(quantityTmp+1, i, 2);
 				}catch(NumberFormatException e){
 					tableModel.setValueAt(1, i, 2);
@@ -413,18 +416,17 @@ public class BanHangPanel extends JPanel {
 			// Tạo hóa đơn
 			// Collect data
 			List<CT_HoaDonDTO> orderDetail = new ArrayList<>();
-			int idSP, soLuong, gialucdat; 
+			int idSP, soLuong, gialucdat;
 			for(int i = 0; i < rowCount; i++){
 				idSP = (int) tableModel.getValueAt(i, 0);
-				soLuong = (int) tableModel.getValueAt(i, 2);
+				soLuong = Integer.parseInt(tableModel.getValueAt(i, 2).toString());
 				gialucdat = parseCurrency(tableModel.getValueAt(i, 3).toString());
 				orderDetail.add(new CT_HoaDonDTO(idSP, soLuong, gialucdat));
 			}
 			LocalDate currentDate = LocalDate.now();
 			HoaDonDTO hoadon = new HoaDonDTO(currentDate, currentUser.getIdTK());
-			// trả về idHD mới nhất (nếu thành công), thất bại trả về -1 
-			String result = hoaDonBus.add(hoadon, orderDetail); 
-			
+			// trả về idHD mới nhất (nếu thành công), thất bại trả về -1
+			String result = hoaDonBus.add(hoadon, orderDetail);
 			try{
 				// nếu lấy newIdHD thành công, in ra file pdf, ngược lại xuất thông báo lỗi
 				int newIdHD = Integer.parseInt(result);
@@ -439,15 +441,18 @@ public class BanHangPanel extends JPanel {
 			}catch(NumberFormatException e){
 				JOptionPane.showMessageDialog(this, result, "Lỗi", JOptionPane.ERROR_MESSAGE);
 			}
-		} else JOptionPane.showMessageDialog(this, "Bạn chưa thêm sản phẩm", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(this, "Bạn chưa thêm sản phẩm", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		}
 
 	}
 
 	private void delete() {
 		int selectedRow = table.getSelectedRow();
-		if (selectedRow == -1) 
+		if (selectedRow == -1) {
 			JOptionPane.showMessageDialog(this, "Bạn chưa chọn sản phẩm");
-		else 
+		} else {
 			tableModel.removeRow(selectedRow);
+		}
 	}
 }
