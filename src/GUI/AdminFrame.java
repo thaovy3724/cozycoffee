@@ -118,7 +118,6 @@ public class AdminFrame extends JFrame {
         btnThongKe.setActionCommand("thongke");
         btnThongKe.setPreferredSize(new Dimension(200, 50));
         
-        btnThongKe.setIconTextGap(10);
         // set default
         dynamicPanel.add(new ThongKePanel(), BorderLayout.CENTER);
         dynamicPanel.revalidate();
@@ -142,7 +141,6 @@ public class AdminFrame extends JFrame {
         btnHoaDon.setPreferredSize(new Dimension(200, 50));
         ImageHelper iconHoaDon = new ImageHelper(30, 30, AdminFrame.class.getResource("/ASSET/Images/2.png"));
         btnHoaDon.setIcon(iconHoaDon.getScaledImage());
-        btnHoaDon.setIconTextGap(10);
         toggleBtnInit(btnHoaDon);
         menuPanel.add(btnHoaDon, gbc);
 
@@ -181,7 +179,6 @@ public class AdminFrame extends JFrame {
         btnNguyenLieu.setPreferredSize(new Dimension(200, 50));
         ImageHelper iconNguyenLieu = new ImageHelper(30, 30, AdminFrame.class.getResource("/ASSET/Images/5.png"));
         btnNguyenLieu.setIcon(iconNguyenLieu.getScaledImage());
-        btnNguyenLieu.setIconTextGap(10);
         toggleBtnInit(btnNguyenLieu);
         menuPanel.add(btnNguyenLieu, gbc);
 
@@ -201,7 +198,6 @@ public class AdminFrame extends JFrame {
         btnCongThuc.setPreferredSize(new Dimension(200, 50));
         ImageHelper iconCongThuc = new ImageHelper(30, 30, AdminFrame.class.getResource("/ASSET/Images/6.png"));
         btnCongThuc.setIcon(iconCongThuc.getScaledImage());
-        btnCongThuc.setIconTextGap(10);
         toggleBtnInit(btnCongThuc);
         menuPanel.add(btnCongThuc, gbc);
 
@@ -221,7 +217,6 @@ public class AdminFrame extends JFrame {
         btnDanhMuc.setPreferredSize(new Dimension(200, 50));
         ImageHelper iconDanhMuc = new ImageHelper(30, 30, AdminFrame.class.getResource("/ASSET/Images/7.png"));
         btnDanhMuc.setIcon(iconDanhMuc.getScaledImage());
-        btnDanhMuc.setIconTextGap(10); 
         toggleBtnInit(btnDanhMuc);
         menuPanel.add(btnDanhMuc, gbc);
 
@@ -241,7 +236,6 @@ public class AdminFrame extends JFrame {
         btnNhaCungCap.setPreferredSize(new Dimension(200, 50));
         ImageHelper iconNhaCungCap = new ImageHelper(30, 30, AdminFrame.class.getResource("/ASSET/Images/8.png"));
         btnNhaCungCap.setIcon(iconNhaCungCap.getScaledImage());
-        btnNhaCungCap.setIconTextGap(10);
         toggleBtnInit(btnNhaCungCap);
         menuPanel.add(btnNhaCungCap, gbc);
 
@@ -261,7 +255,6 @@ public class AdminFrame extends JFrame {
         btnPhieuNhap.setPreferredSize(new Dimension(200, 50));
         ImageHelper iconPhieuNhap = new ImageHelper(30, 30, AdminFrame.class.getResource("/ASSET/Images/9.png"));
         btnPhieuNhap.setIcon(iconPhieuNhap.getScaledImage()); 
-        btnPhieuNhap.setIconTextGap(10);
         toggleBtnInit(btnPhieuNhap);
         menuPanel.add(btnPhieuNhap, gbc);
         
@@ -281,7 +274,6 @@ public class AdminFrame extends JFrame {
         btnTaiKhoan.setPreferredSize(new Dimension(200, 50));
         ImageHelper iconTaiKhoan = new ImageHelper(30, 30, AdminFrame.class.getResource("/ASSET/Images/10.png"));
         btnTaiKhoan.setIcon(iconTaiKhoan.getScaledImage());
-        btnTaiKhoan.setIconTextGap(10);
         toggleBtnInit(btnTaiKhoan);
         menuPanel.add(btnTaiKhoan, gbc);
 
@@ -379,6 +371,10 @@ public class AdminFrame extends JFrame {
     public void toggleBtnInit(JToggleButton btn) {
         btn.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btn.setOpaque(true);
+        btn.setHorizontalAlignment(SwingConstants.LEFT); // Aligns icon+text to left inside btn
+        btn.setHorizontalTextPosition(SwingConstants.RIGHT); // Text to the right of the icon
+        btn.setVerticalTextPosition(SwingConstants.CENTER); // Text centered vertically
+        btn.setIconTextGap(20);
 
         btn.addItemListener(new ItemListener() {
             @Override

@@ -40,7 +40,6 @@ import DTO.TaiKhoanDTO;
 import javax.swing.JComboBox;
 import java.awt.Component;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import java.awt.FlowLayout;
@@ -335,7 +334,7 @@ public class BanHangPanel extends JPanel {
 		// ==== Order detail ====
 	}
 
-	private void loadProduct(List<SanPhamDTO> arr) {
+	private void  loadProduct(List<SanPhamDTO> arr) {
 		productListPanel.removeAll();
 		if (arr != null) {
 			ImageHelper addIcon = new ImageHelper(20, 20, BanHangPanel.class.getResource("/ASSET/Images/icons8_add_30px.png"));

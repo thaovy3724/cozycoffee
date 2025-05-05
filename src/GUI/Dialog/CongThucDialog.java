@@ -39,8 +39,8 @@ public class CongThucDialog extends JDialog {
     private List<NguyenLieuDTO> nguyenLieuList;
 
     public CongThucDialog() {
-        // setSize(750, 550);
-        // setMinimumSize(new Dimension(750, 550));
+         setSize(750, 550);
+         setMinimumSize(new Dimension(750, 550));
         getContentPane().setLayout(new BorderLayout());
 
         contentPanel.setBackground(new Color(255, 255, 255));
@@ -68,7 +68,6 @@ public class CongThucDialog extends JDialog {
         textFieldInit();
         tableInit();
         actionInit();
-        pack();
 
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

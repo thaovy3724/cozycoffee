@@ -133,6 +133,45 @@ public class ThongKeBUS {
         return ingredientBatchList;
     }
 
+    public List<Map<String, List<Long>>> getProductsQuantityStatisticByYear(int year) {
+        return hoaDonDAO.getProductsQuantityStatisticByYear(year);
+    }
+
+    public List<Map<String, List<Long>>> getProductsQuantityStatisticByMonth(int month, int year) {
+        // Định dạng 28/29/30/31 ngày
+        List<Map<String, List<Long>>> weeklyResult = new ArrayList<>();
+        List<Map<String, List<Long>>> monthlyResult = hoaDonDAO.getProductsQuantityStatisticByMonth(month, year);
+
+        LocalDate startOfMonth = LocalDate.of(year, month, 1);
+        LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
+        List<LocalDate[]> weekRanges = getWeekRanges(startOfMonth, endOfMonth);
+
+        for (Map<String, List<Long>> productMap : monthlyResult) { // Với mỗi Map có trong List Map
+            for (Map.Entry<String, List<Long>> entry : productMap.entrySet()) { // Với mỗi map, duyệt từng entry (cặp key - value)
+                String productName = entry.getKey();
+                List<Long> dailyCosts = entry.getValue();
+
+                List<Long> weeklyCosts = new ArrayList<>();
+                for (int i = 0; i < weekRanges.size(); i++) {
+                    int start = weekRanges.get(i)[0].getDayOfMonth();
+                    int end = weekRanges.get(i)[1].getDayOfMonth();
+
+                    long sum = 0;
+                    for (int j = start; j <= end; j++) {
+                        if (j < dailyCosts.size()) {
+                            sum += dailyCosts.get(j);
+                        }
+                    }
+                    weeklyCosts.add(sum);
+                }
+                Map<String, List<Long>> weeklyMap = new LinkedHashMap<>();
+                weeklyMap.put(productName, weeklyCosts);
+                weeklyResult.add(weeklyMap);
+            }
+        }
+        return weeklyResult;
+    }
+
     private List<LocalDate[]> getWeekRanges(LocalDate startOfMonth, LocalDate endOfMonth) {
         List<LocalDate[]> weekRanges = new ArrayList<>();
         LocalDate[][] tempWeekRanges = new LocalDate[5][2];

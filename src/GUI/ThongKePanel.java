@@ -723,40 +723,29 @@ public class ThongKePanel extends JPanel {
 		switch (filterOption) {
 			case 0:
 				setupStatisticByYear(year);
-//				setupTableScrollPane();
 
 				long[] tongBanAllSPThang = new long[12];
 				long tongBanNam = 0;
 
-				for (SanPhamDTO sp : sanPhamList) {
-					long[] tongBanSPThang = new long[12];
-					long tongBanSPNam = 0;
+				List<Map<String, List<Long>>> productsAndQuantityMapList = thongKeBUS.getProductsQuantityStatisticByYear(year);
 
-					for (int i = 0; i < 12; i++) {
-						LocalDate startOfMonth = LocalDate.of(year, i + 1, 1);
-						LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
-
-						List<HoaDonDTO> hoaDonList = hoaDonBus.searchByDate(Date.valueOf(startOfMonth), Date.valueOf(endOfMonth));
-						for (HoaDonDTO hd : hoaDonList) {
-							List<CT_HoaDonDTO> ctHoaDonList = ct_HoaDonBus.getAllByIdHD(hd.getIdHD());
-							for (CT_HoaDonDTO ct : ctHoaDonList) {
-								if (ct.getIdSP() == sp.getIdSP()) {
-									tongBanSPThang[i] += ct.getSoluong();
-									tongBanAllSPThang[i] += tongBanSPThang[i];
-								}
-							}
+				for (Map<String, List<Long>> productMap : productsAndQuantityMapList) { // Với mỗi Map có trong List Map
+					for (Map.Entry<String, List<Long>> entry : productMap.entrySet()) { // Với mỗi map, duyệt từng entry (cặp key - value)
+						long tongNhapKhoNLNam = 0;
+						Object[] row = new Object[thongKeJTableHeaders.size()];
+						row[0] = entry.getKey();
+						for (int i = 0; i < 12; i++) {
+							row[i + 1] = entry.getValue().get(i);
+							tongBanAllSPThang[i] += entry.getValue().get(i);
+							tongNhapKhoNLNam += entry.getValue().get(i);
 						}
-						tongBanSPNam += tongBanSPThang[i];
+						row[row.length - 1] = tongNhapKhoNLNam;
+						thongKeJTableModel.addRow(row);
+
 					}
-					Object[] row = new Object[thongKeJTableHeaders.size()];
-					row[0] = sp.getTenSP();
-					for (int i = 0; i < 12; i++) {
-						row[i + 1] = tongBanSPThang[i];
-					}
-					row[row.length - 1] = tongBanSPNam;
-					thongKeJTableModel.addRow(row);
 				}
 
+				//Hàng tổng
 				Object[] rowTong = new Object[thongKeJTableHeaders.size()];
 				rowTong[0] = "Tổng";
 				for (int i = 0; i < 12; i++) {
@@ -766,6 +755,7 @@ public class ThongKePanel extends JPanel {
 				rowTong[rowTong.length - 1] = tongBanNam;
 				thongKeJTableModel.addRow(rowTong);
 				break;
+
 			case 1:
 				ComboItem selectedMonthItem = (ComboItem) comboMonth.getSelectedItem();
 				int month = selectedMonthItem.getKey();
@@ -774,7 +764,6 @@ public class ThongKePanel extends JPanel {
 					return;
 				}
 				setupStatisticByMonth(month, year);
-//				setupTableScrollPane();
 
 				LocalDate startOfMonth = LocalDate.of(year, month, 1);
 				LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
@@ -783,36 +772,21 @@ public class ThongKePanel extends JPanel {
 				long[] tongBanAllSPTuan = new long[weekRanges.size()];
 				long tongBanThang = 0;
 
-				for (SanPhamDTO sp : sanPhamList) {
-					long[] tongBanSPTuan = new long[5];
-					long tongBanSPThang = 0;
+				productsAndQuantityMapList = thongKeBUS.getProductsQuantityStatisticByMonth(month, year);
 
-					for (int i = 0; i < weekRanges.size(); i++) {
-						LocalDate weekStart = weekRanges.get(i)[0];
-						LocalDate weekEnd = weekRanges.get(i)[1];
-
-						java.sql.Date sqlWeekStart = java.sql.Date.valueOf(weekStart);
-						java.sql.Date sqlWeekEnd = java.sql.Date.valueOf(weekEnd);
-
-						List<HoaDonDTO> hoaDonList = hoaDonBus.searchByDate(sqlWeekStart, sqlWeekEnd);
-						for (HoaDonDTO hd : hoaDonList) {
-							List<CT_HoaDonDTO> ctHoaDonList = ct_HoaDonBus.getAllByIdHD(hd.getIdHD());
-							for (CT_HoaDonDTO ct : ctHoaDonList) {
-								if (ct.getIdSP() == sp.getIdSP()) {
-									tongBanSPTuan[i] += ct.getSoluong();
-									tongBanAllSPTuan[i] += tongBanSPTuan[i];
-								}
-							}
+				for (Map<String, List<Long>> productMap : productsAndQuantityMapList) { // Với mỗi Map có trong List Map
+					for (Map.Entry<String, List<Long>> entry : productMap.entrySet()) { // Với mỗi map, duyệt từng entry (cặp key - value)
+						long tongBanSPThang = 0;
+						Object[] row = new Object[thongKeJTableHeaders.size()];
+						row[0] = entry.getKey();
+						for (int i = 0; i < weekRanges.size(); i++) {
+							row[i + 1] = entry.getValue().get(i);
+							tongBanAllSPTuan[i] += entry.getValue().get(i);
+							tongBanSPThang += entry.getValue().get(i);
 						}
-						tongBanSPThang += tongBanSPTuan[i];
+						row[row.length - 1] = tongBanSPThang;
+						thongKeJTableModel.addRow(row);
 					}
-					Object[] row = new Object[thongKeJTableHeaders.size()];
-					row[0] = sp.getTenSP();
-					for (int i = 0; i < weekRanges.size(); i++) {
-						row[i + 1] = tongBanSPTuan[i];
-					}
-					row[row.length - 1] = tongBanSPThang;
-					thongKeJTableModel.addRow(row);
 				}
 
 				rowTong = new Object[thongKeJTableHeaders.size()];
@@ -823,6 +797,7 @@ public class ThongKePanel extends JPanel {
 				}
 				rowTong[rowTong.length - 1] = tongBanThang;
 				thongKeJTableModel.addRow(rowTong);
+
 				break;
 		}
 	}

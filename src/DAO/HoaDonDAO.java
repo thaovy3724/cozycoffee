@@ -6,8 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import DTO.CT_HoaDonDTO;
 import DTO.HoaDonDTO;
@@ -346,6 +351,155 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
 			db.close(link);
 		}
 
+		return result;
+	}
+
+	public List<Map<String, List<Long>>> getProductsQuantityStatisticByYear(int year) {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<Map<String, List<Long>>> result = new ArrayList<>();
+
+		// Dùng LinkedHashMap để giữ thứ tự thêm vào
+		Map<String, List<Long>> ingredientMap = new LinkedHashMap<>();
+
+		try {
+			link = db.connectDB();
+			String sql = """
+            WITH RECURSIVE months(month) AS (
+                SELECT 1
+                UNION ALL
+                SELECT month + 1 FROM months WHERE month < 12
+            ),
+            so_luong AS (
+                SELECT
+                    MONTH(hd.ngaytao) AS thang,
+                    sp.tenSP,
+                    COALESCE(SUM(ct.soluong), 0) AS soluong
+                FROM sanpham sp
+                LEFT JOIN ct_hoadon ct ON ct.idSP = sp.idSP
+                LEFT JOIN hoadon hd ON hd.idHD = ct.idHD
+                WHERE YEAR(hd.ngaytao) = ? 
+                GROUP BY MONTH(hd.ngaytao), sp.idSP, sp.tenSP
+            )
+            SELECT
+                months.month AS thang,
+                sp.tenSP,
+                COALESCE(so_luong.soluong, 0) AS soluong
+            FROM months
+            CROSS JOIN sanpham sp
+            LEFT JOIN so_luong ON months.month = so_luong.thang AND so_luong.tenSP = sp.tenSP
+            ORDER BY sp.tenSP ASC, months.month ASC;
+        """;
+
+			pstmt = link.prepareStatement(sql);
+			pstmt.setInt(1, year);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				int month = rs.getInt("thang"); // từ 1 đến 12
+				String tenSP = rs.getString("tenSP");
+				long soluong = rs.getLong("soluong");
+
+				// Nếu nguyên liệu chưa có trong map → khởi tạo list 12 tháng = 0
+				ingredientMap.putIfAbsent(tenSP, new ArrayList<>(Collections.nCopies(12, 0L)));
+
+				// Ghi đè chi phí vào đúng vị trí tháng-1
+				ingredientMap.get(tenSP).set(month - 1, soluong);
+			}
+
+			// Chuyển từng entry thành map đơn để thêm vào list
+			for (Map.Entry<String, List<Long>> entry : ingredientMap.entrySet()) {
+				Map<String, List<Long>> singleMap = new HashMap<>();
+				singleMap.put(entry.getKey(), entry.getValue());
+				result.add(singleMap);
+			}
+
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.close(link);
+		}
+
+		return result;
+	}
+
+	public List<Map<String, List<Long>>> getProductsQuantityStatisticByMonth(int month, int year) {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<Map<String, List<Long>>> result = new ArrayList<>();
+
+		// Dùng LinkedHashMap để giữ thứ tự thêm vào
+		Map<String, List<Long>> ingredientMap = new LinkedHashMap<>();
+		int lastDayOfMonth = YearMonth.of(year, month).lengthOfMonth();
+		int numberOfWeeks = (int) Math.ceil(lastDayOfMonth / 7.0);
+		try {
+			link = db.connectDB();
+			String setYearSql = "SET @year = ?;";
+			String setMonthSql = "SET @month = ?;";
+			String sql = """
+                WITH RECURSIVE days(day) AS (
+                    SELECT 1
+                    UNION ALL
+                    SELECT day + 1
+                    FROM days
+                    WHERE day < DAY(LAST_DAY(CONCAT(@year, '-', @month, '-01')))
+                ),
+                so_luong AS (
+                    SELECT
+                        DAY(hd.ngaytao) AS ngay,
+                        sp.tenSP,
+                        COALESCE(SUM(ct.soluong), 0) AS soluong
+                    FROM sanpham sp
+                    LEFT JOIN ct_hoadon ct ON ct.idSP = sp.idSP
+                	LEFT JOIN hoadon hd ON hd.idHD = ct.idHD
+                    WHERE YEAR(hd.ngaytao) = @year AND MONTH(hd.ngaytao) = @month 
+                    GROUP BY DAY(hd.ngaytao), sp.idSP, sp.tenSP
+                )
+                SELECT
+                    days.day AS ngay,
+                    sp.tenSP,
+                    COALESCE(so_luong.soluong, 0) AS soluong
+                FROM days
+                CROSS JOIN sanpham sp
+                LEFT JOIN so_luong ON days.day = so_luong.ngay AND so_luong.tenSP = sp.tenSP
+                ORDER BY days.day ASC, sp.tenSP ASC;
+                """;
+			PreparedStatement yearPstmt = link.prepareStatement(setYearSql);
+			PreparedStatement monthPstmt = link.prepareStatement(setMonthSql);
+			pstmt = link.prepareStatement(sql);
+
+			yearPstmt.setInt(1, year);
+			monthPstmt.setInt(1, month);
+
+			yearPstmt.execute();
+			monthPstmt.execute();
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int day = rs.getInt("ngay");
+				String tenSP = rs.getString("tenSP");
+				long soluong = rs.getLong("soluong");
+
+				// Nếu nguyên liệu chưa có trong map → khởi tạo list có số phần tử bằng số ngày trong tháng, mỗi phần tử = 0
+				ingredientMap.putIfAbsent(tenSP, new ArrayList<>(Collections.nCopies(lastDayOfMonth, 0L)));
+
+				// Ghi đè chi phí vào đúng vị trí tháng-1
+				ingredientMap.get(tenSP).set(day - 1, soluong);
+			}
+
+			// Chuyển từng entry thành map đơn để thêm vào list
+			for (Map.Entry<String, List<Long>> entry : ingredientMap.entrySet()) {
+				Map<String, List<Long>> singleMap = new HashMap<>();
+				singleMap.put(entry.getKey(), entry.getValue());
+				result.add(singleMap);
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.close(link);
+		}
 		return result;
 	}
 }

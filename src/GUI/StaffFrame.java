@@ -282,6 +282,10 @@ public class StaffFrame extends JFrame {
     public void toggleBtnInit(JToggleButton btn) {
         btn.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btn.setOpaque(true);
+        btn.setHorizontalAlignment(SwingConstants.LEFT); // Aligns icon+text to left inside btn
+        btn.setHorizontalTextPosition(SwingConstants.RIGHT); // Text to the right of the icon
+        btn.setVerticalTextPosition(SwingConstants.CENTER); // Text centered vertically
+        btn.setIconTextGap(20);
 
         btn.addItemListener(new ItemListener() {
             @Override
