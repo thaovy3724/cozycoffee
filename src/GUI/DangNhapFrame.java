@@ -34,7 +34,7 @@ public class DangNhapFrame extends JFrame {
     private JButton btnLogin;
 
     public DangNhapFrame() {
-        getContentPane().setBackground(new Color(255, 228, 181));
+        getContentPane().setBackground(new Color(254, 243, 226));
         // Cấu hình JFrame
         setTitle("Login");
         setSize(800, 500);
@@ -54,7 +54,7 @@ public class DangNhapFrame extends JFrame {
 
         // Form đăng nhập (JPanel)
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(255, 228, 181));
+        panel.setBackground(new Color(254, 243, 226));
         panel.setBounds(409, 28, 353, 392);
         panel.setLayout(null);
         getContentPane().add(panel);
@@ -86,6 +86,7 @@ public class DangNhapFrame extends JFrame {
         btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnLogin.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnLogin.setForeground(new Color(255, 255, 255, 240));
+        btnLogin.setFocusPainted(false);
         btnLogin.setBackground(new Color(139, 69, 19));
         btnLogin.setBounds(221, 326, 122, 41);
         panel.add(btnLogin);
@@ -93,7 +94,7 @@ public class DangNhapFrame extends JFrame {
         // Tiêu đề "HELLO CAFÉ"
         JLabel lblFormHeader = new JLabel("HELLO CAFÉ");
         lblFormHeader.setIcon(new ImageIcon(DangNhapFrame.class.getResource("/ASSET/Images/logo.png")));
-        lblFormHeader.setBounds(46, 0, 307, 109);
+        lblFormHeader.setBounds(36, 37, 307, 71);
         panel.add(lblFormHeader);
         lblFormHeader.setVerticalAlignment(SwingConstants.TOP);
         lblFormHeader.setAlignmentX(Component.CENTER_ALIGNMENT);

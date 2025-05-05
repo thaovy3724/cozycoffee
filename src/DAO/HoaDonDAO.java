@@ -200,8 +200,7 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
         return result;
 	}
 
-    // Hiếu
-    public List<HoaDonDTO> searchByDate(Date start, Date end) {
+	public List<HoaDonDTO> searchByDate(Date start, Date end) {
         Connection link = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -236,4 +235,117 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
 
         return result;
     }
+
+    //TrongHiuuu 4/5/2025
+	public List<Long> getTongTienByYear(int year) {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<Long> result = new ArrayList<>();
+		try {
+			link = db.connectDB();
+			String sql = """
+            WITH RECURSIVE months(month) AS (
+                SELECT 1
+                UNION ALL SELECT 2
+                UNION ALL SELECT 3
+                UNION ALL SELECT 4
+                UNION ALL SELECT 5
+                UNION ALL SELECT 6
+                UNION ALL SELECT 7
+                UNION ALL SELECT 8
+                UNION ALL SELECT 9
+                UNION ALL SELECT 10
+                UNION ALL SELECT 11
+                UNION ALL SELECT 12
+            ),
+            doanh_thu AS (
+                SELECT
+                    MONTH(hd.ngaytao) AS thang,
+                    COALESCE(SUM(cthd.soluong * cthd.gialucdat), 0) AS doanhthu
+                FROM hoadon hd
+                LEFT JOIN ct_hoadon cthd
+                    ON cthd.idHD = hd.idHD
+                WHERE YEAR(hd.ngaytao) = ?
+                GROUP BY MONTH(hd.ngaytao)
+            )
+            SELECT
+                months.month AS thang,
+                COALESCE(doanh_thu.doanhthu, 0) AS doanhthu
+            FROM months
+            LEFT JOIN doanh_thu
+                ON months.month = doanh_thu.thang
+            ORDER BY months.month ASC;""";
+			pstmt = link.prepareStatement(sql);
+			pstmt.setInt(1, year);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				result.add(rs.getLong("doanhthu"));
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.close(link);
+		}
+
+		return result;
+	}
+
+	public List<Long> getTongTienByMonth(int month, int year) {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<Long> result = new ArrayList<>();
+		try {
+			link = db.connectDB();
+			String setYearSql = "SET @year = ?;";
+			String setMonthSql = "SET @month = ?;";
+			String sql = """
+            WITH RECURSIVE days(day) AS (
+                SELECT 1
+                UNION ALL
+                SELECT day + 1
+                FROM days
+                WHERE day < DAY(LAST_DAY(CONCAT(@year, '-', @month, '-01')))
+            ),
+            doanh_thu AS (
+                SELECT
+                    DATE(hd.ngaytao) AS ngay,
+                    COALESCE(SUM(cthd.soluong * cthd.gialucdat), 0) AS doanhthu
+                FROM hoadon hd
+                LEFT JOIN ct_hoadon cthd
+                    ON cthd.idHD = hd.idHD
+                WHERE YEAR(hd.ngaytao) = @year
+                    AND MONTH(hd.ngaytao) = @month
+                GROUP BY DATE(hd.ngaytao)
+            )
+            SELECT
+                DATE(CONCAT(@year, '-', @month, '-', days.day)) AS ngay,
+                COALESCE(doanh_thu.doanhthu, 0) AS doanhthu
+            FROM days
+            LEFT JOIN doanh_thu
+                ON DATE(CONCAT(@year, '-', @month, '-', days.day)) = doanh_thu.ngay
+            ORDER BY days.day ASC;""";
+			PreparedStatement yearPstmt = link.prepareStatement(setYearSql);
+			PreparedStatement monthPstmt = link.prepareStatement(setMonthSql);
+			pstmt = link.prepareStatement(sql);
+
+			yearPstmt.setInt(1, year);
+			monthPstmt.setInt(1, month);
+
+			yearPstmt.execute();
+			monthPstmt.execute();
+
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				result.add(rs.getLong("doanhthu"));
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.close(link);
+		}
+
+		return result;
+	}
 }

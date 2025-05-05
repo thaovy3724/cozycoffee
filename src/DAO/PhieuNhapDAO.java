@@ -1,8 +1,13 @@
 package DAO;
 
 import java.sql.*;
+import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import DTO.Lo_NguyenLieuDTO;
 import DTO.PhieuNhapDTO;
@@ -204,43 +209,6 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 		return super.delete(col, idPN);
 	}
 
-	// Hiếu
-	public List<PhieuNhapDTO> searchCompleteByDate(Date start, Date end) {
-		Connection link = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		List<PhieuNhapDTO> result = new ArrayList<>();
-		List<Date> params = new ArrayList<>();
-
-		try {
-			StringBuilder sql = new StringBuilder("SELECT * FROM phieunhap WHERE idTT = 2 ");
-			if (start != null) {
-				sql.append("AND (ngaycapnhat >= ?) ");
-				params.add(start);
-			}
-			if (end != null) {
-				sql.append("AND (ngaycapnhat <= ?) ");
-				params.add(end);
-			}
-
-			link = db.connectDB();
-			pstmt = link.prepareStatement(sql.toString());
-			for (int i=0; i<params.size(); i++) {
-				pstmt.setDate(i+1, params.get(i));
-			}
-			rs = pstmt.executeQuery();
-			while (rs.next()) {
-				result.add(mapResultSetToDTO(rs));
-			}
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		} finally {
-			db.close(link);
-		}
-
-		return result;
-	}
-
 	public long getTotalAmount(int idPN) {
 		Connection link = null;
 		PreparedStatement pstmt = null;
@@ -302,6 +270,307 @@ public class PhieuNhapDAO extends BaseDAO<PhieuNhapDTO> {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				result.add(mapResultSetToDTO(rs));
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.close(link);
+		}
+		return result;
+	}
+
+	public List<PhieuNhapDTO> searchCompleteByDate(Date start, Date end) {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<PhieuNhapDTO> result = new ArrayList<>();
+		List<Date> params = new ArrayList<>();
+
+		try {
+			StringBuilder sql = new StringBuilder("SELECT * FROM phieunhap WHERE idTT = 2 ");
+			if (start != null) {
+				sql.append("AND (ngaycapnhat >= ?) ");
+				params.add(start);
+			}
+			if (end != null) {
+				sql.append("AND (ngaycapnhat <= ?) ");
+				params.add(end);
+			}
+
+			link = db.connectDB();
+			pstmt = link.prepareStatement(sql.toString());
+			for (int i=0; i<params.size(); i++) {
+				pstmt.setDate(i+1, params.get(i));
+			}
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				result.add(mapResultSetToDTO(rs));
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.close(link);
+		}
+
+		return result;
+	}
+
+	//TrongHiuuu 4/5/2025
+	public List<Long> getTongTienEachInvoiceByYear(int year) {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<Long> result = new ArrayList<>();
+		try {
+			link = db.connectDB();
+			String sql = """
+            WITH RECURSIVE months(month) AS (
+                SELECT 1
+                UNION ALL SELECT 2
+                UNION ALL SELECT 3
+                UNION ALL SELECT 4
+                UNION ALL SELECT 5
+                UNION ALL SELECT 6
+                UNION ALL SELECT 7
+                UNION ALL SELECT 8
+                UNION ALL SELECT 9
+                UNION ALL SELECT 10
+                UNION ALL SELECT 11
+                UNION ALL SELECT 12
+            ),
+            chi_phi AS (
+                SELECT
+                    MONTH(pn.ngaytao) AS thang,
+                    COALESCE(SUM(lnl.soluongnhap * lnl.dongia), 0) AS chiphi
+                FROM phieunhap pn
+                LEFT JOIN lo_nguyenlieu lnl
+                    ON lnl.idPN = pn.idPN
+                WHERE YEAR(pn.ngaytao) = ?
+                    AND pn.idTT = 2
+                GROUP BY MONTH(pn.ngaytao)
+            )
+            SELECT
+                months.month AS thang,
+                COALESCE(chi_phi.chiphi, 0) AS chiphi
+            FROM months
+            LEFT JOIN chi_phi
+                ON months.month = chi_phi.thang
+            ORDER BY months.month ASC;""";
+			pstmt = link.prepareStatement(sql);
+			pstmt.setInt(1, year);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				result.add(rs.getLong("chiphi"));
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.close(link);
+		}
+
+		return result;
+	}
+
+	public List<Long> getTongTienEachInvoiceByMonth(int month, int year) {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<Long> result = new ArrayList<>();
+		try {
+			link = db.connectDB();
+			String setYearSql = "SET @year = ?;";
+			String setMonthSql = "SET @month = ?;";
+			String sql = """
+            WITH RECURSIVE days(day) AS (
+                SELECT 1
+                UNION ALL
+                SELECT day + 1
+                FROM days
+                WHERE day < DAY(LAST_DAY(CONCAT(@year, '-', @month, '-01')))
+            ),
+            chi_phi AS (
+                SELECT
+                    DATE(pn.ngaytao) AS ngay,
+                    COALESCE(SUM(lnl.soluongnhap * lnl.dongia), 0) AS chiphi
+                FROM phieunhap pn
+                LEFT JOIN lo_nguyenlieu lnl
+                    ON lnl.idPN = pn.idPN
+                WHERE YEAR(pn.ngaytao) = @year
+                    AND MONTH(pn.ngaytao) = @month
+                    AND pn.idTT = 2
+                GROUP BY DATE(pn.ngaytao)
+            )
+            SELECT
+                DATE(CONCAT(@year, '-', @month, '-', days.day)) AS ngay,
+                COALESCE(chi_phi.chiphi, 0) AS chiphi
+            FROM days
+            LEFT JOIN chi_phi
+                ON DATE(CONCAT(@year, '-', @month, '-', days.day)) = chi_phi.ngay
+            ORDER BY days.day ASC;""";
+			PreparedStatement yearPstmt = link.prepareStatement(setYearSql);
+			PreparedStatement monthPstmt = link.prepareStatement(setMonthSql);
+			pstmt = link.prepareStatement(sql);
+
+			yearPstmt.setInt(1, year);
+			monthPstmt.setInt(1, month);
+
+			yearPstmt.execute();
+			monthPstmt.execute();
+
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				result.add(rs.getLong("chiphi"));
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.close(link);
+		}
+
+		return result;
+	}
+
+	public List<Map<String, List<Long>>> getIngredientsCostStatisticByYear(int year) {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<Map<String, List<Long>>> result = new ArrayList<>();
+
+		// Dùng LinkedHashMap để giữ thứ tự thêm vào
+		Map<String, List<Long>> ingredientMap = new LinkedHashMap<>();
+
+		try {
+			link = db.connectDB();
+			String sql = """
+            WITH RECURSIVE months(month) AS (
+                SELECT 1
+                UNION ALL
+                SELECT month + 1 FROM months WHERE month < 12
+            ),
+            chi_phi AS (
+                SELECT
+                    MONTH(pn.ngaytao) AS thang,
+                    nl.tenNL,
+                    COALESCE(SUM(lnl.soluongnhap * lnl.dongia), 0) AS chiphi
+                FROM nguyenlieu nl
+                LEFT JOIN lo_nguyenlieu lnl ON nl.idNL = lnl.idNL
+                LEFT JOIN phieunhap pn ON lnl.idPN = pn.idPN
+                WHERE YEAR(pn.ngaytao) = ? AND pn.idTT = 2
+                GROUP BY MONTH(pn.ngaytao), nl.idNL, nl.tenNL
+            )
+            SELECT
+                months.month AS thang,
+                nl.tenNL,
+                COALESCE(chi_phi.chiphi, 0) AS chiphi
+            FROM months
+            CROSS JOIN nguyenlieu nl
+            LEFT JOIN chi_phi ON months.month = chi_phi.thang AND chi_phi.tenNL = nl.tenNL
+            ORDER BY nl.tenNL ASC, months.month ASC;
+        """;
+
+			pstmt = link.prepareStatement(sql);
+			pstmt.setInt(1, year);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				int month = rs.getInt("thang"); // từ 1 đến 12
+				String tenNL = rs.getString("tenNL");
+				long chiPhi = rs.getLong("chiphi");
+
+				// Nếu nguyên liệu chưa có trong map → khởi tạo list 12 tháng = 0
+				ingredientMap.putIfAbsent(tenNL, new ArrayList<>(Collections.nCopies(12, 0L)));
+
+				// Ghi đè chi phí vào đúng vị trí tháng-1
+				ingredientMap.get(tenNL).set(month - 1, chiPhi);
+			}
+
+			// Chuyển từng entry thành map đơn để thêm vào list
+			for (Map.Entry<String, List<Long>> entry : ingredientMap.entrySet()) {
+				Map<String, List<Long>> singleMap = new HashMap<>();
+				singleMap.put(entry.getKey(), entry.getValue());
+				result.add(singleMap);
+			}
+
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.close(link);
+		}
+
+		return result;
+	}
+
+
+	public List<Map<String, List<Long>>> getIngredientsCostStatisticByMonth(int month, int year) {
+		Connection link = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<Map<String, List<Long>>> result = new ArrayList<>();
+
+		// Dùng LinkedHashMap để giữ thứ tự thêm vào
+		Map<String, List<Long>> ingredientMap = new LinkedHashMap<>();
+		int lastDayOfMonth = YearMonth.of(year, month).lengthOfMonth();
+		int numberOfWeeks = (int) Math.ceil(lastDayOfMonth / 7.0);
+		try {
+			link = db.connectDB();
+			String setYearSql = "SET @year = ?;";
+			String setMonthSql = "SET @month = ?;";
+			String sql = """
+                WITH RECURSIVE days(day) AS (
+                    SELECT 1
+                    UNION ALL
+                    SELECT day + 1
+                    FROM days
+                    WHERE day < DAY(LAST_DAY(CONCAT(@year, '-', @month, '-01')))
+                ),
+                chi_phi AS (
+                    SELECT
+                        DAY(pn.ngaytao) AS ngay,
+                        nl.tenNL,
+                        COALESCE(SUM(lnl.soluongnhap * lnl.dongia), 0) AS chiphi
+                    FROM nguyenlieu nl
+                    LEFT JOIN lo_nguyenlieu lnl ON nl.idNL = lnl.idNL
+                    LEFT JOIN phieunhap pn ON lnl.idPN = pn.idPN
+                    WHERE YEAR(pn.ngaytao) = @year AND MONTH(pn.ngaytao) = @month AND pn.idTT = 2
+                    GROUP BY DAY(pn.ngaytao), nl.idNL, nl.tenNL
+                )
+                SELECT
+                    days.day AS ngay,
+                    nl.tenNL,
+                    COALESCE(chi_phi.chiphi, 0) AS chiphi
+                FROM days
+                CROSS JOIN nguyenlieu nl
+                LEFT JOIN chi_phi ON days.day = chi_phi.ngay AND chi_phi.tenNL = nl.tenNL
+                ORDER BY days.day ASC, nl.tenNL ASC;
+                """;
+			PreparedStatement yearPstmt = link.prepareStatement(setYearSql);
+			PreparedStatement monthPstmt = link.prepareStatement(setMonthSql);
+			pstmt = link.prepareStatement(sql);
+
+			yearPstmt.setInt(1, year);
+			monthPstmt.setInt(1, month);
+
+			yearPstmt.execute();
+			monthPstmt.execute();
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int day = rs.getInt("ngay");
+				String tenNL = rs.getString("tenNL");
+				long chiPhi = rs.getLong("chiphi");
+
+				// Nếu nguyên liệu chưa có trong map → khởi tạo list có số phần tử bằng số ngày trong tháng, mỗi phần tử = 0
+				ingredientMap.putIfAbsent(tenNL, new ArrayList<>(Collections.nCopies(lastDayOfMonth, 0L)));
+
+				// Ghi đè chi phí vào đúng vị trí tháng-1
+				ingredientMap.get(tenNL).set(day - 1, chiPhi);
+			}
+
+			// Chuyển từng entry thành map đơn để thêm vào list
+			for (Map.Entry<String, List<Long>> entry : ingredientMap.entrySet()) {
+				Map<String, List<Long>> singleMap = new HashMap<>();
+				singleMap.put(entry.getKey(), entry.getValue());
+				result.add(singleMap);
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();

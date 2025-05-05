@@ -47,7 +47,7 @@ public class SanPhamBUS {
 			// tiến hành cập nhậtnhật
 			if(sp.getHinhanh() == null) { 	
 				if(!sanPhamDao.updateNotImage(sp))
-					error = "Xảy ra lỗi trong quá trình cập nhật 1";
+					error = "Xảy ra lỗi trong quá trình cập nhật";
 			}else{
 				if(!sanPhamDao.update(sp)) {
 					error = "Xảy ra lỗi trong quá trình cập nhật";

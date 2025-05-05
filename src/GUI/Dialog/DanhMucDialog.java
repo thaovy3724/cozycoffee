@@ -242,7 +242,7 @@ public class DanhMucDialog extends JDialog {
 		cboTrangThai.setSelectedItem(danhMuc.getTrangthai() == 1 ? "Hoạt động" : "Bị khóa");
 		
 		// load tất cả danh mục đang hoạt động và danh mục cha của danh mục được chọn (nếu có) và trừ danh mục được chọn
-		List<DanhMucDTO> listDMCha = danhMucBus.getAllActiveF0Edit(danhMuc.getIdDMCha()); // F0
+		List<DanhMucDTO> listDMCha = danhMucBus.getAllActiveF0Except(danhMuc.getIdDMCha()); // F0
 		loadComboBoxDMCha(listDMCha);
 		
 		// set default
@@ -303,7 +303,7 @@ public class DanhMucDialog extends JDialog {
 			}
 			
 			// show message
-			if(error != "") {
+			if(!error.isEmpty()) {
 				// fail
 				JOptionPane.showMessageDialog(this, error);
 			}
@@ -313,6 +313,7 @@ public class DanhMucDialog extends JDialog {
 					JOptionPane.showMessageDialog(this, "Thêm thành công ");
 				else 
 					JOptionPane.showMessageDialog(this, "Cập nhật thành công ");
+				dispose();
 			}
 		}
 	}

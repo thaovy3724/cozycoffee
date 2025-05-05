@@ -63,8 +63,8 @@ public class StaffFrame extends JFrame {
     public void init() {
         setBackground(new Color(255, 255, 255));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(1200, 700));
-        setMinimumSize(new Dimension(800, 400));
+        // setPreferredSize(new Dimension(1200, 700));
+        // setMinimumSize(new Dimension(800, 400));
         getContentPane().setLayout(new BorderLayout());
                 
         JPanel centerPanel = new JPanel(new BorderLayout());
@@ -112,7 +112,7 @@ public class StaffFrame extends JFrame {
         separator.setForeground(new Color(200, 200, 200));
         menuPanel.add(separator, gbc);
 
-        // Button: Hóa đơn
+        // Button: Bán hàng
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 15, 5, 15); // Consistent button spacing
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -123,6 +123,7 @@ public class StaffFrame extends JFrame {
         btnBanHang.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBanHang.setFont(new Font("Segoe UI", Font.BOLD, 15));
         btnBanHang.setBackground(new Color (250, 250, 210));
+        btnBanHang.setFocusPainted(false);
         btnBanHang.setForeground(new Color(34, 40, 49));
         btnBanHang.setActionCommand("banhang");
         btnBanHang.setPreferredSize(new Dimension(210, 50));
@@ -144,6 +145,7 @@ public class StaffFrame extends JFrame {
         btnHoaDon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnHoaDon.setFont(new Font("Segoe UI", Font.BOLD, 15));
         btnHoaDon.setBackground(new Color(250, 250, 210)); // Light neutral background
+        btnHoaDon.setFocusPainted(false);
         btnHoaDon.setForeground(new Color(34, 40, 49)); // Dark text for contrast
         btnHoaDon.setActionCommand("hoadon");
         btnHoaDon.setPreferredSize(new Dimension(210, 50));
@@ -167,6 +169,7 @@ public class StaffFrame extends JFrame {
         btnCongThuc.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnCongThuc.setFont(new Font("Segoe UI", Font.BOLD, 15));
         btnCongThuc.setBackground(new Color(250, 250, 210));
+        btnCongThuc.setFocusPainted(false);
         btnCongThuc.setForeground(new Color(34, 40, 49));
         btnCongThuc.setActionCommand("congthuc");
         btnCongThuc.setPreferredSize(new Dimension(210, 50));

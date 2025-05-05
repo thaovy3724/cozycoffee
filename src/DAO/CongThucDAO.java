@@ -129,10 +129,13 @@ public class CongThucDAO extends BaseDAO<CongThucDTO> {
         ResultSet rs = null;
         List<CongThucDTO> result = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM " + table + " WHERE idCT LIKE ? ";
+            String sql = "SELECT * FROM congthuc ct" +
+            " INNER JOIN sanpham sp ON ct.idSP = sp.idSP"+
+            " WHERE tenSP LIKE ? OR idCT LIKE ?";
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);
             pstmt.setString(1, "%" + keyWord + "%");
+            pstmt.setString(2, "%" + keyWord + "%");
             rs = pstmt.executeQuery();
             while (rs.next()) result.add(mapResultSetToDTO(rs));
         } catch (ClassNotFoundException | SQLException e) {

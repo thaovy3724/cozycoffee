@@ -430,7 +430,7 @@ public class SanPhamDialog extends JDialog {
 			}
 			
 			// show message
-			if(error != "") {
+			if(!error.isEmpty()) {
 				// fail
 				JOptionPane.showMessageDialog(this, error, "Lỗi", JOptionPane.ERROR_MESSAGE);
 			}
@@ -440,6 +440,7 @@ public class SanPhamDialog extends JDialog {
 					JOptionPane.showMessageDialog(this, "Thêm thành công ");
 				else 
 					JOptionPane.showMessageDialog(this, "Cập nhật thành công ");
+				dispose();
 			}
 		}
 	}
@@ -463,7 +464,7 @@ public class SanPhamDialog extends JDialog {
 	            ImageIcon icon = new ImageIcon(img);
 	            lblImage.setIcon(icon);
 	        }
-	        else uploadFile = null;
+	        // else uploadFile = null;
         }catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, "Lỗi khi tải ảnh: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }

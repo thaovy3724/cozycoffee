@@ -364,7 +364,7 @@ public class NhaCungCapDialog extends JDialog {
 			}
 			
 			// show message
-			if(error != "") {
+			if(!error.isEmpty()) {
 				// fail
 				JOptionPane.showMessageDialog(this, error);
 			}
@@ -374,6 +374,7 @@ public class NhaCungCapDialog extends JDialog {
 					JOptionPane.showMessageDialog(this, "Thêm thành công ");
 				else 
 					JOptionPane.showMessageDialog(this, "Cập nhật thành công ");
+				dispose();
 			}
 		}
 	}

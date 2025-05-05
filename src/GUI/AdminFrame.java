@@ -112,6 +112,7 @@ public class AdminFrame extends JFrame {
         JToggleButton btnThongKe = new JToggleButton("Thống kê");
         btnThongKe.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnThongKe.setBackground(new Color(250, 250, 210));
+        btnThongKe.setFocusPainted(false);
         ImageHelper iconThongKe = new ImageHelper(30, 30, AdminFrame.class.getResource("/ASSET/Images/1.png"));
         btnThongKe.setIcon(iconThongKe.getScaledImage());
         btnThongKe.setActionCommand("thongke");
@@ -136,6 +137,7 @@ public class AdminFrame extends JFrame {
         btnHoaDon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnHoaDon.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnHoaDon.setBackground(new Color(250, 250, 210));
+        btnHoaDon.setFocusPainted(false);
         btnHoaDon.setActionCommand("hoadon");
         btnHoaDon.setPreferredSize(new Dimension(200, 50));
         ImageHelper iconHoaDon = new ImageHelper(30, 30, AdminFrame.class.getResource("/ASSET/Images/2.png"));
@@ -154,6 +156,7 @@ public class AdminFrame extends JFrame {
         JToggleButton btnSanPham = new JToggleButton("Sản phẩm");
         btnSanPham.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnSanPham.setBackground(new Color(250, 250, 210));
+        btnSanPham.setFocusPainted(false);
         btnSanPham.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnSanPham.setActionCommand("sanpham");
         btnSanPham.setPreferredSize(new Dimension(200, 50));
@@ -172,6 +175,7 @@ public class AdminFrame extends JFrame {
         JToggleButton btnNguyenLieu = new JToggleButton("Nguyên liệu");
         btnNguyenLieu.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnNguyenLieu.setBackground(new Color(250, 250, 210));
+        btnNguyenLieu.setFocusPainted(false);
         btnNguyenLieu.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnNguyenLieu.setActionCommand("nguyenlieu");
         btnNguyenLieu.setPreferredSize(new Dimension(200, 50));
@@ -191,6 +195,7 @@ public class AdminFrame extends JFrame {
         JToggleButton btnCongThuc = new JToggleButton("Công thức");
         btnCongThuc.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnCongThuc.setBackground(new Color(250, 250, 210));
+        btnCongThuc.setFocusPainted(false);
         btnCongThuc.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnCongThuc.setActionCommand("congthuc");
         btnCongThuc.setPreferredSize(new Dimension(200, 50));
@@ -210,6 +215,7 @@ public class AdminFrame extends JFrame {
         JToggleButton btnDanhMuc = new JToggleButton("Danh mục");
         btnDanhMuc.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnDanhMuc.setBackground(new Color(250, 250, 210));
+        btnDanhMuc.setFocusPainted(false);
         btnDanhMuc.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnDanhMuc.setActionCommand("danhmuc");
         btnDanhMuc.setPreferredSize(new Dimension(200, 50));
@@ -229,6 +235,7 @@ public class AdminFrame extends JFrame {
         JToggleButton btnNhaCungCap = new JToggleButton("Nhà cung cấp");
         btnNhaCungCap.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnNhaCungCap.setBackground(new Color(250, 250, 210));
+        btnNhaCungCap.setFocusPainted(false);
         btnNhaCungCap.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnNhaCungCap.setActionCommand("nhacungcap");
         btnNhaCungCap.setPreferredSize(new Dimension(200, 50));
@@ -248,6 +255,7 @@ public class AdminFrame extends JFrame {
         JToggleButton btnPhieuNhap = new JToggleButton("Phiếu nhập");
         btnPhieuNhap.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnPhieuNhap.setBackground(new Color(250, 250, 210));
+        btnPhieuNhap.setFocusPainted(false);
         btnPhieuNhap.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnPhieuNhap.setActionCommand("phieunhap");
         btnPhieuNhap.setPreferredSize(new Dimension(200, 50));
@@ -267,6 +275,7 @@ public class AdminFrame extends JFrame {
         JToggleButton btnTaiKhoan = new JToggleButton("Tài khoản");
         btnTaiKhoan.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnTaiKhoan.setBackground(new Color(250, 250, 210));
+        btnTaiKhoan.setFocusPainted(false);
         btnTaiKhoan.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnTaiKhoan.setActionCommand("taikhoan");
         btnTaiKhoan.setPreferredSize(new Dimension(200, 50));

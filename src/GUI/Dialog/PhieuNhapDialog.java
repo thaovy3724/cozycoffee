@@ -850,7 +850,7 @@ public class PhieuNhapDialog extends JDialog {
             int beginIndex = actionCommand.indexOf('_') + 1;
             LocalDate today = LocalDate.now();
             // FIXME: sửa lại sau khi ráp code (đã đăng nhập)
-            int idTK = currentUser == null ? 1 : currentUser.getIdTK();
+            int idTK = currentUser.getIdTK();
             try {
                 if (beginIndex == 0) { // Thêm một phiếu nhập mới
                     PhieuNhapDTO pn = new PhieuNhapDTO(today, today, idTK, idNCC, trangthai);

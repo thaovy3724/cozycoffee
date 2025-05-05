@@ -159,7 +159,7 @@ public class DanhMucDAO extends BaseDAO<DanhMucDTO>{
         return isExist;
 	}
 	
-	public List<DanhMucDTO> getAllActiveF0Edit(int idDMCha){
+	public List<DanhMucDTO> getAllActiveF0Except(int idDMCha){
 		Connection link = null;
 		PreparedStatement pstmt = null;
         ResultSet rs = null;

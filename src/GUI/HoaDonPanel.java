@@ -162,6 +162,7 @@ public class HoaDonPanel extends JPanel {
 		container.add(hoaDonScrollPane);
 		
 		hoaDonTable = new JTable();
+		hoaDonTable.setModel(hoaDonTableModel);
 		hoaDonTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -206,6 +207,7 @@ public class HoaDonPanel extends JPanel {
 		ctHoaDonPanel.add(ctHoaDonScrollPane);
 		
 		ctHoaDonTable = new JTable();
+		ctHoaDonTable.setModel(ctHoaDonTableModel);
 		ctHoaDonScrollPane.setViewportView(ctHoaDonTable);
 	}
 	
@@ -223,7 +225,6 @@ public class HoaDonPanel extends JPanel {
 			};
 			hoaDonTableModel.addRow(row);
 		}
-	    hoaDonTable.setModel(hoaDonTableModel);
 	}
 
 	private void loadCtHoaDon(int idHD) {
@@ -243,7 +244,6 @@ public class HoaDonPanel extends JPanel {
 			};
 			ctHoaDonTableModel.addRow(row);
 		}
-	    ctHoaDonTable.setModel(ctHoaDonTableModel);
 	}
 
 	private void search() {

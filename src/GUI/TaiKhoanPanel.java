@@ -41,15 +41,6 @@ public class TaiKhoanPanel extends JPanel {
 		container = new JPanel();
 		add(container, BorderLayout.CENTER);
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-		
-		tableModel = new DefaultTableModel(
-		   new String[] {"ID", "Tên tài khoản", "Email", "Trạng thái"}, 0)
-		{                                                // (2) Mở đầu khai báo lớp vô danh (anonymous class)
-	        @Override
-	        public boolean isCellEditable(int row, int column) {
-	            return false; // Không cho phép sửa ô nào cả
-	        }                                                   // (3) Đóng method isCellEditable
-	    };   
 	    	    
 		// actionBox init
 		actionBoxInit();
@@ -128,10 +119,19 @@ public class TaiKhoanPanel extends JPanel {
 	}
 	
 	private void tableInit() {
+		tableModel = new DefaultTableModel(
+		   new String[] {"ID", "Tên tài khoản", "Email", "Trạng thái"}, 0)
+		{                                                // (2) Mở đầu khai báo lớp vô danh (anonymous class)
+	        @Override
+	        public boolean isCellEditable(int row, int column) {
+	            return false; // Không cho phép sửa ô nào cả
+	        }                                                   // (3) Đóng method isCellEditable
+	    };   
 		JScrollPane tablePane = new JScrollPane();
 		container.add(tablePane);
 		
 		table = new JTable();
+		table.setModel(tableModel);
 		tablePane.setViewportView(table);
 		tablePane.getViewport().setBackground(new Color(255, 240, 220));
 		
@@ -152,7 +152,6 @@ public class TaiKhoanPanel extends JPanel {
 		        };
 		        tableModel.addRow(row);
 		    }
-	    table.setModel(tableModel);
 	}
 	
 	private void showEdit() {

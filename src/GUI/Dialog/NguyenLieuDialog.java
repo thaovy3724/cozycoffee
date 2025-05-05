@@ -206,7 +206,7 @@ public class NguyenLieuDialog extends JDialog {
         boolean isError = false;
         
         // tenNL
-        if(txtTenNL.getText().trim().equals("")) {
+        if(txtTenNL.getText().trim().isEmpty()) {
             errTenNL.setText("Tên không được để trống");
             isError = true;
         }
@@ -239,7 +239,7 @@ public class NguyenLieuDialog extends JDialog {
             }
             
             // show message
-            if(error != "") {
+            if(!error.isEmpty()) {
                 // fail
                 JOptionPane.showMessageDialog(this, error);
             }

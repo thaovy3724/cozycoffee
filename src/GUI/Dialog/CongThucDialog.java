@@ -39,8 +39,8 @@ public class CongThucDialog extends JDialog {
     private List<NguyenLieuDTO> nguyenLieuList;
 
     public CongThucDialog() {
-        setSize(750, 550);
-        setMinimumSize(new Dimension(750, 550));
+        // setSize(750, 550);
+        // setMinimumSize(new Dimension(750, 550));
         getContentPane().setLayout(new BorderLayout());
 
         contentPanel.setBackground(new Color(255, 255, 255));
@@ -68,6 +68,7 @@ public class CongThucDialog extends JDialog {
         textFieldInit();
         tableInit();
         actionInit();
+        pack();
 
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -438,11 +439,6 @@ public class CongThucDialog extends JDialog {
         loadComboBoxSP(listSP);
 
         tableModel.setRowCount(0);
-        // if (nguyenLieuList != null && !nguyenLieuList.isEmpty()) {
-        //     tableModel.addRow(new Object[] { nguyenLieuList.get(0), "", "Xóa" });
-        // } else {
-        //     tableModel.addRow(new Object[] { new NguyenLieuDTO(0, "---Chọn nguyên liệu---"), "", "Xóa" });
-        // }
 
         setTitle("Thêm công thức");
         lblTitle.setText("Thêm công thức");
@@ -470,8 +466,6 @@ public class CongThucDialog extends JDialog {
             }
         }
 
-        // tableModel.setColumnIdentifiers(new Object[] { "Nguyên liệu", "Số lượng", "Đơn vị", "Thao tác" });
-        // tableModel.setRowCount(0);
         List<CT_CongThucDTO> chiTietList = ctCongThucBus.getChiTietCongThuc(idCT);
         for (CT_CongThucDTO ctDetail : chiTietList) {
             NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(ctDetail.getIdNL());
@@ -479,12 +473,6 @@ public class CongThucDialog extends JDialog {
                 tableModel.addRow(new Object[] { nl, ctDetail.getSoluong(), nl.getDonvi(), "Xóa" });
             }
         }
-        
-        // if (tableModel.getRowCount() == 0 && nguyenLieuList != null && !nguyenLieuList.isEmpty()) {
-        //     tableModel.addRow(new Object[] { nguyenLieuList.get(0), "", "Xóa" });
-        // } else if (tableModel.getRowCount() == 0) {
-        //     tableModel.addRow(new Object[] { new NguyenLieuDTO(0, "---Chọn nguyên liệu---"), "", "Xóa" });
-        // }
 
         setTitle("Sửa công thức");
         lblTitle.setText("Sửa công thức");
@@ -505,18 +493,6 @@ public class CongThucDialog extends JDialog {
         txtMoTa.setEditable(false);
         btnAdd.setVisible(false);
         btnSubmit.setVisible(false);
-        // btnCancel.setText("Đóng");
-        // btnCancel.setBackground(new Color(117, 117, 117));
-        // btnCancel.addMouseListener(new MouseAdapter() {
-        //     @Override
-        //     public void mouseEntered(MouseEvent e) {
-        //         btnCancel.setBackground(new Color(158, 158, 158));
-        //     }
-        //     @Override
-        //     public void mouseExited(MouseEvent e) {
-        //         btnCancel.setBackground(new Color(117, 117, 117));
-        //     }
-        // });
 
         txtMoTa.setText(ct.getMota());
         List<SanPhamDTO> listSP = sanPhamBus.getAll();
@@ -543,9 +519,9 @@ public class CongThucDialog extends JDialog {
         tableNguyenLieu.getColumnModel().getColumn(1).setPreferredWidth(100);
         tableNguyenLieu.getColumnModel().getColumn(2).setPreferredWidth(80);
 
-        setVisible(true);
         setTitle("Chi tiết công thức");
         lblTitle.setText("Chi tiết công thức");
+        setVisible(true);
     }
 
     private boolean isError() {

@@ -151,6 +151,7 @@ public class CongThucPanel extends JPanel {
         tablePane.getViewport().setBackground(new Color(255, 240, 220));
 
         table = new JTable();
+        table.setModel(tableModel);
         table.setGridColor(new Color(0, 0, 0));
         tablePane.setViewportView(table);
 
@@ -171,7 +172,6 @@ public class CongThucPanel extends JPanel {
                 };
                 tableModel.addRow(row);
             }
-        table.setModel(tableModel);
     }
 
     private void showEdit() {

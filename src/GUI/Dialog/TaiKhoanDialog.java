@@ -120,12 +120,6 @@ public class TaiKhoanDialog extends JDialog {
         btnSubmit.setActionCommand("add");
         cboTrangThai.setEnabled(false);
         cboTrangThai.setSelectedItem("Hoạt động");
-        // txtMatKhau.setVisible(true);
-        // txtMatKhauConfirm.setVisible(true);
-        // clearFields();
-        // contentPanel.revalidate();
-        // contentPanel.repaint();
-        // setLocationRelativeTo(null); // Căn giữa khi hiển thị
         setVisible(true);
     }
 
@@ -154,25 +148,8 @@ public class TaiKhoanDialog extends JDialog {
         cboTrangThai.setEnabled(true);
 		txtMatKhau.setEnabled(false);
 		txtMatKhauConfirm.setEnabled(false);
-        // txtMatKhau.setVisible(true);
-        // txtMatKhauConfirm.setVisible(true);
-        // clearFields();
-        // contentPanel.revalidate();
-        // setLocationRelativeTo(null); // Căn giữa khi hiển thị
-        // contentPanel.repaint();
         setVisible(true);
     }
-
-    // private void clearFields() {
-    //     if (!isEditMode) {
-    //         txtMatKhau.setText("");
-    //         txtMatKhauConfirm.setText("");
-    //     }
-    //     txtTenTK.setText("");
-    //     txtEmail.setText("");
-    //     cboQuyen.setSelectedIndex(0);
-    //     cboTrangThai.setSelectedIndex(0);
-    // }
 
     private boolean isError() {
         if (txtTenTK.getText().trim().isEmpty()) {

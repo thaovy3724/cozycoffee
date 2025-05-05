@@ -131,6 +131,7 @@ public class NhaCungCapPanel extends JPanel {
 		container.add(tablePane);
 		
 		table = new JTable();
+		table.setModel(tableModel);
 		tablePane.setViewportView(table);
 		tablePane.getViewport().setBackground(new Color(255, 240, 220));
 
@@ -152,7 +153,6 @@ public class NhaCungCapPanel extends JPanel {
 		        };
 		        tableModel.addRow(row);
 		    }
-	    table.setModel(tableModel);
 	}
 	
 	private void showEdit() {

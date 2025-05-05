@@ -1,35 +1,5 @@
 package GUI;
 
-import GUI.Dialog.ThongKeNhapKhoDialog;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
-
-import BUS.CT_HoaDonBUS;
-import BUS.HoaDonBUS;
-import BUS.Lo_NguyenLieuBUS;
-import BUS.NguyenLieuBUS;
-import BUS.PhieuNhapBUS;
-import BUS.SanPhamBUS;
-import DTO.CT_HoaDonDTO;
-import DTO.ComboItem;
-import DTO.HoaDonDTO;
-import DTO.Lo_NguyenLieuDTO;
-import DTO.NguyenLieuDTO;
-import DTO.PhieuNhapDTO;
-import DTO.SanPhamDTO;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -50,27 +20,61 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+
+import BUS.*;
+import DTO.CT_HoaDonDTO;
+import DTO.ComboItem;
+import DTO.HoaDonDTO;
+import DTO.Lo_NguyenLieuDTO;
+import DTO.NguyenLieuDTO;
+import DTO.PhieuNhapDTO;
+import DTO.SanPhamDTO;
+import GUI.Dialog.ThongKeNhapKhoDialog;
+import GUI.ThongKe.ThongKeLoiNhuanTheoNam;
+import GUI.ThongKe.ThongKeLoiNhuanTheoThang;
+
 public class ThongKePanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private HoaDonBUS hoaDonBus = new HoaDonBUS();
-	private CT_HoaDonBUS ct_HoaDonBus = new CT_HoaDonBUS();
-	private PhieuNhapBUS phieuNhapBus = new PhieuNhapBUS();
-	private Lo_NguyenLieuBUS lo_NguyenLieuBus = new Lo_NguyenLieuBUS();
-	private NguyenLieuBUS nguyenLieuBus = new NguyenLieuBUS();
-	private SanPhamBUS sanPhamBus = new SanPhamBUS();
+	private final HoaDonBUS hoaDonBus = new HoaDonBUS();
+	private final CT_HoaDonBUS ct_HoaDonBus = new CT_HoaDonBUS();
+	private final PhieuNhapBUS phieuNhapBus = new PhieuNhapBUS();
+	private final ThongKeBUS thongKeBUS = new ThongKeBUS();
+	private final Lo_NguyenLieuBUS lo_NguyenLieuBus = new Lo_NguyenLieuBUS();
+	private final NguyenLieuBUS nguyenLieuBus = new NguyenLieuBUS();
+	private final SanPhamBUS sanPhamBus = new SanPhamBUS();
 	private JTable tableThongKe;
-	private JLabel lblStatics, lblMonth;
-	private JComboBox<ComboItem> comboYear, comboMonth, comboFilterOption;
-	private JButton btnXemLoiNhuan, btnXemNhapKho, btnXemSanPham;
+	private JLabel lblStatics;
+    private JLabel lblMonth;
+	private JComboBox<ComboItem> comboYear;
+    private JComboBox<ComboItem> comboMonth;
+    private JComboBox<ComboItem> comboFilterOption;
+	private JButton btnXemLoiNhuan;
+    private JButton btnXemNhapKho;
+    private JButton btnXemSanPham;
+	private JPanel bodyPanel;
 
 	private List<String> thongKeJTableHeaders;
 	private DefaultTableModel thongKeJTableModel;
 	private JScrollPane tableThongKeScrollPane;
 	private Map<String, Integer> tenNLToIdMap = new HashMap<>(); // Map để lưu tenNL -> idNL
-
+	
 	private int clickedRow = -1;
 	private int clickedColumn = -1;
+
+	// HUONGNGUYEN 4/5
+	private JScrollPane chartPanel;
 
 	/**
 	 * Create the panel.
@@ -86,7 +90,7 @@ public class ThongKePanel extends JPanel {
 		add(lblStatics, BorderLayout.NORTH);
 
 		// BodyPanel (CENTER) with BoxLayout Y_AXIS
-		JPanel bodyPanel = new JPanel();
+		bodyPanel = new JPanel();
 		bodyPanel.setLayout(new BoxLayout(bodyPanel, BoxLayout.Y_AXIS));
 		bodyPanel.setBackground(new Color(255, 240, 220));
 		add(bodyPanel, BorderLayout.CENTER);
@@ -162,8 +166,11 @@ public class ThongKePanel extends JPanel {
 		tablePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		bodyPanel.add(tablePanel);
 
+		tableThongKe = new JTable();
+
 		// Initialize table scroll pane (will be populated dynamically)
 		tableThongKeScrollPane = new JScrollPane();
+		tableThongKeScrollPane.setViewportView(tableThongKe);
 		tableThongKeScrollPane.getViewport().setBackground(new Color(255, 240, 220));
 		tablePanel.add(tableThongKeScrollPane, BorderLayout.CENTER);
 
@@ -175,20 +182,33 @@ public class ThongKePanel extends JPanel {
 		setupComboFilterOption();
 		setupComboYear();
 
+		// Setup tenNL - idNL map (để hiển thị dialog thống kê nhập kho)
+			for (NguyenLieuDTO nl : nguyenLieuBus.getAll()) {
+				tenNLToIdMap.put(nl.getTenNL(), nl.getIdNL());
+			}
+
 		// Gán sự kiện
 		setupEventListeners();
-		
+		setupTableCellRenderer();
+		setupTableMouseListener();
+	}
+
+	private void chartInit() {
+		// HUONGNGUYEN 4/5
+		chartPanel = new JScrollPane();
+		chartPanel.getViewport().setBackground(new Color(255, 240, 220));
+		bodyPanel.add(chartPanel);
 	}
 
 	// ===Các hàm setUp cho GUI===
 	private void setupComboFilterOption() {
-		comboFilterOption.removeAllItems();
+		//comboFilterOption.removeAllItems();
 		comboFilterOption.addItem(new ComboItem(0, "--- Năm ---"));
-		comboFilterOption.addItem(new ComboItem(1, "--- Tháng"));
+		comboFilterOption.addItem(new ComboItem(1, "--- Tháng ---"));
 	}
 
 	private void setupComboYear() {
-		comboYear.removeAllItems();
+		//comboYear.removeAllItems();
 		comboYear.addItem(new ComboItem(0, "--- Chọn năm ---"));
 		int startYear = 2025;
 		for (int i = startYear; i <= LocalDate.now().getYear(); i++) {
@@ -220,40 +240,64 @@ public class ThongKePanel extends JPanel {
 	private void setupEventListeners() {
 		comboFilterOption.addActionListener(
 				e -> {
-					setupComboYear();
 					ComboItem option = (ComboItem) comboFilterOption.getSelectedItem();
-					if (option == null) return;
-					lblMonth.setVisible(option.getKey() == 1);
-					comboMonth.setVisible(option.getKey() == 1);
+					if (option.getValue().equals("--- Tháng ---")) {
+						lblMonth.setVisible(true);
+						setupComboMonth();
+						comboMonth.setVisible(true);
+					} else {
+						lblMonth.setVisible(false);
+						comboMonth.setVisible(false);
+					}
 				}
 		);
 
 		comboYear.addActionListener(e -> {
 			ComboItem selectedFilterOption = (ComboItem) comboFilterOption.getSelectedItem();
 			ComboItem selectedYear = (ComboItem) comboYear.getSelectedItem();
-			if (selectedFilterOption == null || selectedYear == null) return;
-			if (selectedFilterOption.getKey() == 1 && selectedYear.getKey() > 0) {
+			if (selectedFilterOption.getValue().equals("--- Tháng ---") && selectedYear.getKey() > 0) {
 				setupComboMonth();
 			}
 		});
 
 		btnXemLoiNhuan.addActionListener(
 				e -> {
-					loadLoiNhuanTable();
-					setupTableCellRenderer();
+					if (!isError()) {
+						if(chartPanel != null){
+							bodyPanel.remove(chartPanel);
+							bodyPanel.revalidate();
+							bodyPanel.repaint();
+						}
+						chartInit();
+						loadThongKe();
+						loadProfitTable();
+					}
 				}
 		);
 
 		btnXemNhapKho.addActionListener(
 				e -> {
-					loadNhapKhoTable();
-					setupTableMouseListener();
+					if (!isError()) {
+						if(chartPanel != null){
+							bodyPanel.remove(chartPanel);
+							bodyPanel.revalidate();
+							bodyPanel.repaint();
+						}
+						loadNhapKhoTable();
+					}
 				}
 		);
 
 		btnXemSanPham.addActionListener(
 				e -> {
-					loadSanPhamTable();
+					if (!isError()) {
+						if(chartPanel != null){
+							bodyPanel.remove(chartPanel);
+							bodyPanel.revalidate();
+							bodyPanel.repaint();
+						}
+						loadSanPhamTable();
+					}
 				}
 		);
 	}
@@ -278,8 +322,7 @@ public class ThongKePanel extends JPanel {
 		return weekRanges;
 	}
 
-	private void setupThongKeByMonthTableHeaders(int year, int month) {
-		if (tableThongKe != null) tableThongKe.removeAll();
+	private void setupStatisticByMonth(int month, int year) {
 		thongKeJTableHeaders = new ArrayList<>();
 		thongKeJTableHeaders.add("");
 		LocalDate startOfMonth = LocalDate.of(year, month, 1);
@@ -294,15 +337,12 @@ public class ThongKePanel extends JPanel {
 		}
 		thongKeJTableHeaders.add("Tổng cộng");
 		thongKeJTableHeaders.toArray(new String[0]);
-		thongKeJTableModel = new DefaultTableModel(new Object[][]{}, thongKeJTableHeaders.toArray());
-		tableThongKe = new JTable(thongKeJTableModel);
-		tableThongKe.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		tableThongKe.setEnabled(true);
+		thongKeJTableModel = new DefaultTableModel(thongKeJTableHeaders.toArray(),0);
+		tableThongKe.setModel(thongKeJTableModel);
 		tableThongKe.setDefaultEditor(Object.class, null);
 	}
 
-	private void setupThongKeByYearTableHeaders(int year) {
-		if (tableThongKe != null) tableThongKe.removeAll();
+	private void setupStatisticByYear(int year) {
 		thongKeJTableHeaders = new ArrayList<>();
 		thongKeJTableHeaders.add("");
 		for (int i = 1; i <= 12; i++) {
@@ -310,17 +350,9 @@ public class ThongKePanel extends JPanel {
 		}
 		thongKeJTableHeaders.add("Tổng cộng");
 		thongKeJTableHeaders.toArray(new String[0]);
-		thongKeJTableModel = new DefaultTableModel(new Object[][]{}, thongKeJTableHeaders.toArray());
-		tableThongKe = new JTable(thongKeJTableModel);
-		tableThongKe.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		tableThongKe.setEnabled(true);
+		thongKeJTableModel = new DefaultTableModel(thongKeJTableHeaders.toArray(), 0);
+		tableThongKe.setModel(thongKeJTableModel);
 		tableThongKe.setDefaultEditor(Object.class, null);
-	}
-
-	private void setupTableScrollPane() {
-		tableThongKeScrollPane.setViewportView(tableThongKe);
-		tableThongKeScrollPane.getViewport().setBackground(new Color(255, 240, 220));
-		thongKeJTableModel.setRowCount(0);
 	}
 
 	class CustomTableCellRenderer extends DefaultTableCellRenderer {
@@ -360,113 +392,126 @@ public class ThongKePanel extends JPanel {
 	}
 
 	private void setupTableCellRenderer() {
-		tableThongKe.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
+		if (tableThongKe != null) {
+			tableThongKe.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
+		}
 	}
 
 	private void setupTableMouseListener() {
-		tableThongKe.addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				Point p = e.getPoint();
-				int row = tableThongKe.rowAtPoint(p);
-				int column = tableThongKe.columnAtPoint(p);
-				Object cellValue = tableThongKe.getValueAt(row, column);
-				if (row >= 0 && row < tableThongKe.getRowCount() - 1 &&  column > 0 && Integer.valueOf(cellValue.toString().replaceAll("[^\\d]", "")) > 0 && cellValue != null) {
-					tableThongKe.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				} else {
-					tableThongKe.setCursor(Cursor.getDefaultCursor());
-				}
-			}
-		});
-
-		tableThongKe.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Point p = e.getPoint();
-				int row = tableThongKe.rowAtPoint(p);
-				int column = tableThongKe.columnAtPoint(p);
-				Object cell = null;
-				if (row >= 0 && column >= 0) {
-					cell = tableThongKe.getValueAt(row, column);
-				}
-				int cellValue = Integer.valueOf(cell.toString().replaceAll("[^\\d]", ""));
-				if (e.getClickCount() == 1) {
-					if (row >= 0 && column > 0 && row < tableThongKe.getRowCount() - 1 && cell != null && cellValue > 0) {
-						if (clickedRow != row || clickedColumn != column) {
-							clickedRow = row;
-							clickedColumn = column;
-						}
+		 if (tableThongKe != null) {
+			tableThongKe.addMouseMotionListener(new MouseMotionAdapter() {
+				@Override
+				public void mouseMoved(MouseEvent e) {
+					Point p = e.getPoint();
+					int row = tableThongKe.rowAtPoint(p);
+					int column = tableThongKe.columnAtPoint(p);
+					Object cellValue = tableThongKe.getValueAt(row, column);
+					if (row >= 0 && row < tableThongKe.getRowCount() - 1 &&  column > 0 && Integer.valueOf(cellValue.toString().replaceAll("[^\\d]", "")) > 0 && cellValue != null) {
 						tableThongKe.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 					} else {
-						if (clickedRow != -1 || clickedColumn != -1) {
-							clickedRow = -1;
-							clickedColumn = -1;
-						}
 						tableThongKe.setCursor(Cursor.getDefaultCursor());
 					}
 				}
-				if (e.getClickCount() == 2) {
-					if (row >= 0 && column > 0 && row < tableThongKe.getRowCount() - 1 && cell != null && cellValue > 0) {
-						ComboItem selectedFilterOptionItem = (ComboItem) comboFilterOption.getSelectedItem();
-						int filterOption = selectedFilterOptionItem.getKey();
-						ComboItem selectedYearItem = (ComboItem) comboYear.getSelectedItem();
-						int year = selectedYearItem.getKey();
+			});
 
-						if (filterOption == 0) {
-							LocalDate start;
-							LocalDate end;
-							if (column == tableThongKe.getColumnCount() - 1) {
-								start = LocalDate.of(year, 1, 1);
-								end = LocalDate.of(year, 12, 31);
+			tableThongKe.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					Point p = e.getPoint();
+					int row = tableThongKe.rowAtPoint(p);
+					int column = tableThongKe.columnAtPoint(p);
+					Object cell = null;
+					if (row >= 0 && column > 0) {
+						cell = tableThongKe.getValueAt(row, column);
+					}
+					if (cell != null) {
+						int cellValue = Integer.valueOf(cell.toString().replaceAll("[^\\d]", ""));
+						if (e.getClickCount() == 1) {
+							if (row >= 0 && column > 0 && row < tableThongKe.getRowCount() - 1 && cell != null && cellValue > 0) {
+								if (clickedRow != row || clickedColumn != column) {
+									clickedRow = row;
+									clickedColumn = column;
+								}
+								tableThongKe.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 							} else {
-								int month = column;
-								start = LocalDate.of(year, month, 1);
-								end = start.withDayOfMonth(start.lengthOfMonth());
+								if (clickedRow != -1 || clickedColumn != -1) {
+									clickedRow = -1;
+									clickedColumn = -1;
+								}
+								tableThongKe.setCursor(Cursor.getDefaultCursor());
 							}
-							showNhapKhoDetailDialog(row, start, end);
-						} else if (filterOption == 1) {
-							ComboItem selectedMonthItem = (ComboItem) comboMonth.getSelectedItem();
-							int month = selectedMonthItem.getKey();
-							LocalDate startOfMonth = LocalDate.of(year, month, 1);
-							LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
-							List<LocalDate[]> weekRanges = getWeekRanges(startOfMonth, endOfMonth);
-							if (column < weekRanges.size() - 1) {
-								LocalDate[] range = weekRanges.get(column - 1);
-								showNhapKhoDetailDialog(row, range[0], range[1]);
-							} else if (column == tableThongKe.getColumnCount() - 1) {
-								showNhapKhoDetailDialog(row, startOfMonth, endOfMonth);
+						}
+						if (e.getClickCount() == 2) {
+							if ( //ThongKeNhapKhoDialog được mở nếu click 2 lần lên ô
+									row >= 0 && // Không phải hàng header
+									row < tableThongKe.getRowCount() - 1 && // Không phải dòng tổng dưới cùng
+									column > 0 && // Không phải cột chứa tên NL
+									cell != null && cellValue > 0 // Ô phải có giá trị và lớn hơn 0
+							) {
+								ComboItem selectedFilterOptionItem = (ComboItem) comboFilterOption.getSelectedItem();
+								int filterOption = selectedFilterOptionItem.getKey();
+								ComboItem selectedYearItem = (ComboItem) comboYear.getSelectedItem();
+								int year = selectedYearItem.getKey();
+
+								// Lấy tên NL từ ô được chọn và lấy idNL dựa trên map được khởi tạo trong constructor
+								String tenNguyenLieu = (String) tableThongKe.getValueAt(row, 0);
+								Integer idNL = tenNLToIdMap.get(tenNguyenLieu);
+								if (idNL == null) {
+									return;
+								}
+
+								LocalDate start = null, end = null;
+
+								if (filterOption == 0) { // Nếu duyệt theo năm
+
+									if (column == tableThongKe.getColumnCount() - 1) { // Và là cột tổng
+										// Thời gian duyệt chi tiết nhập kho là cả năm
+										start = LocalDate.of(year, 1, 1);
+										end = LocalDate.of(year, 12, 31);
+
+									} else { // Nếu không
+										// Thời gian duyệt là tháng được chọn
+										int month = column;
+										start = LocalDate.of(year, month, 1);
+										end = start.withDayOfMonth(start.lengthOfMonth());
+									}
+
+								} else if (filterOption == 1) { // Duyệt theo tháng
+									ComboItem selectedMonthItem = (ComboItem) comboMonth.getSelectedItem();
+									int month = selectedMonthItem.getKey();
+									// Gán trước thời gian là cả tháng
+									start = LocalDate.of(year, month, 1);
+									end = start.withDayOfMonth(start.lengthOfMonth());
+									List<LocalDate[]> weekRanges = getWeekRanges(start, end);
+
+									if (column != tableThongKe.getColumnCount() - 1) {
+										// Nếu không phải cột tổng, lấy khoảng thời gian dựa trên cột của ô được chọn
+										LocalDate[] range = weekRanges.get(column - 1);
+										start = range[0];
+										end = range[1];
+									}
+								}
+
+								if (start != null && end != null) { // Dựa trên thời gian mà hiển thị dialog tương ứng
+									// Load danh sách CT lô nguyên liệu dựa trên thời gian
+									List<Lo_NguyenLieuDTO> danhSachLo = thongKeBUS.getChoseIngredientBatchList(idNL, start, end);
+									new ThongKeNhapKhoDialog(Date.valueOf(start), Date.valueOf(end), idNL, danhSachLo);
+								}
 							}
 						}
 					}
 				}
-			}
-		});
-	}
-
-	private void showNhapKhoDetailDialog(int row, LocalDate start, LocalDate end) {
-		String tenNguyenLieu = (String) tableThongKe.getValueAt(row, 0);
-		Integer idNL = tenNLToIdMap.get(tenNguyenLieu);
-		if (idNL == null) return;
-		NguyenLieuDTO nl = nguyenLieuBus.findByIdNL(idNL);
-		if (nl == null) return;
-
-		List<PhieuNhapDTO> danhSachPN = phieuNhapBus.searchCompleteByDate(Date.valueOf(start), Date.valueOf(end));
-		List<Lo_NguyenLieuDTO> danhSachLo = new ArrayList<>();
-
-		for (PhieuNhapDTO pn : danhSachPN) {
-			List<Lo_NguyenLieuDTO> loList = lo_NguyenLieuBus.getAllByIdPN(pn.getIdPN());
-			for (Lo_NguyenLieuDTO lo : loList) {
-				if (lo.getIdNL() == nl.getIdNL()) {
-					System.out.print(1);
-					danhSachLo.add(lo);
-				}
-			}
+			});
 		}
-
-		new ThongKeNhapKhoDialog(Date.valueOf(start), Date.valueOf(end), idNL, danhSachLo);
 	}
 
-	private void loadLoiNhuanTable() {
+//	private void showNhapKhoDetailDialog(int idNL, LocalDate start, LocalDate end) {
+//		List<Lo_NguyenLieuDTO> danhSachLo = thongKeBUS.getChoseIngredientBatchList(idNL, start, end);
+//
+//		new ThongKeNhapKhoDialog(Date.valueOf(start), Date.valueOf(end), idNL, danhSachLo);
+//	}
+
+	private void loadProfitTable() {
 		lblStatics.setText("Thống kê lợi nhuận");
 		ComboItem selectedFilterOptionItem = (ComboItem) comboFilterOption.getSelectedItem();
 		int filterOption = selectedFilterOptionItem.getKey();
@@ -479,56 +524,41 @@ public class ThongKePanel extends JPanel {
 		}
 
 		switch (filterOption) {
-			case 0:
-				setupThongKeByYearTableHeaders(year);
-				setupTableScrollPane();
-
-				long[] doanhThu = new long[12];
-				long[] tongChi = new long[12];
-				long[] loiNhuan = new long[12];
-				long tongDoanhThu = 0, tongChiPhi = 0, tongLoiNhuan = 0;
-
-				for (int i = 0; i < 12; i++) {
-					LocalDate startOfMonth = LocalDate.of(year, i + 1, 1);
-					LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
-
-					List<HoaDonDTO> hoaDonList = hoaDonBus.searchByDate(Date.valueOf(startOfMonth), Date.valueOf(endOfMonth));
-					long doanhThuThang = hoaDonBus.getAllTongTien(hoaDonList);
-					doanhThu[i] += doanhThuThang;
-
-					List<PhieuNhapDTO> phieuNhapList = phieuNhapBus.searchCompleteByDate(Date.valueOf(startOfMonth), Date.valueOf(endOfMonth));
-					long tongChiThang = phieuNhapBus.getAllTongTien(phieuNhapList);
-					tongChi[i] += tongChiThang;
-
-					loiNhuan[i] += doanhThuThang - tongChiThang;
-
-					tongDoanhThu += doanhThu[i];
-					tongChiPhi += tongChi[i];
-					tongLoiNhuan += loiNhuan[i];
-				}
+			case 0: // Năm
+				setupStatisticByYear(year);
+				List<List<Long>> statisticByYear = thongKeBUS.getProfitStatisticByYear(year);
 
 				DecimalFormat df = new DecimalFormat("#,### VNĐ");
 
+				// Hàng tổng chi
+				Object[] rowTongChi = new Object[thongKeJTableHeaders.size()];
+				long tongChi = 0;
+				rowTongChi[0] = "Tổng chi";
+				for (int i = 0; i < 12; i++) {
+					rowTongChi[i + 1] = df.format(statisticByYear.get(0).get(i));
+					tongChi += statisticByYear.get(0).get(i);
+				}
+				rowTongChi[rowTongChi.length - 1] = df.format(tongChi);
+				thongKeJTableModel.addRow(rowTongChi);
+
+				// Hàng tổng doanh thu
 				Object[] rowDoanhThu = new Object[thongKeJTableHeaders.size()];
+				long tongDoanhThu = 0;
 				rowDoanhThu[0] = "Doanh Thu";
 				for (int i = 0; i < 12; i++) {
-					rowDoanhThu[i + 1] = df.format(doanhThu[i]);
+					rowDoanhThu[i + 1] = df.format(statisticByYear.get(1).get(i));
+					tongDoanhThu += statisticByYear.get(1).get(i);
 				}
 				rowDoanhThu[rowDoanhThu.length - 1] = df.format(tongDoanhThu);
 				thongKeJTableModel.addRow(rowDoanhThu);
 
-				Object[] rowTongChi = new Object[thongKeJTableHeaders.size()];
-				rowTongChi[0] = "Tổng chi";
-				for (int i = 0; i < 12; i++) {
-					rowTongChi[i + 1] = df.format(tongChi[i]);
-				}
-				rowTongChi[rowTongChi.length - 1] = df.format(tongChiPhi);
-				thongKeJTableModel.addRow(rowTongChi);
-
+				// Hàng lợi nhuận
 				Object[] rowLoiNhuan = new Object[thongKeJTableHeaders.size()];
+				long tongLoiNhuan = 0;
 				rowLoiNhuan[0] = "Lợi nhuận";
 				for (int i = 0; i < 12; i++) {
-					rowLoiNhuan[i + 1] = df.format(loiNhuan[i]);
+					rowLoiNhuan[i + 1] = df.format(statisticByYear.get(2).get(i));
+					tongLoiNhuan += statisticByYear.get(2).get(i);
 				}
 				rowLoiNhuan[rowLoiNhuan.length - 1] = df.format(tongLoiNhuan);
 				thongKeJTableModel.addRow(rowLoiNhuan);
@@ -537,68 +567,41 @@ public class ThongKePanel extends JPanel {
 			case 1:
 				ComboItem selectedMonthItem = (ComboItem) comboMonth.getSelectedItem();
 				int month = selectedMonthItem.getKey();
-				if (month == 0) {
-					JOptionPane.showMessageDialog(this, "Vui lòng chọn tháng hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				setupThongKeByMonthTableHeaders(year, month);
-				setupTableScrollPane();
+				setupStatisticByMonth(month, year);
 
-				doanhThu = new long[5];
-				tongChi = new long[5];
-				loiNhuan = new long[5];
-				tongDoanhThu = 0;
-				tongChiPhi = 0;
-				tongLoiNhuan = 0;
-
-				LocalDate startOfMonth = LocalDate.of(year, month, 1);
-				LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
-				List<LocalDate[]> weekRanges = getWeekRanges(startOfMonth, endOfMonth);
-
-				for (int i = 0; i < weekRanges.size(); i++) {
-					LocalDate weekStart = weekRanges.get(i)[0];
-					LocalDate weekEnd = weekRanges.get(i)[1];
-
-					java.sql.Date sqlWeekStart = java.sql.Date.valueOf(weekStart);
-					java.sql.Date sqlWeekEnd = java.sql.Date.valueOf(weekEnd);
-
-					List<HoaDonDTO> hoaDonList = hoaDonBus.searchByDate(sqlWeekStart, sqlWeekEnd);
-					long doanhThuTuan = hoaDonBus.getAllTongTien(hoaDonList);
-					doanhThu[i] += doanhThuTuan;
-
-					List<PhieuNhapDTO> phieuNhapList = phieuNhapBus.searchCompleteByDate(sqlWeekStart, sqlWeekEnd);
-					long tongChiTuan = phieuNhapBus.getAllTongTien(phieuNhapList);
-					tongChi[i] += tongChiTuan;
-
-					loiNhuan[i] += (doanhThuTuan - tongChiTuan);
-
-					tongDoanhThu += doanhThu[i];
-					tongChiPhi += tongChi[i];
-					tongLoiNhuan += loiNhuan[i];
-				}
+				List<List<Long>> statisticByMonth = thongKeBUS.getProfitStatisticByMonth(month, year);
 
 				df = new DecimalFormat("#,### VNĐ");
 
+				// Hàng chi
+				rowTongChi = new Object[thongKeJTableHeaders.size()];
+				tongChi = 0;
+				rowTongChi[0] = "Tổng chi";
+				for (int i = 0; i < statisticByMonth.get(0).size(); i++) {
+					rowTongChi[i + 1] = df.format(statisticByMonth.get(0).get(i));
+					tongChi += statisticByMonth.get(0).get(i);
+				}
+				rowTongChi[rowTongChi.length - 1] = df.format(tongChi);
+				thongKeJTableModel.addRow(rowTongChi);
+
+				// Hàng doanh thu
 				rowDoanhThu = new Object[thongKeJTableHeaders.size()];
+				tongDoanhThu = 0;
 				rowDoanhThu[0] = "Doanh Thu";
-				for (int i = 0; i < weekRanges.size(); i++) {
-					rowDoanhThu[i + 1] = df.format(doanhThu[i]);
+				for (int i = 0; i < statisticByMonth.get(1).size(); i++) {
+					rowDoanhThu[i + 1] = df.format(statisticByMonth.get(1).get(i));
+					tongDoanhThu += statisticByMonth.get(1).get(i);
 				}
 				rowDoanhThu[rowDoanhThu.length - 1] = df.format(tongDoanhThu);
 				thongKeJTableModel.addRow(rowDoanhThu);
 
-				rowTongChi = new Object[thongKeJTableHeaders.size()];
-				rowTongChi[0] = "Tổng chi";
-				for (int i = 0; i < weekRanges.size(); i++) {
-					rowTongChi[i + 1] = df.format(tongChi[i]);
-				}
-				rowTongChi[rowTongChi.length - 1] = df.format(tongChiPhi);
-				thongKeJTableModel.addRow(rowTongChi);
-
+				// Hàng lợi nhuận
 				rowLoiNhuan = new Object[thongKeJTableHeaders.size()];
+				tongLoiNhuan = 0;
 				rowLoiNhuan[0] = "Lợi nhuận";
-				for (int i = 0; i < weekRanges.size(); i++) {
-					rowLoiNhuan[i + 1] = df.format(loiNhuan[i]);
+				for (int i = 0; i < statisticByMonth.get(2).size(); i++) {
+					rowLoiNhuan[i + 1] = df.format(statisticByMonth.get(2).get(i));
+					tongLoiNhuan += statisticByMonth.get(2).get(i);
 				}
 				rowLoiNhuan[rowLoiNhuan.length - 1] = df.format(tongLoiNhuan);
 				thongKeJTableModel.addRow(rowLoiNhuan);
@@ -624,50 +627,38 @@ public class ThongKePanel extends JPanel {
 
 		switch (filterOption) {
 			case 0:
-				setupThongKeByYearTableHeaders(year);
-				setupTableScrollPane();
+				setupStatisticByYear(year);
 
 				long[] tongNhapKhoAllNLThang = new long[12];
 				int tongNhapKhoNam = 0;
+				List<Map<String, List<Long>>> IngredientsAndTongTienMapList = thongKeBUS.getIngredientsCostStatisticByYear(year);
 
-				for (NguyenLieuDTO nl : nguyenLieuList) {
-					tenNLToIdMap.put(nl.getTenNL(), nl.getIdNL());
-					long[] tongNhapKhoNLThang = new long[12];
-					long tongNhapKhoNLNam = 0;
-
-					for (int i = 0; i < 12; i++) {
-						LocalDate startOfMonth = LocalDate.of(year, i + 1, 1);
-						LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
-
-						List<PhieuNhapDTO> phieuNhapList = phieuNhapBus.searchCompleteByDate(Date.valueOf(startOfMonth), Date.valueOf(endOfMonth));
-						for (PhieuNhapDTO pn : phieuNhapList) {
-							List<Lo_NguyenLieuDTO> lo_NLList = lo_NguyenLieuBus.getAllByIdPN(pn.getIdPN());
-							for (Lo_NguyenLieuDTO lo : lo_NLList) {
-								if (lo.getIdNL() == nl.getIdNL()) {
-									tongNhapKhoNLThang[i] += (long) (lo.getSoluongnhap() * lo.getDongia());
-									tongNhapKhoAllNLThang[i] += tongNhapKhoNLThang[i];
-								}
-							}
+				for (Map<String, List<Long>> ingredientMap : IngredientsAndTongTienMapList) { // Với mỗi Map có trong List Map
+					for (Map.Entry<String, List<Long>> entry : ingredientMap.entrySet()) { // Với mỗi map, duyệt từng entry (cặp key - value)
+						long tongNhapKhoNLNam = 0;
+						Object[] row = new Object[thongKeJTableHeaders.size()];
+						row[0] = entry.getKey();
+						for (int i = 0; i < 12; i++) {
+							row[i + 1] = entry.getValue().get(i);
+							tongNhapKhoAllNLThang[i] += entry.getValue().get(i);
+							tongNhapKhoNLNam += entry.getValue().get(i);
 						}
-						tongNhapKhoNLNam += tongNhapKhoNLThang[i];
+						row[row.length - 1] = df.format(tongNhapKhoNLNam);
+						thongKeJTableModel.addRow(row);
+
 					}
-					Object[] row = new Object[thongKeJTableHeaders.size()];
-					row[0] = nl.getTenNL();
-					for (int i = 0; i < 12; i++) {
-						row[i + 1] = tongNhapKhoNLThang[i];
-					}
-					row[row.length - 1] = df.format(tongNhapKhoNLNam);
-					thongKeJTableModel.addRow(row);
 				}
 
+				//Hàng tổng
 				Object[] rowTong = new Object[thongKeJTableHeaders.size()];
 				rowTong[0] = "Tổng";
 				for (int i = 0; i < 12; i++) {
-					rowTong[i + 1] = tongNhapKhoAllNLThang[i];
+					rowTong[i + 1] = df.format(tongNhapKhoAllNLThang[i]);
 					tongNhapKhoNam += tongNhapKhoAllNLThang[i];
 				}
 				rowTong[rowTong.length - 1] = df.format(tongNhapKhoNam);
 				thongKeJTableModel.addRow(rowTong);
+
 				break;
 			case 1:
 				ComboItem selectedMonthItem = (ComboItem) comboMonth.getSelectedItem();
@@ -676,8 +667,7 @@ public class ThongKePanel extends JPanel {
 					JOptionPane.showMessageDialog(this, "Vui lòng chọn tháng hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				setupThongKeByMonthTableHeaders(year, month);
-				setupTableScrollPane();
+				setupStatisticByMonth(month, year);
 
 				LocalDate startOfMonth = LocalDate.of(year, month, 1);
 				LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
@@ -686,37 +676,21 @@ public class ThongKePanel extends JPanel {
 				long[] tongNhapKhoAllNLTuan = new long[weekRanges.size()];
 				long tongNhapKhoThang = 0;
 
-				for (NguyenLieuDTO nl : nguyenLieuList) {
-					tenNLToIdMap.put(nl.getTenNL(), nl.getIdNL());
-					long[] tongNhapKhoNLTuan = new long[weekRanges.size()];
-					long tongNhapKhoNLThang = 0;
+				IngredientsAndTongTienMapList = thongKeBUS.getIngredientsCostStatisticByMonth(month, year);
 
-					for (int i = 0; i < weekRanges.size(); i++) {
-						LocalDate weekStart = weekRanges.get(i)[0];
-						LocalDate weekEnd = weekRanges.get(i)[1];
-
-						Date sqlWeekStart = Date.valueOf(weekStart);
-						Date sqlWeekEnd = Date.valueOf(weekEnd);
-
-						List<PhieuNhapDTO> phieuNhapList = phieuNhapBus.searchCompleteByDate(sqlWeekStart, sqlWeekEnd);
-						for (PhieuNhapDTO pn : phieuNhapList) {
-							List<Lo_NguyenLieuDTO> lo_NLList = lo_NguyenLieuBus.getAllByIdPN(pn.getIdPN());
-							for (Lo_NguyenLieuDTO lo : lo_NLList) {
-								if (lo.getIdNL() == nl.getIdNL()) {
-									tongNhapKhoNLTuan[i] += (long) (lo.getSoluongnhap() * lo.getDongia());
-									tongNhapKhoAllNLTuan[i] += tongNhapKhoNLTuan[i];
-								}
-							}
+				for (Map<String, List<Long>> ingredientMap : IngredientsAndTongTienMapList) { // Với mỗi Map có trong List Map
+					for (Map.Entry<String, List<Long>> entry : ingredientMap.entrySet()) { // Với mỗi map, duyệt từng entry (cặp key - value)
+						long tongNhapKhoNLThang = 0;
+						Object[] row = new Object[thongKeJTableHeaders.size()];
+						row[0] = entry.getKey();
+						for (int i = 0; i < weekRanges.size(); i++) {
+							row[i + 1] = entry.getValue().get(i);
+							tongNhapKhoAllNLTuan[i] += entry.getValue().get(i);
+							tongNhapKhoNLThang += entry.getValue().get(i);
 						}
-						tongNhapKhoNLThang += tongNhapKhoNLTuan[i];
+						row[row.length - 1] = df.format(tongNhapKhoNLThang);
+						thongKeJTableModel.addRow(row);
 					}
-					Object[] row = new Object[thongKeJTableHeaders.size()];
-					row[0] = nl.getTenNL();
-					for (int i = 0; i < weekRanges.size(); i++) {
-						row[i + 1] = df.format(tongNhapKhoNLTuan[i]);
-					}
-					row[row.length - 1] = df.format(tongNhapKhoNLThang);
-					thongKeJTableModel.addRow(row);
 				}
 
 				rowTong = new Object[thongKeJTableHeaders.size()];
@@ -727,6 +701,7 @@ public class ThongKePanel extends JPanel {
 				}
 				rowTong[rowTong.length - 1] = df.format(tongNhapKhoThang);
 				thongKeJTableModel.addRow(rowTong);
+
 				break;
 		}
 	}
@@ -747,8 +722,8 @@ public class ThongKePanel extends JPanel {
 
 		switch (filterOption) {
 			case 0:
-				setupThongKeByYearTableHeaders(year);
-				setupTableScrollPane();
+				setupStatisticByYear(year);
+//				setupTableScrollPane();
 
 				long[] tongBanAllSPThang = new long[12];
 				long tongBanNam = 0;
@@ -798,8 +773,8 @@ public class ThongKePanel extends JPanel {
 					JOptionPane.showMessageDialog(this, "Vui lòng chọn tháng hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				setupThongKeByMonthTableHeaders(year, month);
-				setupTableScrollPane();
+				setupStatisticByMonth(month, year);
+//				setupTableScrollPane();
 
 				LocalDate startOfMonth = LocalDate.of(year, month, 1);
 				LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
@@ -852,4 +827,46 @@ public class ThongKePanel extends JPanel {
 		}
 	}
 	// ===END: Các hàm tiện ích===
+
+	// HUONGNGUYEN 4/5
+	public void loadThongKe() {
+		ComboItem filterOption =
+				(ComboItem) comboFilterOption.getSelectedItem();
+		ComboItem yearItem = (ComboItem) comboYear.getSelectedItem();
+		ComboItem monthItem = (ComboItem) comboMonth.getSelectedItem();
+
+		int year = yearItem.getKey();
+		int month =
+				filterOption.getKey() == 1 && monthItem != null && monthItem.getKey() > 0 ? monthItem.getKey() : -1;
+		if (filterOption.getKey() == 0) {
+			// Chọn xem theo năm
+			ThongKeLoiNhuanTheoNam chartByYear = new ThongKeLoiNhuanTheoNam(year);
+			chartPanel.setViewportView(chartByYear);
+		} else {
+			ThongKeLoiNhuanTheoThang chartByMonth = new ThongKeLoiNhuanTheoThang(month, year);
+			chartPanel.setViewportView(chartByMonth);
+		}
+	}
+
+	private boolean isError() {
+		boolean isError = false;
+
+		ComboItem filterOption =
+				(ComboItem) comboFilterOption.getSelectedItem();
+		ComboItem yearItem = (ComboItem) comboYear.getSelectedItem();
+		ComboItem monthItem = (ComboItem) comboMonth.getSelectedItem();
+
+		if (yearItem.getKey() == 0) {
+			JOptionPane.showMessageDialog(this, "Vui lòng chọn năm!", "LỖI", JOptionPane.ERROR_MESSAGE);
+			isError = true;
+		}
+
+		if (filterOption.getKey() == 1 &&  monthItem.getKey() == 0) {
+			JOptionPane.showMessageDialog(this, "Vui lòng chọn tháng!",
+					"LỖI", JOptionPane.ERROR_MESSAGE);
+			isError = true;
+		}
+
+		return isError;
+	}
 }

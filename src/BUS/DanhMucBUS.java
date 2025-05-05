@@ -10,15 +10,17 @@ public class DanhMucBUS {
 		return danhMucDao.getAll();
 	}
 	
-	public List<DanhMucDTO> getAllActiveF0Edit(int idDMCha){
-		return danhMucDao.getAllActiveF0Edit(idDMCha);
+	public List<DanhMucDTO> getAllActiveF0Except(int idDMCha){
+		return danhMucDao.getAllActiveF0Except(idDMCha);
 	}
 
 	public List<DanhMucDTO> getAllActiveF0(){
+		// dùng để hiển thị cbo DMCha trong khi thêm danh mục
 		return danhMucDao.getAllActiveF0();
 	}
 
 	public List<DanhMucDTO> getAllActiveF1(){
+		// dùng để hiển thị cbo DM trong BanHangPanel, trong cbo DM của SanPhamDialog
 		return danhMucDao.getAllActiveF1();
 	}
 
