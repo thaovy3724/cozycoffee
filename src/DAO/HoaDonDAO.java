@@ -40,7 +40,7 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
 		Connection link = null;
 		PreparedStatement pstmt = null;
 		ResultSet generatedKeys = null;
-		int newIdHD = -1;
+		int newIdHD = 0;
 		String sql;
 		try{
 			link = db.connectDB();
@@ -73,7 +73,6 @@ public class HoaDonDAO extends BaseDAO<HoaDonDTO>{
 		}catch(ClassNotFoundException | SQLException e){
 			try{
 				link.rollback();
-				newIdHD = -1;
 			}catch(SQLException ex){
 				ex.printStackTrace();
 			}

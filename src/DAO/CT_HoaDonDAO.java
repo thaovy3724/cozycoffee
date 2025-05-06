@@ -59,22 +59,19 @@ public class CT_HoaDonDAO extends BaseDAO<CT_HoaDonDTO>{
             "WITH TonKhoTheoHSD AS (" +
             " SELECT lo.idNL, SUM(lo.tonkho) AS tonkho_kha_dung" +
             " FROM lo_nguyenlieu lo" +
-            " GROUP BY lo.idNL" +
-            " HAVING SUM(lo.tonkho) > 0)," +
+            " GROUP BY lo.idNL)," +
             " SoLuongSanPhamToiDa AS ("+
-            " SELECT c.idCT, c.idSP, ct.idNL, ct.soluong AS so_luong_can," +
-                " FLOOR(COALESCE(tkh.tonkho_kha_dung, 0) / (ct.soluong * ?)) AS so_san_pham_toi_da" +
+            " SELECT FLOOR(COALESCE(tkh.tonkho_kha_dung, 0) / ct.soluong) AS so_san_pham_toi_da" +
             " FROM congthuc c" +
                 " JOIN ct_congthuc ct ON c.idct = ct.idct" +
                 " LEFT JOIN TonKhoTheoHSD tkh ON ct.idNL = tkh.idNL" +
             " WHERE c.idSP = ?)" +
-            " SELECT idCT, idSP," +
+            " SELECT" +
                 " CASE" +
                     " WHEN MIN(so_san_pham_toi_da) IS NULL THEN 0" +
                     " ELSE MIN(so_san_pham_toi_da)" +
                 " END AS so_luong_san_pham_available" +
-            " FROM SoLuongSanPhamToiDa" +
-            " GROUP BY idCT, idSP";
+            " FROM SoLuongSanPhamToiDa";
 
             link = db.connectDB();
             pstmt = link.prepareStatement(sql);

@@ -95,28 +95,6 @@ public class CongThucDAO extends BaseDAO<CongThucDTO> {
             db.close(link);
         }
     }
-
-    public boolean isProduct(int idSP) {
-        Connection link = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        boolean hasProduct = false;
-        try {
-            String sql = "SELECT * FROM sanpham WHERE idSP = ?";
-            link = db.connectDB();
-            pstmt = link.prepareStatement(sql);
-            pstmt.setInt(1, idSP);
-            rs = pstmt.executeQuery();
-            hasProduct = rs.next();
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-            db.close(link);
-        }
-        return hasProduct;
-    }
     
     public boolean delete(int idCT) {
         String col = "idCT";
@@ -233,27 +211,6 @@ public class CongThucDAO extends BaseDAO<CongThucDTO> {
             pstmt = link.prepareStatement(sql);
             pstmt.setInt(1, idCT);
             pstmt.setInt(2, idSP);
-            rs = pstmt.executeQuery();
-            while (rs.next()) result.add(mapResultSetToDTO(rs));
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-            db.close(link);
-        }
-        return result;
-    }
-    
-    public List<CongThucDTO> getAllActive() {
-        Connection link = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        List<CongThucDTO> result = new ArrayList<>();
-        try {
-            String sql = "SELECT * FROM congthuc ";
-            link = db.connectDB();
-            pstmt = link.prepareStatement(sql);
             rs = pstmt.executeQuery();
             while (rs.next()) result.add(mapResultSetToDTO(rs));
         } catch (ClassNotFoundException | SQLException e) {

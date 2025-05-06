@@ -173,6 +173,21 @@ public class ThongKePanel extends JPanel {
 		tableThongKeScrollPane.setViewportView(tableThongKe);
 		tableThongKeScrollPane.getViewport().setBackground(new Color(255, 240, 220));
 		tablePanel.add(tableThongKeScrollPane, BorderLayout.CENTER);
+		int rowHeight = tableThongKe.getRowHeight();
+		int rowCount = tableThongKe.getRowCount();
+		int headerHeight = tableThongKe.getTableHeader().getPreferredSize().height;
+
+		// Max number of visible rows before scrolling is needed
+		int maxVisibleRows = 10;
+
+		// Use min(rowCount, maxVisibleRows) to determine visible height
+		int visibleRows = Math.min(rowCount, maxVisibleRows);
+		int tableHeight = visibleRows * rowHeight + headerHeight + 5; // add padding if needed
+
+		// Set preferred size of scroll pane to fit table height
+		tableThongKeScrollPane.setPreferredSize(new Dimension(
+			tableThongKe.getPreferredSize().width, tableHeight
+		));
 
 		// Ẩn lựa chọn tháng trước
 		lblMonth.setVisible(false);

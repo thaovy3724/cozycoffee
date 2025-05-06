@@ -2,12 +2,13 @@ package BUS;
 
 import DTO.CongThucDTO;
 import DTO.CT_CongThucDTO;
+import DAO.CT_CongThucDAO;
 import DAO.CongThucDAO;
 import java.util.List;
 
 public class CongThucBUS {
     private final CongThucDAO congThucDao = new CongThucDAO();
-    private final CT_CongThucBUS ctCongThucBus = new CT_CongThucBUS();
+    private final CT_CongThucDAO ctCongThucDao = new CT_CongThucDAO();
 
     public List<CongThucDTO> getAll() {
         return congThucDao.getAll();
@@ -15,10 +16,6 @@ public class CongThucBUS {
 
     public List<CongThucDTO> getAllActiveEdit(int idCT, int idSP) {
         return congThucDao.getAllActiveEdit(idCT, idSP);
-    }
-
-    public List<CongThucDTO> getAllActive() {
-        return congThucDao.getAllActive();
     }
 
     public CongThucDTO findByIdCT(int idCT) {
@@ -43,10 +40,10 @@ public class CongThucBUS {
 
         boolean success = congThucDao.update(ct);
         if (success) {
-            ctCongThucBus.deleteByCongThuc(ct.getIdCT());
+            ctCongThucDao.deleteByCongThuc(ct.getIdCT());
             for (CT_CongThucDTO chiTiet : chiTietList) {
                 chiTiet.setIdCT(ct.getIdCT());
-                String error = ctCongThucBus.add(chiTiet);
+                String error = ctCongThucDao.add(chiTiet);
                 if (!error.isEmpty()) {
                     return error;
                 }
@@ -56,7 +53,7 @@ public class CongThucBUS {
     }
 
     public boolean delete(int idCT) {
-        return congThucDao.delete(idCT);
+        return ctCongThucDao.deleteByCongThuc(idCT) & congThucDao.delete(idCT);
     }
 
     public List<CongThucDTO> search(String keyWord) {

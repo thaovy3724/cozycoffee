@@ -48,10 +48,10 @@ public class HoaDonBUS {
             }
         }
 
-        // nếu tất cả sản phẩm đều available thì tiến hàng tạo hóa đơn
+        // nếu tất cả sản phẩm đều available thì tiến hành tạo hóa đơn
         if(error.isEmpty()){
             int newIdHD = hoaDonDao.add(hoaDon, dsChiTiet);
-            if(newIdHD == -1)
+            if(newIdHD == 0)
                 error = "Đã xảy ra lỗi trong quá trình thêm hóa đơn";
             else{
                 // cập nhật tồn kho
